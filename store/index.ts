@@ -12,6 +12,8 @@ interface GlobalState {
   sourceToken: string | null;
   setSourceChain: (chain: string | null) => void;
   setSourceToken: (token: string | null) => void;
+  sourceType: string | null;
+  setSourceType: (type: string | null) => void;
 }
 
 const useGlobalStore = create<GlobalState>()(
@@ -21,6 +23,8 @@ const useGlobalStore = create<GlobalState>()(
       signer: null,
       sourceChain: null,
       sourceToken: null,
+      sourceType: 'Autopay',
+      setSourceType: (_type) => set(() => ({ sourceType: _type })),
       setSourceChain: (_chain) => set(() => ({ sourceChain: _chain })),
       setSourceToken: (_token) => set(() => ({ sourceToken: _token })),
       setSigner: (_signer) => set(() => ({ signer: _signer })),
