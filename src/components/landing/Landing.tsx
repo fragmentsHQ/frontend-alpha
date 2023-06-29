@@ -4,6 +4,7 @@ import useGlobalStore from 'store';
 import Card from '@/components/cards';
 import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';
+import PreviewReview from '@/components/prevoiew/Previewreview';
 import Row from '@/components/rows/Row';
 
 const tabMenus = [
@@ -42,6 +43,10 @@ const Landing: React.FC = () => {
     sourceType,
     sourceTypeMode,
     setSourceTypeMode,
+    onetimeSubOption,
+    setOnetimeSubOption,
+    recurringSubOption,
+    setRecurringSubOption,
   } = useGlobalStore((state) => ({
     sourceToken: state.sourceToken,
     sourceChain: state.sourceChain,
@@ -49,6 +54,10 @@ const Landing: React.FC = () => {
     sourceType: state.sourceType,
     sourceTypeMode: state.sourceTypeMode,
     setSourceTypeMode: state.setSourceTypeMode,
+    onetimeSubOption: state.onetimeSubOption,
+    setOnetimeSubOption: state.setOneTimeSubOption,
+    recurringSubOption: state.recurringSubOption,
+    setRecurringSubOption: state.setRecurringSubOption,
   }));
 
   return (
@@ -68,7 +77,11 @@ const Landing: React.FC = () => {
             <Menu />
             <div className='mt-4'>
               {sourceToken && sourceChain && (
-                <TabsMenu options={tabMenus} onChange={setSourceType} />
+                <TabsMenu
+                  options={tabMenus}
+                  onChange={setSourceType}
+                  currentTab={sourceType}
+                />
               )}
             </div>
           </Card>
@@ -78,6 +91,7 @@ const Landing: React.FC = () => {
                 <TabsMenu
                   options={autoplayItems}
                   onChange={setSourceTypeMode}
+                  currentTab={sourceTypeMode}
                 />
               </Card>
             </div>
@@ -86,17 +100,29 @@ const Landing: React.FC = () => {
           )}
 
           <div>
-            {sourceTypeMode === 'Onetime' &&
-            sourceType === 'Autopay' &&
-            sourceChain &&
-            sourceToken ? (
-              <Card className='w-[864px] bg-[#282828] p-[26px] shadow-none'>
-                <TabsMenu options={oneTimeItems} />
-              </Card>
-            ) : (
-              <div></div>
-            )}
+            {(sourceTypeMode === 'Onetime' || sourceTypeMode === 'Recurring') &&
+              sourceType === 'Autopay' &&
+              sourceChain &&
+              sourceToken && (
+                <Card className='w-[864px] bg-[#282828] p-[26px] shadow-none'>
+                  <TabsMenu
+                    options={oneTimeItems}
+                    onChange={
+                      sourceTypeMode === 'Onetime'
+                        ? setOnetimeSubOption
+                        : setRecurringSubOption
+                    }
+                    currentTab={
+                      sourceTypeMode === 'Onetime'
+                        ? onetimeSubOption
+                        : recurringSubOption
+                    }
+                  />
+                </Card>
+              )}
           </div>
+
+          <PreviewReview />
         </div>
       </Row>
     </React.Fragment>

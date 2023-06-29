@@ -16,6 +16,12 @@ interface GlobalState {
   setSourceType: (type: string | null) => void;
   sourceTypeMode: string | null;
   setSourceTypeMode: (mode: string | null) => void;
+  paymentMethod: string | null;
+  onetimeSubOption: string | null;
+  recurringSubOption: string | null;
+  setOneTimeSubOption: (mode: string | null) => void;
+  setRecurringSubOption: (mode: string | null) => void;
+  setPaymentMethod: (paymentMethod: string | null) => void;
 }
 
 const useGlobalStore = create<GlobalState>()(
@@ -25,8 +31,16 @@ const useGlobalStore = create<GlobalState>()(
       signer: null,
       sourceChain: null,
       sourceToken: null,
-      sourceType: 'Autopay',
-      sourceTypeMode: 'Onetime',
+      sourceType: null,
+      sourceTypeMode: null,
+      paymentMethod: null,
+      onetimeSubOption: null,
+      recurringSubOption: null,
+      setOneTimeSubOption: (_mode) => set(() => ({ onetimeSubOption: _mode })),
+      setRecurringSubOption: (_mode) =>
+        set(() => ({ recurringSubOption: _mode })),
+      setPaymentMethod: (_paymentMethod) =>
+        set(() => ({ paymentMethod: _paymentMethod })),
       setSourceTypeMode: (_mode) => set(() => ({ sourceTypeMode: _mode })),
       setSourceType: (_type) => set(() => ({ sourceType: _type })),
       setSourceChain: (_chain) => set(() => ({ sourceChain: _chain })),
