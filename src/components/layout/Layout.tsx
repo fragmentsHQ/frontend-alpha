@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className='h-full w-full bg-[#262229] px-4 text-white    md:min-h-screen'>
       <div className=''>
         <Header />
-        <Row className=' ' isCentered={true} direction='col' isBetween={true}>
+        <Row className=' ' isCentered={true}>
           {children}
         </Row>
       </div>

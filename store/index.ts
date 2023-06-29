@@ -19,8 +19,8 @@ const useGlobalStore = create<GlobalState>()(
     (set) => ({
       provider: null,
       signer: null,
-      sourceChain: 'Ethereun',
-      sourceToken: 'ETH',
+      sourceChain: null,
+      sourceToken: null,
       setSourceChain: (_chain) => set(() => ({ sourceChain: _chain })),
       setSourceToken: (_token) => set(() => ({ sourceToken: _token })),
       setSigner: (_signer) => set(() => ({ signer: _signer })),
