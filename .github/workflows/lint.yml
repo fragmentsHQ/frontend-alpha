@@ -64,5 +64,3 @@ jobs:
 
       - name: 💅 Prettier check
         run: yarn format:check
-
-  
