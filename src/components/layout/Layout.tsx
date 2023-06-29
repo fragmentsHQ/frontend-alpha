@@ -6,10 +6,12 @@ import Row from '@/components/rows/Row';
 export default function Layout({ children }: { children: React.ReactNode }) {
   // Put Header or Footer Here
   return (
-    <div className='h-full w-full bg-[#060606] px-4 text-white    md:min-h-screen'>
+    <div className='h-full w-full bg-[#262229] px-4 text-white    md:min-h-screen'>
       <div className=''>
         <Header />
-        <Row className=' '>{children}</Row>
+        <Row className=' ' isCentered={true} direction='col' isBetween={true}>
+          {children}
+        </Row>
       </div>
     </div>
   );
