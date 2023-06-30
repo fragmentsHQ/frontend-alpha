@@ -4,6 +4,7 @@ import useGlobalStore from 'store';
 import Card from '@/components/cards';
 import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';
+import ErrorModal from '@/components/loading/Failed';
 import PreviewReview from '@/components/prevoiew/Previewreview';
 import Row from '@/components/rows/Row';
 
@@ -121,7 +122,7 @@ const Landing: React.FC = () => {
                 </Card>
               )}
           </div>
-
+          <ErrorModal isOpen={true} />
           <PreviewReview />
         </div>
       </Row>
