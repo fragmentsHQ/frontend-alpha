@@ -19,8 +19,11 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
+    "@mui/material": "^5.13.6",
     "@rainbow-me/rainbowkit": "0.12.6",
     "@typechain/ethers-v5": "^10.2.0",
     "alchemy-sdk": "^2.8.3",
