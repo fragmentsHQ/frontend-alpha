@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useGlobalStore from 'store';
 
+import TimeIntervalConfigRow from '@/components/autopay/TimeIntervalConfigRow';
 import Card from '@/components/cards';
 import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';
@@ -61,18 +62,23 @@ const Landing: React.FC = () => {
             )}
           </Card>
           {sourceType === 'Autopay' && sourceChain && sourceToken ? (
-            <div className='flex w-[864px] justify-start'>
-              <Card className='w-[300px] bg-[#282828] p-[20px] shadow-none'>
-                <TabsMenu
-                  options={autoplayItems}
-                  listBg='[#464646]'
-                  tabBg='[#0047CE]'
-                  tabText='white'
-                  isDifferentSubTabColor={true}
-                  optionBgColor='[#2E2E2E]'
-                />
-              </Card>
-            </div>
+            <>
+              <div className='flex w-[864px] justify-start'>
+                <Card className='w-[300px] bg-[#282828] p-[20px] shadow-none'>
+                  <TabsMenu
+                    options={autoplayItems}
+                    listBg='[#464646]'
+                    tabBg='[#0047CE]'
+                    tabText='white'
+                    isDifferentSubTabColor={true}
+                    optionBgColor='[#2E2E2E]'
+                  />
+                </Card>
+              </div>
+              <div>
+                <TimeIntervalConfigRow autoPayMode='tesd' defaultValue={null} />
+              </div>
+            </>
           ) : (
             <div></div>
           )}
