@@ -22,6 +22,8 @@ interface GlobalState {
   setOneTimeSubOption: (mode: string | null) => void;
   setRecurringSubOption: (mode: string | null) => void;
   setPaymentMethod: (paymentMethod: string | null) => void;
+  currency: string | null;
+  setCurrency: (currency: string | null) => void;
 }
 
 const useGlobalStore = create<GlobalState>()(
@@ -36,6 +38,8 @@ const useGlobalStore = create<GlobalState>()(
       paymentMethod: null,
       onetimeSubOption: null,
       recurringSubOption: null,
+      currency: 'Ethereum',
+      setCurrency: (_currency) => set(() => ({ currency: _currency })),
       setOneTimeSubOption: (_mode) => set(() => ({ onetimeSubOption: _mode })),
       setRecurringSubOption: (_mode) =>
         set(() => ({ recurringSubOption: _mode })),
