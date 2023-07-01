@@ -5,7 +5,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import * as React from 'react';
 
-export default function DatePicker() {
+interface IDatePicker {
+  defaultValue?: Dayjs,
+  onChange: (value: Dayjs) => void
+}
+
+const DatePicker: React.FC<IDatePicker> = (props) => {
   const [value, setValue] = React.useState<Dayjs | null>(
     dayjs().add(1, 'hour')
   );
@@ -13,6 +18,7 @@ export default function DatePicker() {
 
   const handleChange = (newValue) => {
     const d = dayjs(newValue).unix();
+    props.onChange(d)
   };
   
 
@@ -24,9 +30,9 @@ export default function DatePicker() {
           label=''
           disablePast
           value={value}
-          onChange={(da) => {
-            setValue(dayjs(new Date(da)));
-            handleChange(da);
+          onChange={(value) => {
+            setValue(dayjs(new Date(value)));
+            handleChange(value);
           }}
           views={['year', 'day', 'hours', 'minutes']}
           // onError={(data) => {
@@ -41,9 +47,15 @@ export default function DatePicker() {
              
           //   }
           // }}
-          
+          slotProps={{
+            textField: {
+              inputProps: { className:"text-white"}
+            }
+          }} 
         />
       </LocalizationProvider>
     </div>
   );
 }
+
+export default DatePicker

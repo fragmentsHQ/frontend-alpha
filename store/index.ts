@@ -3,6 +3,8 @@ import { Signer } from 'ethers';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
+import { TimeIntervalConfigRowValues } from '@/components/autopay/TimeIntervalConfigRow';
+
 interface GlobalState {
   provider: Provider | null;
   signer: Signer | null;
@@ -19,11 +21,13 @@ interface GlobalState {
   paymentMethod: string | null;
   onetimeSubOption: string | null;
   recurringSubOption: string | null;
+  timeIntervalConfig: TimeIntervalConfigRowValues | null;
   setOneTimeSubOption: (mode: string | null) => void;
   setRecurringSubOption: (mode: string | null) => void;
   setPaymentMethod: (paymentMethod: string | null) => void;
   currency: string | null;
   setCurrency: (currency: string | null) => void;
+  setTimeIntervalConfig: (timeConfig: TimeIntervalConfigRowValues | null) => void
 }
 
 const useGlobalStore = create<GlobalState>()(
@@ -39,6 +43,7 @@ const useGlobalStore = create<GlobalState>()(
       onetimeSubOption: null,
       recurringSubOption: null,
       currency: 'Ethereum',
+      timeIntervalConfig: null,
       setCurrency: (_currency) => set(() => ({ currency: _currency })),
       setOneTimeSubOption: (_mode) => set(() => ({ onetimeSubOption: _mode })),
       setRecurringSubOption: (_mode) =>
@@ -51,6 +56,8 @@ const useGlobalStore = create<GlobalState>()(
       setSourceToken: (_token) => set(() => ({ sourceToken: _token })),
       setSigner: (_signer) => set(() => ({ signer: _signer })),
       setProvider: (_provider) => set(() => ({ provider: _provider })),
+      setTimeIntervalConfig: (_timeInterval) => set(() => ({timeIntervalConfig: _timeInterval}))
+
     }),
     {
       name: '',

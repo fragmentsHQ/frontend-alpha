@@ -48,6 +48,8 @@ const Landing: React.FC = () => {
     setOnetimeSubOption,
     recurringSubOption,
     setRecurringSubOption,
+    timeIntervalConfig,
+    setTimeIntervalConfig
   } = useGlobalStore((state) => ({
     sourceToken: state.sourceToken,
     sourceChain: state.sourceChain,
@@ -59,6 +61,8 @@ const Landing: React.FC = () => {
     setOnetimeSubOption: state.setOneTimeSubOption,
     recurringSubOption: state.recurringSubOption,
     setRecurringSubOption: state.setRecurringSubOption,
+    timeIntervalConfig: state.timeIntervalConfig,
+    setTimeIntervalConfig: state.setTimeIntervalConfig
   }));
 
   return (
@@ -98,7 +102,7 @@ const Landing: React.FC = () => {
                 </Card>
               </div>
               <div>
-                <TimeIntervalConfigRow autoPayMode='tesd' defaultValue={null} />
+                <TimeIntervalConfigRow autoPayMode={sourceType} defaultValue={timeIntervalConfig} onChange={setTimeIntervalConfig} />
               </div>
             </>
           ) : (
