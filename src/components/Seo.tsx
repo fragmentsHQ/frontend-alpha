@@ -5,14 +5,14 @@ const defaultMeta = {
   title: 'Autopay',
   siteName: 'Autopay',
   description: 'Autopay',
-  url: 'https://tsnext-tw.thcl.dev',
+  url: 'https://fragments.money',
   type: 'website',
   robots: 'follow, index',
   /**
    * No need to be filled, will be populated with openGraph function
    * If you wish to use a normal image, just specify the path below
    */
-  image: 'https://tsnext-tw.thcl.dev/images/large-og.png',
+  image: 'https://fragments.money/images/large-og.png',
 };
 
 type SeoProps = {
