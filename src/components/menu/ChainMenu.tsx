@@ -83,6 +83,9 @@ export default function ChainMenu({
           setSelectedChain(selectedChain);
           handleClose();
         }}
+        style={{
+          width: '400px',
+        }}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'left',
@@ -158,7 +161,7 @@ export function TokenMenu({
       >
         {selectedToken ? (
           <div className='flex items-center justify-start'>
-            <div className='relative mr-2 h-[1.5rem] w-[1.5rem] py-2'>
+            <div className='relative mr-2  h-[1.5rem] w-[1.5rem] overflow-hidden rounded-full py-2'>
               <Image src={selectedToken.image} fill alt='Logo' />
             </div>
             {selectedToken.name}
@@ -205,7 +208,7 @@ export function TokenMenu({
               }}
               key={index}
             >
-              <div className='relative mr-2 h-[1.5rem] w-[1.5rem] py-2'>
+              <div className='relative mr-2 h-[1.5rem] w-[1.5rem] overflow-hidden rounded-full py-2'>
                 <Image src={token.image} fill alt='Logo' />
               </div>
               {token.name}

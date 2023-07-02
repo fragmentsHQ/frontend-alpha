@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import useGlobalStore from 'store';
+import useGlobalStore, { useTableData } from 'store';
 import { useNetwork } from 'wagmi';
 
 import useAutoPayContract from '@/hooks/useAutoPayContract';
 
+import Card from '@/components/cards';
 import DatePicker from '@/components/DatePicker';
 import FrequencyDialog from '@/components/FrequencyDialog';
 import LoadingScreen from '@/components/loaders';
-import PreviewReview from '@/components/prevoiew/Previewreview';
+import PreviewTabMenu from '@/components/prevoiew/PreviewTab';
 import TokenTable from '@/components/table/TokenTable';
 
 export type TransactionStates = {
   isApproving: boolean;
-  isApproved: boolean;
+  isTransactionProcessing: boolean;
   isTransactionSuccessFul: boolean;
   isTransactionFailed: boolean;
   hash?: string;
@@ -21,7 +22,7 @@ export type TransactionStates = {
 
 const transactionInitialState: TransactionStates = {
   isApproving: false,
-  isApproved: false,
+  isTransactionProcessing: false,
   isTransactionSuccessFul: false,
   isTransactionFailed: false,
   hash: '',
@@ -30,6 +31,9 @@ const Time = () => {
   const [transactionstate, setTransactionState] = useState<TransactionStates>(
     transactionInitialState
   );
+  const [isApproved, setApproved] = useState(false);
+  const { paymentMethod } = useGlobalStore();
+
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [noOfCycles, setNoOfCycles] = useState(0);
@@ -38,10 +42,12 @@ const Time = () => {
     'days' | 'weeks' | 'months' | 'years' | null
   >(null);
   const [isError, setError] = React.useState(false);
-  const { enteredRows, sourceTypeMode } = useGlobalStore();
+  const { enteredRows } = useTableData();
+  const { sourceTypeMode, sourceToken } = useGlobalStore();
   const isValid = enteredRows.every(
     (item) =>
       item.amount_of_source_token !== '' &&
+      item.amount_of_source_token !== '0' &&
       item.destination_chain !== 0 &&
       item.destination_token !== '' &&
       item.to_address
@@ -53,27 +59,9 @@ const Time = () => {
     try {
       if (!chain || !startTime) return;
       setTransactionState({
-        ...transactionInitialState,
-        isApproving: true,
+        ...transactionstate,
+        isTransactionProcessing: true,
       });
-      const allowance = await fetchAllowance(chain);
-      if (allowance) {
-        setTransactionState({
-          ...transactionInitialState,
-          isApproved: true,
-        });
-      } else {
-        const res = await handleApprove();
-        if (res) {
-          setTransactionState({
-            ...transactionInitialState,
-            isApproved: true,
-          });
-        } else {
-          throw new Error('No');
-        }
-      }
-
       const res = await handleTimeExecution({
         start_time: startTime,
         cycles: noOfCycles,
@@ -97,6 +85,16 @@ const Time = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (!chain) return;
+    fetchAllowance(chain).then((res) => {
+      if (res) {
+        setApproved(true);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chain, sourceToken]);
 
   return (
     <div className='mt-6 w-full'>
@@ -145,11 +143,61 @@ const Time = () => {
       {!isError && startTime && <TokenTable />}
       <div className='h-[50px]' />
       {!isError && startTime && isValid && (
-        <PreviewReview
-          onClick={() => {
-            confirmTransaction();
-          }}
-        />
+        <Card className='flex w-[864px] flex-col space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
+          <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
+            Choose how the task should be paid for. The cost of each execution
+            equals the network fee.
+          </p>
+
+          <PreviewTabMenu />
+
+          {paymentMethod && (
+            <div className=' flex justify-center space-x-3'>
+              <button
+                onClick={async () => {
+                  try {
+                    if (!chain) return;
+                    setTransactionState({
+                      ...transactionInitialState,
+                      isApproving: true,
+                    });
+                    const allowance = await fetchAllowance(chain);
+                    if (allowance) {
+                      setApproved(true);
+                    } else {
+                      const res = await handleApprove();
+                      if (res) {
+                        setApproved(true);
+                      } else {
+                        throw new Error('No');
+                      }
+                    }
+                  } catch (error) {
+                    setTransactionState({
+                      ...transactionInitialState,
+                      isApproving: false,
+                    });
+                  }
+                }}
+                disabled={isApproved}
+                className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-opacity-50 disabled:text-opacity-20'
+              >
+                {' '}
+                Confirm Token Allowance
+              </button>
+              <button
+                disabled={!isApproved}
+                onClick={() => {
+                  confirmTransaction();
+                }}
+                className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-[#464646] disabled:bg-opacity-50 disabled:text-opacity-20'
+              >
+                {' '}
+                Confirm by signing
+              </button>
+            </div>
+          )}
+        </Card>
       )}
     </div>
   );

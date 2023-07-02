@@ -2,6 +2,8 @@ import * as React from 'react';
 import useGlobalStore from 'store';
 import { useAccount, useNetwork } from 'wagmi';
 
+import clsxm from '@/lib/clsxm';
+
 import Card from '@/components/cards';
 import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';
@@ -21,7 +23,7 @@ const tabMenus = [
 ];
 const autoplayItems = [
   {
-    name: 'One-time',
+    name: 'Conditional(one time)',
     value: 'Onetime',
   },
   {
@@ -83,7 +85,7 @@ const Landing: React.FC = () => {
           !chain?.unsupported &&
           sourceToken?.name ? (
             <div className='flex w-[864px] justify-center'>
-              <Card className='mt-6 w-[300px] bg-[#373A40] shadow-none'>
+              <Card className='mt-6 w-[400px] bg-[#373A40] shadow-none'>
                 <TabsMenu
                   options={autoplayItems}
                   onChange={setSourceTypeMode}
@@ -95,7 +97,7 @@ const Landing: React.FC = () => {
             <div></div>
           )}
 
-          <div>
+          <div className='flex items-center justify-center'>
             {isConnected &&
               (sourceTypeMode === 'Onetime' ||
                 sourceTypeMode === 'Recurring') &&
@@ -103,8 +105,18 @@ const Landing: React.FC = () => {
               !chain?.unsupported &&
               chain?.id &&
               sourceToken && (
-                <Card className='mt-6 flex w-[864px] space-x-3 bg-[#373A40] p-[10px] shadow-none'>
-                  {TriggerValues.map((value, index) => {
+                <Card
+                  className={clsxm(
+                    'mt-6 flex space-x-3 bg-[#373A40] p-[10px] shadow-none',
+                    sourceTypeMode !== 'Recurring'
+                      ? 'w-[864px]'
+                      : 'w-[300px] justify-center'
+                  )}
+                >
+                  {TriggerValues.slice(
+                    0,
+                    sourceTypeMode === 'Recurring' ? 1 : TriggerValues.length
+                  ).map((value, index) => {
                     return (
                       <div key={index} className='flex w-full  space-x-3 '>
                         <a
@@ -125,6 +137,14 @@ const Landing: React.FC = () => {
           </div>
           {isConnected &&
             sourceType === 'Autopay' &&
+            sourceTypeMode === 'Recurring' &&
+            chain?.id &&
+            !chain?.unsupported &&
+            selectedTriggerValue &&
+            TriggerValues[0].component}
+          {isConnected &&
+            sourceType === 'Autopay' &&
+            sourceTypeMode !== 'Recurring' &&
             chain?.id &&
             !chain?.unsupported &&
             selectedTriggerValue &&

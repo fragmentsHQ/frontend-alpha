@@ -1,7 +1,7 @@
 import { Chain, Provider } from '@wagmi/core';
 import { Signer } from 'ethers';
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 import { Token } from '@/config/tokens';
 
@@ -16,7 +16,6 @@ interface Data {
 interface GlobalState {
   provider: Provider | null;
   signer: Signer | null;
-  enteredRows: Data[];
   setSigner: (provider: Signer | null) => void;
   setProvider: (provider: Provider | null) => void;
   sourceChain: Chain | null;
@@ -25,7 +24,6 @@ interface GlobalState {
   setSourceToken: (token: Token | null) => void;
   sourceType: string | null;
   setSourceType: (type: string | null) => void;
-  setEnteredRows: (newrows: Data[]) => void;
   sourceTypeMode: string | null;
   setSourceTypeMode: (mode: string | null) => void;
   paymentMethod: string | null;
@@ -52,7 +50,7 @@ const useGlobalStore = create<GlobalState>()(
   devtools(
     (set) => ({
       provider: null,
-      enteredRows: rows,
+
       signer: null,
       sourceChain: null,
       sourceToken: null,
@@ -63,7 +61,6 @@ const useGlobalStore = create<GlobalState>()(
       recurringSubOption: null,
       currency: 'Ethereum',
       setCurrency: (_currency) => set(() => ({ currency: _currency })),
-      setEnteredRows: (newrows) => set(() => ({ enteredRows: newrows })),
       setOneTimeSubOption: (_mode) => set(() => ({ onetimeSubOption: _mode })),
       setRecurringSubOption: (_mode) =>
         set(() => ({ recurringSubOption: _mode })),
@@ -82,4 +79,18 @@ const useGlobalStore = create<GlobalState>()(
   )
 );
 
+export const useTableData = create<{
+  enteredRows: Data[];
+  setEnteredRows: (newrows: Data[]) => void;
+}>()(
+  persist(
+    (set) => ({
+      enteredRows: rows,
+      setEnteredRows: (newrows) => set(() => ({ enteredRows: newrows })),
+    }),
+    {
+      name: 'tabledata',
+    }
+  )
+);
 export default useGlobalStore;

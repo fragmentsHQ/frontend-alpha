@@ -66,7 +66,7 @@ const LandingMenu = () => {
             {chains.map((option, index) => (
               <Menu.Item key={index}>
                 {({ active }) => (
-                  <p
+                  <div
                     className={`${
                       active && 'bg-[#282828]'
                     } flex w-full cursor-pointer items-center space-x-2 px-4 py-2 text-white`}
@@ -86,7 +86,7 @@ const LandingMenu = () => {
                     )}
 
                     <div>{option.name}</div>
-                  </p>
+                  </div>
                 )}
               </Menu.Item>
             ))}

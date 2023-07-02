@@ -16,14 +16,22 @@ const PreviewReview = ({ onClick }: { onClick: () => void }) => {
 
         <PreviewTabMenu />
 
-        <div className=' flex justify-center'>
+        <div className=' flex justify-center space-x-3'>
           <button
             onClick={onClick}
             disabled={!paymentMethod}
             className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-opacity-50 disabled:text-opacity-20'
           >
             {' '}
-            Preview and Confirm
+            Confirm Token Allowance
+          </button>
+          <button
+            onClick={onClick}
+            disabled={!paymentMethod}
+            className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-[#464646] disabled:bg-opacity-50 disabled:text-opacity-20'
+          >
+            {' '}
+            Confirm by signing
           </button>
         </div>
       </Card>

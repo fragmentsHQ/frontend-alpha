@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
 import { useCSVReader } from 'react-papaparse';
-import useGlobalStore from 'store';
+import useGlobalStore, { useTableData } from 'store';
 
 import clsxm from '@/lib/clsxm';
 
@@ -48,7 +48,7 @@ export default function TokenTable() {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const { enteredRows, setEnteredRows } = useGlobalStore();
+  const { enteredRows, setEnteredRows } = useTableData();
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };

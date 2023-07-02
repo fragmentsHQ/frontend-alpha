@@ -6,13 +6,22 @@ export default function Header() {
   return (
     <header className='z-50'>
       <div className='flex w-full items-center justify-between px-4 py-6'>
-        <div className='text-[36.65px]  font-bold leading-[46.18px] '>
-          FRAGMENTS
-        </div>
+        <Link href='/'>
+          <div className='text-[36.65px]  font-bold leading-[46.18px] '>
+            FRAGMENTS
+          </div>
+        </Link>
 
         <div className=' flex items-center space-x-4'>
           <Link href='/jobs' title='All Jobs' className='mr-2'>
             All Jobs
+          </Link>
+          <Link
+            href='/balance'
+            title='All Jobs'
+            className='mr-2 rounded-lg border border-[#464646] bg-[#262229] px-2 py-2'
+          >
+            Balance ($4.54)
           </Link>
           <ConnectButton />
         </div>

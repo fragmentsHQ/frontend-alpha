@@ -11,7 +11,7 @@ import {
 import { BigNumber, ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils';
 import toast from 'react-hot-toast';
-import useGlobalStore from 'store';
+import useGlobalStore, { useTableData } from 'store';
 import { encodeFunctionData } from 'viem';
 
 import AutoPayAbi from '../abi/Autopay.json';
@@ -31,7 +31,8 @@ type AutomationArguments = {
 const useAutoPayContract = () => {
   const { chain } = getNetwork();
   const { address } = getAccount();
-  const { enteredRows, sourceToken } = useGlobalStore();
+  const { sourceToken } = useGlobalStore();
+  const { enteredRows } = useTableData();
   const fetchAllowance = async (chain: Chain) => {
     try {
       const allowance = await readContract({

@@ -7,9 +7,9 @@ import { TransactionStates } from '@/components/TriggerValues/Time';
 
 export default function LoadingScreen({
   isApproving,
-  isApproved,
   isTransactionSuccessFul,
   isTransactionFailed,
+  isTransactionProcessing,
   handleClose,
   hash,
 }: TransactionStates & {
@@ -21,9 +21,9 @@ export default function LoadingScreen({
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={
           isApproving ||
-          isApproved ||
           isTransactionSuccessFul ||
-          isTransactionFailed
+          isTransactionFailed ||
+          isTransactionProcessing
         }
         onClick={() => {
           if (isTransactionFailed || isTransactionSuccessFul) {
@@ -34,7 +34,7 @@ export default function LoadingScreen({
         }}
       >
         {isApproving && <Allowance />}
-        {isApproved && <TransactionPending />}
+        {isTransactionProcessing && <TransactionPending />}
         {isTransactionSuccessFul && (
           <TransactionSuccessfull
             handleClose={handleClose}
