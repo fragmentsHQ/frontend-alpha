@@ -25,6 +25,7 @@ import {
   JobCreated_OrderBy,
   OrderDirection,
 } from '../../graphql/alljobs.generated';
+import useGetGasUsed from '@/hooks/useGetGasUsed';
 
 interface Column {
   id: 'job_id' | 'owner' | 'total_fee_execution' | 'status';
@@ -203,14 +204,11 @@ export const LinkIcon = () => {
 };
 
 const JobRow = ({ row }: { row: Data }) => {
-  const [gasUsed, setGasUsed] = React.useState('-');
   const router = useRouter();
   const { chain } = useNetwork();
-  useEffect(() => {
-    fetchTransaction({
-      hash: row.transactionHash as Address,
-    }).then((s) => setGasUsed(BigNumber.from(s.gasPrice).toString()));
-  }, []);
+  const gas = useGetGasUsed({
+    hash: row.transactionHash,
+  });
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
@@ -253,10 +251,7 @@ const JobRow = ({ row }: { row: Data }) => {
             {column.id === 'total_fee_execution' && (
               <div>
                 <span className='block text-[#AFAEAE]'>
-                  Total Fee :{' '}
-                  <span className='text-white'>
-                    {parseFloat(gasUsed) / Math.pow(10, 9)} Gwei
-                  </span>
+                  Total Fee : <span className='text-white'>{gas} Gwei</span>
                 </span>
                 <span
                   className='mt-1 block
