@@ -2,16 +2,12 @@ import { Menu } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import * as React from 'react';
+import useGlobalStore from 'store';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 
 import Row from '@/components/rows/Row';
 
-import useGlobalStore from '../../../store/index';
-
-type MenuOptions = {
-  name: string;
-  value: string;
-  icon?: string;
-};
+import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
 
 export const getLogo = (name: string | undefined) => {
   switch (name) {
@@ -24,99 +20,76 @@ export const getLogo = (name: string | undefined) => {
   }
 };
 
-const LandingMenu: React.FC = () => {
-  const { sourceToken, sourceChain, setSourceChain, setSourceToken } =
-    useGlobalStore((state) => ({
-      sourceToken: state.sourceToken,
-      sourceChain: state.sourceChain,
-      setSourceChain: state.setSourceChain,
-      setSourceToken: state.setSourceToken,
-    }));
-
-  const sourceTokenOptions: MenuOptions[] = [
-    {
-      name: 'ETH',
-      value: 'ETH',
-    },
-    {
-      name: 'BTC',
-      value: 'BTC',
-    },
-  ];
-  const sourceChainOptions: MenuOptions[] = [
-    {
-      name: 'Ethereum',
-      value: 'Ehereum',
-      icon: 'https://img.icons8.com/?size=512&id=50284&format=png',
-    },
-    {
-      name: 'Bitcoin',
-      value: 'Bitcoin',
-      icon: 'https://img.icons8.com/?size=512&id=63192&format=png',
-    },
-  ];
+const LandingMenu = () => {
+  const { isConnected } = useAccount();
+  const { sourceToken, setSourceToken } = useGlobalStore();
+  const { switchNetwork } = useSwitchNetwork();
+  const { chains, chain } = useNetwork();
 
   return (
     <React.Fragment>
       <Row className='gap-[30px] ' direction='row'>
         <Menu as='div' className='relative w-full'>
           <div className='mb-1 text-[18px] font-medium text-white'>
-            Source Chian
+            Source Chain
           </div>
-          <Menu.Button className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-2 text-[18px]  '>
-            <span className='font-normal text-white'>
-              {sourceChain === null ? (
-                'Selection'
-              ) : (
-                <span className='flex items-center space-x-2'>
-                  <span className={`h-[20px] w-[20px] `}>
+          <Menu.Button
+            disabled={chain?.unsupported || !isConnected}
+            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-2 text-[18px] disabled:cursor-not-allowed  '
+          >
+            <div className='font-normal text-white'>
+              <div className='flex items-center space-x-2'>
+                {chain?.id && !chain.unsupported && (
+                  <div className='relative h-[20px] w-[20px]'>
                     <Image
-                      src={getLogo(sourceChain)}
-                      alt={getLogo(sourceChain)}
-                      width={100}
-                      height={100}
-                      // className={`${active && 'bg-[#282828]'}`}
+                      src={CHAIN_IMAGES[chain?.id].image_url}
+                      alt={chain?.name || ''}
+                      fill
+                      className='rounded-full'
                     />
-                  </span>
-                  <span>{sourceChain}</span>
-                </span>
-              )}
-            </span>
+                  </div>
+                )}
+
+                <div>
+                  {chain?.unsupported && 'Unsupported chain'}
+                  {!chain?.id && 'Connect your wallet'}
+                  {chain?.id && !chain.unsupported && chain.name}
+                </div>
+              </div>
+            </div>
             <ChevronDownIcon
               className='-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100'
               aria-hidden='true'
             />
           </Menu.Button>
           <Menu.Items className='absolute right-0 mt-2 flex w-full origin-top-right flex-col rounded-md bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-            {sourceChainOptions.map((option: MenuOptions, index: number) => (
+            {chains.map((option, index) => (
               <Menu.Item key={index}>
                 {({ active }) => (
-                  // <span className='group flex items-center space-x-2'>
-                  <a
+                  <p
                     className={`${
                       active && 'bg-[#282828]'
                     } flex w-full cursor-pointer items-center space-x-2 px-4 py-2 text-white`}
-                    onClick={() => setSourceChain(option.value)}
+                    onClick={() => {
+                      switchNetwork?.(option.id);
+                    }}
                   >
-                    {option.icon && (
-                      <span className={`h-[20px] w-[20px] `}>
+                    {option.id && (
+                      <div className={`relative h-[20px] w-[20px] `}>
                         <Image
-                          src={option.icon}
-                          alt={option.name}
-                          width={100}
-                          height={100}
-                          // className={`${active && 'bg-[#282828]'}`}
+                          src={CHAIN_IMAGES[option.id].image_url}
+                          alt={option.name || ''}
+                          fill
+                          className='rounded-full'
                         />
-                      </span>
+                      </div>
                     )}
-                    <span>{option.name}</span>
-                  </a>
-                  // </span>
+
+                    <div>{option.name}</div>
+                  </p>
                 )}
               </Menu.Item>
             ))}
-            {/* <Menu.Item>Menu Item 2</Menu.Item>
-              <Menu.Item>Menu Item 3</Menu.Item> */}
           </Menu.Items>
         </Menu>
 
@@ -125,32 +98,60 @@ const LandingMenu: React.FC = () => {
             Source Token
           </div>
 
-          <Menu.Button className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-2 text-[18px]'>
-            <span className='font-mormal text-white'>
-              {sourceToken === null ? 'Selection' : sourceToken}
-            </span>
+          <Menu.Button
+            disabled={chain?.unsupported || !isConnected}
+            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-2 text-[18px] disabled:cursor-not-allowed'
+          >
+            <div className='font-mormal text-white'>
+              {!sourceToken ? (
+                'Select your token'
+              ) : (
+                <div className='flex items-center '>
+                  <div className='relative mr-2 h-[20px] w-[20px]'>
+                    <Image
+                      src={sourceToken.image}
+                      alt={sourceToken.name || ''}
+                      fill
+                      className='rounded-full'
+                    />
+                  </div>
+                  {sourceToken.name}
+                </div>
+              )}
+            </div>
             <ChevronDownIcon
               className='-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100'
               aria-hidden='true'
             />
           </Menu.Button>
           <Menu.Items className='absolute right-0 mt-2 flex w-full origin-top-right flex-col rounded-md bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-            {sourceTokenOptions.map((option: MenuOptions, index: number) => (
-              <Menu.Item key={index}>
-                {({ active }) => (
-                  <a
-                    className={`${
-                      active && 'bg-[#282828] '
-                    } cursor-pointer px-4 py-2 text-white`}
-                    onClick={() => setSourceToken(option.value)}
-                  >
-                    {option.name}
-                  </a>
-                )}
-              </Menu.Item>
-            ))}
-            {/* <Menu.Item>Menu Item 2</Menu.Item>
-              <Menu.Item>Menu Item 3</Menu.Item> */}
+            {chain?.id &&
+              !chain.unsupported &&
+              TOKENS[chain?.id].map((option, index: number) => (
+                <Menu.Item key={index}>
+                  {({ active }) => (
+                    <p
+                      className={`${
+                        active && 'bg-[#282828]'
+                      } flex w-full cursor-pointer items-center space-x-2 px-4 py-2 text-white`}
+                      onClick={() => setSourceToken(option as Token)}
+                    >
+                      {option.image && (
+                        <div className={`relative h-[20px] w-[20px] `}>
+                          <Image
+                            src={option.image}
+                            alt={option.name || ''}
+                            fill
+                            className='rounded-full'
+                          />
+                        </div>
+                      )}
+
+                      <div>{option.name}</div>
+                    </p>
+                  )}
+                </Menu.Item>
+              ))}
           </Menu.Items>
         </Menu>
       </Row>

@@ -27,24 +27,23 @@ const CustomMenu: React.FC<MenuProps> = ({
       {({ open }) => (
         <>
           <Menu.Button className='align-left flex w-full items-center justify-between rounded-[12px] bg-[#464646] px-[20px] py-[10px] text-[16px]'>
-            <span className='font-normal text-white'>
+            <div className='font-normal text-white'>
               {currentValue === null ? (
                 'Selection'
               ) : (
-                <span className='flex items-center space-x-2'>
-                  <span className={`h-[20px] w-[20px] `}>
+                <div className='flex items-center space-x-2'>
+                  <div className={`relative h-[20px] w-[20px] `}>
                     <Image
                       src={getLogo(currentValue)}
+                      fill
                       alt={getLogo(currentValue)}
-                      width={100}
-                      height={100}
                       // className={`${active && 'bg-[#282828]'}`}
                     />
-                  </span>
-                  <span>{currentValue}</span>
-                </span>
+                  </div>
+                  <div>{currentValue}</div>
+                </div>
               )}
-            </span>
+            </div>
             <ChevronDownIcon
               className='-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100'
               aria-hidden='true'
@@ -63,7 +62,7 @@ const CustomMenu: React.FC<MenuProps> = ({
               {items?.map((option: MenuOption, index: number) => (
                 <Menu.Item key={index}>
                   {({ active }) => (
-                    // <span className='group flex items-center space-x-2'>
+                    // <div className='group flex items-center space-x-2'>
                     <a
                       className={`${
                         active && 'bg-[#282828]'
@@ -73,19 +72,18 @@ const CustomMenu: React.FC<MenuProps> = ({
                       }
                     >
                       {option.icon && (
-                        <span className={`h-[20px] w-[20px] `}>
+                        <div className={`relative h-[20px]  w-[20px] `}>
                           <Image
                             src={option.icon}
                             alt={option.name}
-                            width={100}
-                            height={100}
+                            fill
                             // className={`${active && 'bg-[#282828]'}`}
                           />
-                        </span>
+                        </div>
                       )}
-                      <span>{option.name}</span>
+                      <div>{option.name}</div>
                     </a>
-                    // </span>
+                    // </div>
                   )}
                 </Menu.Item>
               ))}

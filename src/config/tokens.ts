@@ -1,5 +1,6 @@
 import { Address } from 'viem';
 import { goerli, polygonMumbai } from 'wagmi/chains';
+
 export type Token = {
   id: string;
   symbol: string;
@@ -9,61 +10,53 @@ export type Token = {
   image: string;
 };
 
-export const tokens: Record<number, Token[]> = {
-  [polygonMumbai.id]: [
+export const CHAIN_IMAGES = {
+  [polygonMumbai.id as number]: {
+    image_url: require('../../public/logo/chains/polygonMumbai.png'),
+  },
+  [goerli.id as number]: {
+    image_url: require('../../public/logo/chains/Goerli.png'),
+  },
+};
+export const TOKENS: Record<number, Token[]> = {
+  [polygonMumbai.id as number]: [
     {
-      id: 'tether',
-      symbol: 'USA',
-      name: 'USA Coin',
-      decimals: 2,
-      address: '0x04517a727E4d503a9aCE8Ec8B17c08990e2561b9',
+      id: '0',
+      name: 'USDC',
+      symbol: 'USDC',
+      address: '0x2058A9D7613eEE744279e3856Ef0eAda5FCbaA7e',
+      decimals: 18,
+      // logo: require('../../public/logo/tokens'),
       image:
         'https://assets.coingecko.com/coins/images/325/large/Tether.png?1668148663',
     },
     {
-      id: 'usd-coin',
-      symbol: 'USF',
-      decimals: 2,
-      name: 'USF Coin',
-      address: '0x97B83cD86D699A1fC92d5c7edfbdA2f1f9768f1f',
-      image:
-        'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
-    },
-    {
-      id: 'ket-coin',
-      symbol: 'KET',
+      id: '1',
+      name: 'WETH',
+      symbol: 'WETH',
+      address: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
       decimals: 18,
-      name: 'KET Coin',
-      address: '0x4d8159C1ACDa64376cbcCc6447db27A9F6066383',
-      image:
-        'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
-    },
-    {
-      id: 'ket-1-coin',
-      symbol: 'KET-1',
-      decimals: 18,
-      name: 'KET-1 Coin',
-      address: '0xe701ea7a59c93d977d55ae399156001c2e3b4ec4',
+      // logo: require('../../public/weth.png'),
       image:
         'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
     },
   ],
-  [goerli.id]: [
+  [goerli.id as number]: [
     {
-      id: 'tether',
-      symbol: 'USDT',
-      decimals: 2,
-      name: 'Tether',
-      address: '0xC57DF9849Ca6709a421551De4578b928518E3EDc',
+      id: '0',
+      symbol: 'USDC',
+      name: 'USDC',
+      address: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+      decimals: 18,
       image:
         'https://assets.coingecko.com/coins/images/325/large/Tether.png?1668148663',
     },
     {
-      id: 'usd-coin',
-      decimals: 2,
-      symbol: 'USDC',
-      name: 'USD Coin',
-      address: '0x5E5a4309D4F3f170766Ee4635dAbB743A594D399',
+      id: '1',
+      symbol: 'WETH',
+      name: 'WETH',
+      address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
+      decimals: 18,
       image:
         'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
     },

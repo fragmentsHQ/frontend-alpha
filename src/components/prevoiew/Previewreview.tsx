@@ -1,9 +1,11 @@
 import React from 'react';
+import useGlobalStore from 'store';
 
 import Card from '@/components/cards';
 import PreviewTabMenu from '@/components/prevoiew/PreviewTab';
 
-const PreviewReview: React.FC = () => {
+const PreviewReview = ({ onClick }: { onClick: () => void }) => {
+  const { paymentMethod } = useGlobalStore();
   return (
     <div>
       <Card className='flex w-[864px] flex-col space-y-10 bg-[#282828] p-[26px] shadow-none'>
@@ -15,7 +17,11 @@ const PreviewReview: React.FC = () => {
         <PreviewTabMenu />
 
         <div className=' flex justify-center'>
-          <button className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white'>
+          <button
+            onClick={onClick}
+            disabled={!paymentMethod}
+            className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-800'
+          >
             {' '}
             Preview and Confirm
           </button>

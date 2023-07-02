@@ -36,10 +36,8 @@ const SucessFullModal: React.FC<LoadingModalProps> = ({ isOpen }) => {
                   d='M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
                 />
               </svg>
-              <span className='text-[24px] font-bold text-white'>
-                Successful
-              </span>
-              <span className='flex items-center space-x-1 rounded-md bg-[#464646] px-4 py-[3px]'>
+              <div className='text-[24px] font-bold text-white'>Successful</div>
+              <div className='flex items-center space-x-1 rounded-md bg-[#464646] px-4 py-[3px]'>
                 <a className='cursor-pointer text-[16px] text-[#AFAEAE] underline'>
                   view tx. on etherscan
                 </a>
@@ -57,7 +55,7 @@ const SucessFullModal: React.FC<LoadingModalProps> = ({ isOpen }) => {
                     d='M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25'
                   />
                 </svg>
-              </span>
+              </div>
             </div>
             <div className='flex flex-col space-y-5'>
               <button className='w-full rounded-lg bg-white py-3 text-[18px] font-semibold text-black'>
