@@ -22,6 +22,7 @@ import InitiateProvider from '@/components/InitiateProvider';
 import Seo from '@/components/Seo';
 
 const { chains, provider, webSocketProvider } = configureChains(
+  // [mainnet, polygonMumbai, goerli, gnosis, bsc, arbitrum, polygonZkEvm],
   [polygonMumbai, goerli],
   [publicProvider()]
 );
