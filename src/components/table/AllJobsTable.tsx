@@ -6,11 +6,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Address, fetchTransaction } from '@wagmi/core';
+import { BigNumber } from 'alchemy-sdk';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import * as React from 'react';
 import { ImSpinner2 } from 'react-icons/im';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
 
@@ -52,6 +55,7 @@ interface Data {
   id: string;
   job_id: { address: string; date: string };
   owner: string;
+  transactionHash: string;
   total_fee_execution: { total_fee: string; execution: string };
   status: 'ongoing' | 'completed' | 'failed';
 }
@@ -80,8 +84,6 @@ export default function AllJobsTable() {
     setPage(0);
   };
 
-  const router = useRouter();
-
   const filteredData: Data[] = React.useMemo(() => {
     if (loading || !data) {
       return [];
@@ -91,8 +93,9 @@ export default function AllJobsTable() {
         id: job.id,
         job_id: { address: job._jobId, date: job._startTime },
         owner: job._taskCreator,
-        status: 'ongoing',
-        total_fee_execution: { execution: job._amount, total_fee: job._amount },
+        status: 'completed',
+        transactionHash: job.transactionHash,
+        total_fee_execution: { execution: '', total_fee: '' },
       };
     });
     return sortedData;
@@ -102,7 +105,6 @@ export default function AllJobsTable() {
       sx={{
         width: '100%',
         overflow: 'hidden',
-        backgroundColor: '#282828',
         color: '#fff',
         fontFamily: 'Inter',
         boxShadow: 'none',
@@ -121,8 +123,8 @@ export default function AllJobsTable() {
                     maxWidth: 240,
                     overflow: 'hidden',
                     color: '#ffff',
-                    borderColor: '#393939',
-                    backgroundColor: '#464646',
+                    borderColor: '#373A40',
+                    backgroundColor: '#373A40',
                   }}
                 >
                   {column.label}
@@ -133,10 +135,15 @@ export default function AllJobsTable() {
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={12}>
+                <TableCell
+                  colSpan={12}
+                  style={{
+                    backgroundColor: '#373A40',
+                  }}
+                >
                   <div
-                    className='flex h-[300px] w-full 
-                   flex-col items-center justify-center'
+                    className='flex h-[300px] w-full flex-col items-center 
+                   justify-center text-white '
                   >
                     <ImSpinner2 className='animate-spin' size={20} />
                     <p className='mt-2'>Fetching Jobs.....</p>
@@ -147,95 +154,7 @@ export default function AllJobsTable() {
             {filteredData &&
               filteredData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  return (
-                    <TableRow hover role='checkbox' tabIndex={-1} key={index}>
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            onClick={() => {
-                              const path = '/job/' + row.id;
-                              router.push(path);
-                            }}
-                            style={{
-                              cursor: 'pointer',
-                              color: '#fff',
-                              backgroundColor: '#282828',
-                              borderColor: '#393939',
-                            }}
-                          >
-                            {column.id === 'owner' && (
-                              <div className='w-[200px] truncate'>
-                                {value as string}
-                              </div>
-                            )}
-                            {column.id === 'job_id' && (
-                              <div className=''>
-                                <span className='block w-[200px] truncate'>
-                                  {(value as Data['job_id']).address}
-                                </span>
-                                <span
-                                  className='block
-                              text-[#AFAEAE]'
-                                >
-                                  {dayjs(parseInt(value as Data['job_id']).date)
-                                    .toDate()
-                                    .toLocaleString()}
-                                </span>
-                              </div>
-                            )}
-                            {column.id === 'total_fee_execution' && (
-                              <div>
-                                <span className='block text-[#AFAEAE]'>
-                                  Total Fee :{' '}
-                                  <span className='text-white'>
-                                    {
-                                      (value as Data['total_fee_execution'])
-                                        .total_fee
-                                    }
-                                  </span>
-                                </span>
-                                <span
-                                  className='mt-1 block
-                              text-[#AFAEAE]'
-                                >
-                                  Execution :{' '}
-                                  <span className='text-white'>
-                                    {
-                                      (value as Data['total_fee_execution'])
-                                        .execution
-                                    }
-                                  </span>
-                                </span>
-                              </div>
-                            )}
-                            {column.id === 'status' && (
-                              <UnstyledLink
-                                href={'/job/' + row.id}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                }}
-                                className={clsxm(
-                                  'block flex items-center justify-end',
-                                  'capitalize',
-                                  value === 'ongoing' && 'text-[#1867FD]',
-                                  value === 'completed' && 'text-[#00C1A3]'
-                                )}
-                              >
-                                {value as string}
-
-                                <LinkIcon />
-                              </UnstyledLink>
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+                .map((row, index) => <JobRow row={row} key={index} />)}
           </TableBody>
         </Table>
       </TableContainer>
@@ -243,9 +162,9 @@ export default function AllJobsTable() {
         rowsPerPageOptions={[2, 5]}
         component='div'
         style={{
-          backgroundColor: '#282828',
+          color: '#fff',
+          backgroundColor: '#262626',
         }}
-        className='text-white'
         count={data?.jobCreateds.length || 30}
         rowsPerPage={rowsPerPage}
         page={page}
@@ -280,5 +199,101 @@ export const LinkIcon = () => {
         stroke-linejoin='round'
       />
     </svg>
+  );
+};
+
+const JobRow = ({ row }: { row: Data }) => {
+  const [gasUsed, setGasUsed] = React.useState('-');
+  const router = useRouter();
+  const { chain } = useNetwork();
+  useEffect(() => {
+    fetchTransaction({
+      hash: row.transactionHash as Address,
+    }).then((s) => setGasUsed(BigNumber.from(s.gasPrice).toString()));
+  }, []);
+
+  return (
+    <TableRow hover role='checkbox' tabIndex={-1}>
+      {columns.map((column) => {
+        const value = row[column.id];
+        return (
+          <TableCell
+            key={column.id}
+            align={column.align}
+            onClick={() => {
+              const path = '/job/' + row.id;
+              router.push(path);
+            }}
+            style={{
+              cursor: 'pointer',
+              color: '#fff',
+              backgroundColor: '#262229',
+              borderColor: '#262229',
+            }}
+          >
+            {column.id === 'owner' && (
+              <div className='w-[200px] truncate'>{value as string}</div>
+            )}
+            {column.id === 'job_id' && (
+              <div className=''>
+                <span className='block w-[200px] truncate'>
+                  {(value as Data['job_id']).address}
+                </span>
+                <span
+                  className='block
+                text-[#AFAEAE]'
+                >
+                  {dayjs
+                    .unix(parseInt((value as Data['job_id']).date))
+                    .toDate()
+                    .toLocaleString()}
+                </span>
+              </div>
+            )}
+            {column.id === 'total_fee_execution' && (
+              <div>
+                <span className='block text-[#AFAEAE]'>
+                  Total Fee :{' '}
+                  <span className='text-white'>
+                    {parseFloat(gasUsed) / Math.pow(10, 9)} Gwei
+                  </span>
+                </span>
+                <span
+                  className='mt-1 block
+                text-[#AFAEAE]'
+                >
+                  Execution :{' '}
+                  <span className='text-white'>
+                    {(value as Data['total_fee_execution']).execution}
+                  </span>
+                </span>
+              </div>
+            )}
+            {column.id === 'status' && (
+              <UnstyledLink
+                href={
+                  chain?.blockExplorers?.default.url +
+                  '/tx/' +
+                  row.transactionHash
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                className={clsxm(
+                  'block flex items-center justify-end',
+                  'capitalize',
+                  value === 'ongoing' && 'text-[#1867FD]',
+                  value === 'completed' && 'text-[#00C1A3]'
+                )}
+              >
+                {value as string}
+
+                <LinkIcon />
+              </UnstyledLink>
+            )}
+          </TableCell>
+        );
+      })}
+    </TableRow>
   );
 };

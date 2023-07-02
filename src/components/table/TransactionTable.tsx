@@ -90,7 +90,7 @@ export default function TransactionTable() {
       sx={{
         width: '100%',
         overflow: 'hidden',
-        backgroundColor: '#282828',
+        backgroundColor: '#373A40',
         color: '#fff',
         fontFamily: 'Inter',
         boxShadow: 'none',
@@ -107,8 +107,8 @@ export default function TransactionTable() {
                   style={{
                     minWidth: column.minWidth,
                     color: '#ffff',
-                    borderColor: '#393939',
-                    backgroundColor: '#464646',
+                    borderColor: '#373A40',
+                    backgroundColor: '#373A40',
                   }}
                 >
                   {column.label}
@@ -135,8 +135,8 @@ export default function TransactionTable() {
                           style={{
                             cursor: 'pointer',
                             color: '#fff',
-                            backgroundColor: '#282828',
-                            borderColor: '#393939',
+                            backgroundColor: '#262229',
+                            borderColor: '#262229',
                           }}
                         >
                           {column.id === 'transaction_hash' && (
@@ -228,7 +228,8 @@ export default function TransactionTable() {
         rowsPerPageOptions={[2, 5, 10]}
         component='div'
         style={{
-          backgroundColor: '#282828',
+          color: '#fff',
+          backgroundColor: '#262626',
         }}
         className='text-white'
         count={rows.length}

@@ -45,6 +45,7 @@ export default function DatePicker({
         <DateTimePicker
           label=''
           disablePast
+          className='w-full'
           value={value}
           onChange={(date) => {
             if (date) {
