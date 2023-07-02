@@ -24,6 +24,7 @@ function useAutoConnect() {
       });
     }
     handleConnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, chains, address]);
 }
 

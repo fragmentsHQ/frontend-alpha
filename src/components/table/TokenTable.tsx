@@ -61,10 +61,10 @@ export default function TokenTable() {
     setPage(0);
   };
 
-
   return (
     <div>
       <CSVReader
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onUploadAccepted={(results: any) => {
           setEnteredRows(
             results.data
@@ -81,6 +81,7 @@ export default function TokenTable() {
           );
         }}
       >
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {({ getRootProps, acceptedFile }: any) => (
           <>
             <div className='mb-4 flex w-full items-center justify-end gap-4'>

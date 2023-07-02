@@ -112,7 +112,23 @@ const Time = () => {
             }}
           />
         </div>
-        {sourceTypeMode === 'Recurring' && <div>Recurring</div>}
+        {sourceTypeMode === 'Recurring' && (
+          <div>
+            <input
+              title='No of cycles'
+              onChange={(e) => {
+                setNoOfCycles(parseInt(e.target.value));
+              }}
+            />
+            <input
+              title='No of intervals'
+              onChange={() => {
+                setNoOfInterval('days');
+                setIntervalType('days');
+              }}
+            />
+          </div>
+        )}
       </div>
       {!isError && startTime && <TokenTable />}
       <div className='h-[50px]' />

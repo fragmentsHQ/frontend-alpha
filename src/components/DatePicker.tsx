@@ -35,6 +35,7 @@ export default function DatePicker({
     } else {
       onChange(dayjs(value).unix());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (

@@ -31,13 +31,6 @@ const autoplayItems = [
   },
 ];
 
-const oneTimeItems = [
-  { name: 'Time', value: 'Time' },
-  { name: 'Token Pair Price', value: 'Token Pair Price' },
-  { name: 'Gas Price Estimate', value: 'Gas Price Estimate' },
-  { name: 'ABI Functions', value: 'ABI Functions' },
-];
-
 const Landing: React.FC = () => {
   const { isConnected } = useAccount();
   const { chain } = useNetwork();
@@ -51,10 +44,6 @@ const Landing: React.FC = () => {
     sourceType,
     sourceTypeMode,
     setSourceTypeMode,
-    onetimeSubOption,
-    setOnetimeSubOption,
-    recurringSubOption,
-    setRecurringSubOption,
   } = useGlobalStore((state) => ({
     sourceToken: state.sourceToken,
     sourceChain: state.sourceChain,

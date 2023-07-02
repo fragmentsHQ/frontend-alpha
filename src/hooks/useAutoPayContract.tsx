@@ -116,7 +116,7 @@ const useAutoPayContract = () => {
               : '0'
           ),
         ],
-        [...enteredRows.map((e) => sourceToken?.address)],
+        [...enteredRows.map(() => sourceToken?.address)],
         [...enteredRows.map((e) => e.destination_token)],
         [...enteredRows.map((e) => e.destination_chain)],
         [
@@ -189,7 +189,7 @@ const useAutoPayContract = () => {
       if (!chain) {
         throw new Error('Chain not found ');
       }
-      const allowance = await fetchAllowance(chain);
+      // const allowance = await fetchAllowance(chain);
       // write to check if proper allowance is provider
       // console.log(
       //   BigNumber.from(allowance ? allowance : 0).eq(
