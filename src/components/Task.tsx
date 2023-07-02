@@ -1,18 +1,14 @@
 import { Tab } from '@headlessui/react';
 import { ArrowRightIcon, ArrowUpRightIcon } from '@heroicons/react/20/solid';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useNetwork } from 'wagmi';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
 
-import {
-  AUTOPAY_CONTRACT,
-  AUTOPAY_CONTRACT_ADDRESSES,
-  CONDITIONAL_CONTRACT,
-} from '@/config/contracts';
+import { AUTOPAY_CONTRACT_ADDRESSES } from '@/config/contracts';
 import { useGetAllJobsQuery } from '@/graphql/alljobs.generated';
 import { GoBackLink } from '@/pages/jobs';
 
@@ -33,96 +29,96 @@ const Task = ({ jobId }: { jobId: string }) => {
   const { chain } = useNetwork();
   const [selectedTableCategory, setSelectedTableCategory] =
     useState('Executions');
-  const [dataRows, setDataRows] = useState([
-    {
-      id: '0',
-      sourceTxnHash: {
-        hash: '0xf8c929db...04f21d9b',
-        date: 'May 27, 2023, 24:12',
-      },
-      sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
-      destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
-      status: 'success',
-    },
-  ]);
+  // const [dataRows, setDataRows] = useState([
+  //   {
+  //     id: '0',
+  //     sourceTxnHash: {
+  //       hash: '0xf8c929db...04f21d9b',
+  //       date: 'May 27, 2023, 24:12',
+  //     },
+  //     sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
+  //     destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
+  //     status: 'success',
+  //   },
+  // ]);
 
-  const fetchPrevTransactions = async () => {
-    try {
-      if (!chain) return;
-      const conditionalContract = CONDITIONAL_CONTRACT(chain);
-      const autoPaycontract = AUTOPAY_CONTRACT(chain);
+  // const fetchPrevTransactions = async () => {
+  //   try {
+  //     if (!chain) return;
+  //     const conditionalContract = CONDITIONAL_CONTRACT(chain);
+  //     const autoPaycontract = AUTOPAY_CONTRACT(chain);
 
-      let filter = conditionalContract.filters.JobCreated(
-        null,
-        address,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      );
+  //     let filter = conditionalContract.filters.JobCreated(
+  //       null,
+  //       address,
+  //       null,
+  //       null,
+  //       null,
+  //       null,
+  //       null,
+  //       null
+  //     );
 
-      let events = await conditionalContract.queryFilter(filter);
+  //     let events = await conditionalContract.queryFilter(filter);
 
-      let data = events.map((event) => {
-        // const { token, amount } = event.args;
+  //     let data = events.map((event) => {
+  //       // const { token, amount } = event.args;
 
-        return {
-          id: event.args?.taskId.toString(),
-          sourceTxnHash: {
-            hash: event.transactionHash,
-            date: 'May 27, 2023, 24:12',
-          },
-          sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
-          destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
-          status: 'success',
-        };
-      });
+  //       return {
+  //         id: event.args?.taskId.toString(),
+  //         sourceTxnHash: {
+  //           hash: event.transactionHash,
+  //           date: 'May 27, 2023, 24:12',
+  //         },
+  //         sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
+  //         destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
+  //         status: 'success',
+  //       };
+  //     });
 
-      setDataRows(data);
+  //     setDataRows(data);
 
-      filter = autoPaycontract.filters.JobCreated(
-        null,
-        address,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      );
+  //     filter = autoPaycontract.filters.JobCreated(
+  //       null,
+  //       address,
+  //       null,
+  //       null,
+  //       null,
+  //       null,
+  //       null,
+  //       null
+  //     );
 
-      events = await conditionalContract.queryFilter(filter);
+  //     events = await conditionalContract.queryFilter(filter);
 
-      console.log('*** DEBUG', events);
+  //     console.log('*** DEBUG', events);
 
-      data = events.map((event) => {
-        // const { token, amount } = event.args;
+  //     data = events.map((event) => {
+  //       // const { token, amount } = event.args;
 
-        return {
-          id: event.args?.taskId.toString(),
-          sourceTxnHash: {
-            hash: event.transactionHash,
-            date: 'May 27, 2023, 24:12',
-          },
-          sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
-          destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
-          status: 'success',
-        };
-      });
+  //       return {
+  //         id: event.args?.taskId.toString(),
+  //         sourceTxnHash: {
+  //           hash: event.transactionHash,
+  //           date: 'May 27, 2023, 24:12',
+  //         },
+  //         sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
+  //         destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
+  //         status: 'success',
+  //       };
+  //     });
 
-      setDataRows([...dataRows, data]);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  //     setDataRows([...dataRows, data]);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (address) {
-      fetchPrevTransactions();
-    }
-  }, [address]);
+  `  // useEffect(() => {
+  //   if (address) {
+  //     fetchPrevTransactions();
+  //   }
+  // }, [address]);`;
 
   if (loading) {
     return (
