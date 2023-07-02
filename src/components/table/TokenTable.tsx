@@ -13,7 +13,6 @@ import useGlobalStore from 'store';
 
 import clsxm from '@/lib/clsxm';
 
-import Button from '@/components/buttons/Button';
 import ChainMenu, { TokenMenu } from '@/components/menu/ChainMenu';
 
 interface Column {
@@ -62,7 +61,7 @@ export default function TokenTable() {
   };
 
   return (
-    <div>
+    <div className='mt-4 rounded-[10px] bg-[#272E3C] px-4 py-6'>
       <CSVReader
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onUploadAccepted={(results: any) => {
@@ -101,15 +100,15 @@ export default function TokenTable() {
                     );
                 })()}
               </div>
-              <Button
+              <button
                 type='button'
                 {...getRootProps()}
-                className='flex w-fit items-center justify-center rounded-md  bg-[#464646] p-2 font-normal'
+                className='flex w-fit items-center justify-center rounded-md border border-[#464646] bg-[#262229] p-2 font-normal'
                 size='sm'
               >
                 <div>.csv upload</div>
-                <ArrowUpCircleIcon width='1.2rem' />
-              </Button>
+                <ArrowUpCircleIcon width='1rem' />
+              </button>
               {/* <button {...getRemoveFileProps()} style={styles.remove}>
                 Remove
               </button> */}
@@ -121,7 +120,7 @@ export default function TokenTable() {
         sx={{
           width: '100%',
           overflow: 'hidden',
-          backgroundColor: '#282828',
+          backgroundColor: '#262229',
           color: '#fff',
           boxShadow: 'none',
         }}
@@ -137,8 +136,8 @@ export default function TokenTable() {
                     style={{
                       minWidth: column.minWidth,
                       color: '#ffff',
-                      borderColor: '#393939',
-                      backgroundColor: '#464646',
+                      borderColor: '#373A40',
+                      backgroundColor: '#373A40',
                     }}
                   >
                     {column.label}
@@ -160,8 +159,8 @@ export default function TokenTable() {
                             align={column.align}
                             style={{
                               color: '#fff',
-                              backgroundColor: '#282828',
-                              borderColor: '#393939',
+                              backgroundColor: '#262229',
+                              borderColor: '#262229',
                             }}
                           >
                             {column.id === 'destination_chain' && (
@@ -248,7 +247,7 @@ export default function TokenTable() {
           rowsPerPageOptions={[2, 5, 10]}
           component='div'
           style={{
-            backgroundColor: '#282828',
+            backgroundColor: '#262626',
           }}
           className='text-white'
           count={enteredRows.length}

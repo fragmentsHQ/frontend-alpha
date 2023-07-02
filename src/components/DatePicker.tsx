@@ -19,6 +19,7 @@ export default function DatePicker({
   );
 
   const handleChange = (newValue: dayjs.Dayjs) => {
+    setError(false);
     const d = dayjs(newValue).unix();
     if (isError) {
       toast.error('Invalid date');
@@ -39,7 +40,7 @@ export default function DatePicker({
   }, [value]);
 
   return (
-    <div className='flex items-center justify-start'>
+    <div className='flex items-center justify-start border-none bg-[#262229]'>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateTimePicker
           label=''

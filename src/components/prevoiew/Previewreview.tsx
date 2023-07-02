@@ -8,7 +8,7 @@ const PreviewReview = ({ onClick }: { onClick: () => void }) => {
   const { paymentMethod } = useGlobalStore();
   return (
     <div>
-      <Card className='flex w-[864px] flex-col space-y-10 bg-[#282828] p-[26px] shadow-none'>
+      <Card className='flex w-[864px] flex-col space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
         <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
           Choose how the task should be paid for. The cost of each execution
           equals the network fee.
@@ -20,7 +20,7 @@ const PreviewReview = ({ onClick }: { onClick: () => void }) => {
           <button
             onClick={onClick}
             disabled={!paymentMethod}
-            className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-800'
+            className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-opacity-50 disabled:text-opacity-20'
           >
             {' '}
             Preview and Confirm

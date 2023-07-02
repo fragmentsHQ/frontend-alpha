@@ -6,6 +6,7 @@ import { useNetwork } from 'wagmi';
 import useAutoPayContract from '@/hooks/useAutoPayContract';
 
 import DatePicker from '@/components/DatePicker';
+import FrequencyDialog from '@/components/FrequencyDialog';
 import LoadingScreen from '@/components/loaders';
 import PreviewReview from '@/components/prevoiew/Previewreview';
 import TokenTable from '@/components/table/TokenTable';
@@ -15,6 +16,7 @@ export type TransactionStates = {
   isApproved: boolean;
   isTransactionSuccessFul: boolean;
   isTransactionFailed: boolean;
+  hash?: string;
 };
 
 const transactionInitialState: TransactionStates = {
@@ -22,11 +24,13 @@ const transactionInitialState: TransactionStates = {
   isApproved: false,
   isTransactionSuccessFul: false,
   isTransactionFailed: false,
+  hash: '',
 };
 const Time = () => {
   const [transactionstate, setTransactionState] = useState<TransactionStates>(
     transactionInitialState
   );
+  const [isDialogOpen, setDialogOpen] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [noOfCycles, setNoOfCycles] = useState(0);
   const [noOfInterval, setNoOfInterval] = useState('1');
@@ -83,6 +87,7 @@ const Time = () => {
       setTransactionState({
         ...transactionInitialState,
         isTransactionSuccessFul: true,
+        hash: res.hash,
       });
     } catch (error) {
       toast.error('Something went wrong');
@@ -94,15 +99,15 @@ const Time = () => {
   };
 
   return (
-    <div className='w-full'>
+    <div className='mt-6 w-full'>
       <LoadingScreen
         {...transactionstate}
         handleClose={() => {
           setTransactionState(transactionInitialState);
         }}
       />
-      <div className='flex  w-full items-center rounded-[16px] bg-[#272E3C] p-4'>
-        <div>
+      <div className='flex  w-full items-end justify-between space-x-4 rounded-[10px] bg-[#272E3C] px-4 py-3'>
+        <div className='w-[30%]'>
           <p className='mb-2'>Start Time</p>
           <DatePicker
             isError={isError}
@@ -113,20 +118,27 @@ const Time = () => {
           />
         </div>
         {sourceTypeMode === 'Recurring' && (
-          <div>
+          <div className='flex w-[70%] items-end justify-between space-x-4'>
             <input
               title='No of cycles'
+              placeholder='Enter no of cycles'
+              className='w-full rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
               onChange={(e) => {
                 setNoOfCycles(parseInt(e.target.value));
               }}
             />
-            <input
-              title='No of intervals'
-              onChange={() => {
-                setNoOfInterval('days');
-                setIntervalType('days');
-              }}
-            />
+            <div className='w-full'>
+              <p className='mb-2'>Select Frequency</p>
+
+              <FrequencyDialog
+                setOpen={setDialogOpen}
+                open={isDialogOpen}
+                intervalType={intervalType}
+                setIntervalType={setIntervalType}
+                noOfInterval={noOfInterval}
+                setNoOfInterval={setNoOfInterval}
+              />
+            </div>
           </div>
         )}
       </div>

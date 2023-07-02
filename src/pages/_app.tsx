@@ -1,3 +1,4 @@
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import {
   connectorsForWallets,
   darkTheme,
@@ -56,30 +57,36 @@ const wagmiClient = createClient({
 });
 
 const queryClient = new QueryClient();
+const apolloClient = new ApolloClient({
+  uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+  cache: new InMemoryCache(),
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          theme={darkTheme({
-            accentColor: '#fff',
-            accentColorForeground: 'black',
-            borderRadius: 'large',
-            fontStack: 'system',
-            overlayBlur: 'small',
-          })}
-          modalSize='compact'
-          showRecentTransactions
-          appInfo={demoAppInfo}
-          chains={chains}
-        >
-          <Seo />
-          <InitiateProvider />
-          <Component {...pageProps} />
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </QueryClientProvider>
+    <ApolloProvider client={apolloClient}>
+      <QueryClientProvider client={queryClient}>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider
+            theme={darkTheme({
+              accentColor: '#fff',
+              accentColorForeground: 'black',
+              borderRadius: 'large',
+              fontStack: 'system',
+              overlayBlur: 'small',
+            })}
+            modalSize='compact'
+            showRecentTransactions
+            appInfo={demoAppInfo}
+            chains={chains}
+          >
+            <Seo />
+            <InitiateProvider />
+            <Component {...pageProps} />
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </QueryClientProvider>
+    </ApolloProvider>
   );
 }
 

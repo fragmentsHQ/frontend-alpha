@@ -5,7 +5,6 @@ import { useAccount, useNetwork } from 'wagmi';
 import Card from '@/components/cards';
 import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';
-import ErrorModal from '@/components/loading/Failed';
 import Row from '@/components/rows/Row';
 
 import { TriggerValues } from '@/pages';
@@ -39,7 +38,6 @@ const Landing: React.FC = () => {
   );
   const {
     sourceToken,
-    sourceChain,
     setSourceType,
     sourceType,
     sourceTypeMode,
@@ -59,19 +57,12 @@ const Landing: React.FC = () => {
 
   return (
     <React.Fragment>
-      <ErrorModal isOpen={false} />
       <Row className=' ' isCentered={true}>
-        <div
-          className={`relative flex ${
-            (!sourceToken || !sourceChain) && 'min-h-[90vh]'
-          }  flex-col ${
-            sourceChain && sourceToken ? 'pt-20' : 'items-center justify-center'
-          }  space-y-4`}
-        >
-          <p className='flex w-[864px] justify-start text-[24px] font-bold leading-[29.05px] text-white '>
+        <div className=''>
+          <p className='mb-6 mt-20 text-center text-[24px] font-bold leading-[29.05px] text-white '>
             The Fragments way of automating smart contracts{' '}
           </p>
-          <Card className='w-[864px] bg-[#282828] p-[26px] shadow-none'>
+          <Card className='w-[864px] bg-[#272E3C] p-[26px] shadow-none'>
             <Menu />
             <div className='mt-4'>
               {isConnected &&
@@ -91,8 +82,8 @@ const Landing: React.FC = () => {
           chain?.id &&
           !chain?.unsupported &&
           sourceToken?.name ? (
-            <div className='flex w-[864px] justify-start'>
-              <Card className='w-[300px] bg-[#282828] p-[20px] shadow-none'>
+            <div className='flex w-[864px] justify-center'>
+              <Card className='mt-6 w-[300px] bg-[#373A40] shadow-none'>
                 <TabsMenu
                   options={autoplayItems}
                   onChange={setSourceTypeMode}
@@ -112,7 +103,7 @@ const Landing: React.FC = () => {
               !chain?.unsupported &&
               chain?.id &&
               sourceToken && (
-                <Card className='flex w-[864px] space-x-3 bg-[#282828] p-[26px] shadow-none'>
+                <Card className='mt-6 flex w-[864px] space-x-3 bg-[#373A40] p-[10px] shadow-none'>
                   {TriggerValues.map((value, index) => {
                     return (
                       <div key={index} className='flex w-full  space-x-3 '>

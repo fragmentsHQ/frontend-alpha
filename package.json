@@ -19,6 +19,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.16",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^1.7.15",
@@ -30,6 +31,7 @@
     "alchemy-sdk": "^2.8.3",
     "clsx": "^1.2.1",
     "dayjs": "^1.11.9",
+    "graphql": "^16.7.1",
     "next": "^13.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -46,6 +48,10 @@
   "devDependencies": {
     "@commitlint/cli": "^16.3.0",
     "@commitlint/config-conventional": "^16.2.4",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.1",
+    "@graphql-codegen/near-operation-file-preset": "^2.5.0",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/forms": "^0.5.3",
     "@testing-library/jest-dom": "^5.16.5",
