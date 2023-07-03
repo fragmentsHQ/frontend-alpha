@@ -132,7 +132,7 @@ const TokenPairPrice = () => {
                   title='Enter amount'
                   placeholder='Enter amount'
                   type='number'
-                  className='max-w-[100px] border-none bg-transparent focus:outline-none focus:ring-0'
+                  className='max-w-[120px] border-none bg-transparent focus:outline-none focus:ring-0'
                   onChange={(e) => {
                     if (tokenA) {
                       setTokenA({
@@ -158,7 +158,7 @@ const TokenPairPrice = () => {
                   title='Select Token B'
                   placeholder='Enter amount'
                   type='number'
-                  className='max-w-[100px] border-none bg-transparent focus:outline-none focus:ring-0'
+                  className='max-w-[120px] border-none bg-transparent focus:outline-none focus:ring-0'
                   onChange={(e) => {
                     if (tokenB) {
                       setTokenB({
