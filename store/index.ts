@@ -1,5 +1,6 @@
 import { Chain, Provider } from '@wagmi/core';
 import { Signer } from 'ethers';
+import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
@@ -35,10 +36,16 @@ interface GlobalState {
   currency: string | null;
   setCurrency: (currency: string | null) => void;
 }
-
-const rows: Data[] = [
+export const generateId = () => {
+  return uuidv4({
+    random: {
+      length: 4,
+    },
+  });
+};
+export const rows: Data[] = [
   {
-    id: '1',
+    id: uuidv4(),
     to_address: '',
     destination_token: '',
     amount_of_source_token: '',

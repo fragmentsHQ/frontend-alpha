@@ -9,7 +9,10 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
 import { useCSVReader } from 'react-papaparse';
-import useGlobalStore, { useTableData } from 'store';
+import { useTableData } from 'store';
+import { v4 } from 'uuid';
+
+const TEST_ADD = '0xd67D11499679CBcd33c0c2a7B792FC3d6aE628e9';
 
 import clsxm from '@/lib/clsxm';
 
@@ -45,6 +48,7 @@ const columns: readonly Column[] = [
 
 export default function TokenTable() {
   const { CSVReader } = useCSVReader();
+  const [invalidFormat, setInvalidFormat] = React.useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -65,41 +69,65 @@ export default function TokenTable() {
       <CSVReader
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onUploadAccepted={(results: any) => {
-          setEnteredRows(
-            results.data
+          try {
+            setInvalidFormat(false);
+            const csvdata = results.data
               .slice(1)
-              .map((elem: number[] | string[], idx: number) => {
+              .map((elem: number[] | string[]) => {
+                if (
+                  (elem[1] as string).length !== TEST_ADD.length &&
+                  !(elem[1] as string).startsWith('0x')
+                ) {
+                  throw new Error('Invalid token address');
+                }
+                if (
+                  (elem[2] as string).length !== TEST_ADD.length &&
+                  !(elem[1] as string).startsWith('0x')
+                ) {
+                  throw new Error('Invalid token address');
+                }
+
                 return {
-                  id: String(idx),
+                  id: v4(),
                   to_address: elem[2],
                   destination_chain: parseInt(elem[0] as string),
                   destination_token: elem[1],
                   amount_of_source_token: elem[3],
                 };
-              })
-          );
+              });
+
+            setEnteredRows(csvdata);
+          } catch (error) {
+            setInvalidFormat(true);
+            setEnteredRows(enteredRows);
+          }
         }}
       >
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {({ getRootProps, acceptedFile }: any) => (
           <>
             <div className='mb-4 flex w-full items-center justify-end gap-4'>
-              <div className='flex items-center gap-2 text-[#00FFA9]'>
-                {(() => {
-                  if (acceptedFile)
-                    return (
-                      <>
-                        <CheckIcon width='1.2rem' color='#00FFA9' />
-                        {acceptedFile?.name?.length > 10
-                          ? acceptedFile.name
-                              .slice(0, 10)
-                              .concat('....')
-                              .concat(acceptedFile.name.slice(-7))
-                          : acceptedFile.name}
-                      </>
-                    );
-                })()}
-              </div>
+              {invalidFormat ? (
+                <p className='text-red-400'>Invalid csv format</p>
+              ) : (
+                <div className='flex items-center gap-2 text-[#00FFA9]'>
+                  {(() => {
+                    if (acceptedFile)
+                      return (
+                        <>
+                          <CheckIcon width='1.2rem' color='#00FFA9' />
+                          {acceptedFile?.name?.length > 10
+                            ? acceptedFile.name
+                                .slice(0, 10)
+                                .concat('....')
+                                .concat(acceptedFile.name.slice(-7))
+                            : acceptedFile.name}
+                        </>
+                      );
+                  })()}
+                </div>
+              )}
+
               <button
                 type='button'
                 {...getRootProps()}
@@ -109,9 +137,6 @@ export default function TokenTable() {
                 <div>.csv upload</div>
                 <ArrowUpCircleIcon width='1rem' />
               </button>
-              {/* <button {...getRemoveFileProps()} style={styles.remove}>
-                Remove
-              </button> */}
             </div>
           </>
         )}
@@ -143,6 +168,14 @@ export default function TokenTable() {
                     {column.label}
                   </TableCell>
                 ))}
+                <TableCell
+                  padding='checkbox'
+                  style={{
+                    color: '#ffff',
+                    borderColor: '#373A40',
+                    backgroundColor: '#373A40',
+                  }}
+                ></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -237,6 +270,74 @@ export default function TokenTable() {
                           </TableCell>
                         );
                       })}
+                      <TableCell
+                        padding='checkbox'
+                        style={{
+                          color: '#fff',
+                          backgroundColor: '#262229',
+                          borderColor: '#262229',
+                        }}
+                      >
+                        <div className='flex h-full w-full items-center justify-end space-x-3 pr-4'>
+                          {enteredRows[enteredRows.length - 1].id ===
+                            row.id && (
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              fill='none'
+                              role='button'
+                              viewBox='0 0 24 24'
+                              onClick={() => {
+                                setEnteredRows([
+                                  ...enteredRows,
+                                  {
+                                    id: v4(),
+                                    amount_of_source_token: '',
+                                    destination_chain: 0,
+                                    destination_token: '',
+                                    to_address: '',
+                                  },
+                                ]);
+                              }}
+                              strokeWidth={1.5}
+                              stroke='currentColor'
+                              className='h-[24px] w-[24px]'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                d='M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
+                              />
+                            </svg>
+                          )}
+
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            role='button'
+                            strokeWidth={1.5}
+                            stroke='currentColor'
+                            className='h-6 w-6'
+                            onClick={() => {
+                              try {
+                                if (enteredRows.length === 1) return;
+                                const fil = enteredRows.filter(
+                                  (d) => d.id !== row.id
+                                );
+                                setEnteredRows(fil);
+                              } catch (error) {
+                                console.error(error);
+                              }
+                            }}
+                          >
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0'
+                            />
+                          </svg>
+                        </div>
+                      </TableCell>
                     </TableRow>
                   );
                 })}

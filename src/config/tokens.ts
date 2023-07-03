@@ -41,23 +41,14 @@ export const TOKENS: Record<number, Token[]> = {
         'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
     },
     {
-      id: '1',
-      name: 'WETH',
-      symbol: 'WETH',
-      address: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
-      decimals: 18,
-      // logo: require('../../public/weth.png'),
-      image:
-        'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
-    },
-    {
       id: '4',
       name: 'UNI',
       symbol: 'UNI',
       address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
       decimals: 18,
       // logo: require('../../public/weth.png'),
-      image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png',
+      image:
+        'https://assets.coingecko.com/coins/images/12504/small/uni.jpg?1687143398',
     },
   ],
   [goerli.id as number]: [
