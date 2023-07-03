@@ -6,16 +6,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Address, fetchTransaction } from '@wagmi/core';
-import { BigNumber } from 'alchemy-sdk';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import * as React from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useNetwork } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
+import useGetGasUsed from '@/hooks/useGetGasUsed';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 
@@ -25,7 +23,6 @@ import {
   JobCreated_OrderBy,
   OrderDirection,
 } from '../../graphql/alljobs.generated';
-import useGetGasUsed from '@/hooks/useGetGasUsed';
 
 interface Column {
   id: 'job_id' | 'owner' | 'total_fee_execution' | 'status';
