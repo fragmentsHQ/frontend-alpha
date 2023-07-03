@@ -7,6 +7,7 @@ import useGlobalStore, { useTableData } from 'store';
 import { Chain, useNetwork } from 'wagmi';
 
 import useAutoPayContract from '@/hooks/useAutoPayContract';
+import useGasPriceEstimate from '@/hooks/useGasPriceEstimate';
 
 import Card from '@/components/cards';
 import LoadingScreen from '@/components/loaders';
@@ -37,7 +38,7 @@ const GasPrice = () => {
   const [isApproved, setApproved] = useState(false);
   const { paymentMethod } = useGlobalStore();
   const [selectedChain, setSelectedChain] = useState<Chain | null>(null);
-  const [gas, setGas] = useState<number | null>(null);
+  const [gas, setGas] = useState<string | null>(null);
   const { sourceToken } = useGlobalStore();
   const { enteredRows } = useTableData();
   const isValid = enteredRows.every(
@@ -49,29 +50,28 @@ const GasPrice = () => {
       item.to_address
   );
   const { fetchAllowance, handleApprove } = useAutoPayContract();
+  const { handleConditionalExecution } = useGasPriceEstimate();
   const { chain, chains } = useNetwork();
   const confirmTransaction = async () => {
     try {
-      if (!chain || !gas) return;
+      if (!chain || !gas || !selectedChain) return;
       setTransactionState({
         ...transactionstate,
         isTransactionProcessing: true,
       });
-      // const res = await handleTimeExecution({
-      //   start_time: gas,
-      //   cycles: noOfCycles,
-      //   interval_count: noOfInterval,
-      //   interval_type: intervalType,
-      // });
+      const res = await handleConditionalExecution({
+        gas: gas,
+        _chain: selectedChain,
+      });
 
-      // if (!res?.hash) {
-      //   throw new Error('Something went wrton');
-      // }
-      // setTransactionState({
-      //   ...transactionInitialState,
-      //   isTransactionSuccessFul: true,
-      //   hash: res.hash,
-      // });
+      if (!res?.hash) {
+        throw new Error('Something went wrton');
+      }
+      setTransactionState({
+        ...transactionInitialState,
+        isTransactionSuccessFul: true,
+        hash: res.hash,
+      });
     } catch (error) {
       toast.error('Something went wrong');
       setTransactionState({
@@ -108,9 +108,10 @@ const GasPrice = () => {
               <input
                 title='Enter gas'
                 placeholder='Enter gas'
-                className='w-full  bg-transparent px-4 py-4 focus:outline-none'
+                type='number'
+                className='w-full  border-none bg-transparent px-4 py-4 focus:border-none focus:outline-none focus:ring-0'
                 onChange={(e) => {
-                  setGas(parseInt(e.target.value));
+                  setGas(e.target.value);
                 }}
               />
               <div className='mr-2 rounded-md bg-gray-900 px-2 py-2'>Gwei</div>
@@ -174,9 +175,9 @@ const GasPrice = () => {
           </div>
         </div>
       </div>
-      {gas && selectedChain && <TokenTable />}
+      {gas && gas !== '0' && selectedChain && <TokenTable />}
       <div className='h-[50px]' />
-      {gas && selectedChain && isValid && (
+      {gas && gas !== '0' && selectedChain && isValid && (
         <Card className='flex w-[864px] flex-col space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
           <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
             Choose how the task should be paid for. The cost of each execution

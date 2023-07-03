@@ -232,6 +232,32 @@ const Task = ({ jobId }: { jobId: string }) => {
             <ArrowUpRightIcon className='w-5' />
           </div>
         </div>
+        <div className='flex items-center gap-7'>
+          <span className='text-lg font-semibold text-[#AFAEAE]'>
+            Automation Type
+          </span>
+          <div className='flex'>Autopay</div>
+        </div>
+        <div className='flex items-center gap-7'>
+          <span className='text-lg font-semibold text-[#AFAEAE]'>Trigger</span>
+          <div className='flex'>Time</div>
+        </div>
+        <div className='flex items-center gap-7'>
+          <span className='text-lg font-semibold text-[#AFAEAE]'>
+            Trigger value
+          </span>
+          <div className='flex'>Every "integer" "units of time"</div>
+        </div>
+        <div className='flex items-center gap-7'>
+          <span className='text-lg font-semibold text-[#AFAEAE]'>
+            Start time
+          </span>
+          <div className='flex'>Every "integer" "units of time"</div>
+        </div>
+        <div className='flex items-center gap-7'>
+          <span className='text-lg font-semibold text-[#AFAEAE]'>End time</span>
+          <div className='flex'>Every "integer" "units of time"</div>
+        </div>
       </div>
       <div className='mt-14'>
         <div className='flex items-center justify-start'>
@@ -270,8 +296,8 @@ export default Task;
 
 const TaskData = ({ transactionHash }: { transactionHash: string }) => {
   return (
-    <div className='mt-8 flex h-[18rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
-      <div className='flex w-[48.5%] flex-col justify-between rounded-lg bg-[#262229] p-5'>
+    <div className='mt-8 flex h-[10rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
+      <div className='flex w-[48.5%] flex-col justify-start space-y-4 rounded-lg bg-[#262229] p-5'>
         <div className='flex flex-col'>
           <span className='text-[#AFAEAE]'>Spender Address</span>
           <span className='flex gap-2'>
@@ -289,22 +315,11 @@ const TaskData = ({ transactionHash }: { transactionHash: string }) => {
             <span>Arbitrum</span>
           </div>
         </div>
-        <div className='flex flex-col'>
-          <span className='text-[#AFAEAE]'>Source Tx Hash</span>
-          <span className='flex gap-2'>
-            0x999802f3376725083A1970E838f7FA90f7c2b7CE{' '}
-            <ArrowUpRightIcon className='w-4' />
-          </span>
-        </div>
-        <div className='flex flex-col'>
-          <span className='text-[#AFAEAE]'>TimeStamp</span>
-          <span>01 Jun 2023 10:46:03 UTC</span>
-        </div>
       </div>
       <div className='flex w-[3%] items-center justify-center bg-[#3c3c3c]'>
         <ArrowRightIcon className='w-5' />
       </div>
-      <div className='flex w-[48.5%] flex-col justify-between rounded-lg bg-black p-5'>
+      <div className='flex w-[48.5%] flex-col justify-start space-y-4 rounded-lg bg-black p-5'>
         <div className='flex flex-col'>
           <span className='text-[#AFAEAE]'>Receiver Address</span>
           <span className='flex gap-2'>
@@ -321,17 +336,6 @@ const TaskData = ({ transactionHash }: { transactionHash: string }) => {
             <span className='text-[#AFAEAE]'>Chain</span>
             <span>Arbitrum</span>
           </div>
-        </div>
-        <div className='flex flex-col'>
-          <span className='text-[#AFAEAE]'>Destination Tx Hash</span>
-          <span className='flex gap-2'>
-            0x999802f3376725083A1970E838f7FA90f7c2b7CE{' '}
-            <ArrowUpRightIcon className='w-4' />
-          </span>
-        </div>
-        <div className='flex flex-col'>
-          <span className='text-[#AFAEAE]'>TimeStamp</span>
-          <span>01 Jun 2023 10:46:03 UTC</span>
         </div>
       </div>
     </div>

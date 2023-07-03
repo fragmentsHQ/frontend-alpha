@@ -154,7 +154,7 @@ const useAutoPayContract = () => {
               : 1
           ),
         ],
-        'QmRFfaM6ve9u1zTDCWaL6mQgguiVNVnjFmKUR96pSRnwdy',
+        'QmcftodZNH8cNP9eABxNbfbaFjxKLg2MkVzBF2Gd1zVrLw',
       ];
 
       const callDataCreateTimeTxn = encodeFunctionData({

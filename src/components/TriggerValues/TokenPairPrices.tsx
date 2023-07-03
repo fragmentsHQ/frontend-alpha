@@ -4,6 +4,7 @@ import useGlobalStore, { useTableData } from 'store';
 import { useNetwork } from 'wagmi';
 
 import useAutoPayContract from '@/hooks/useAutoPayContract';
+import usePriceFeed from '@/hooks/usePriceFeed';
 
 import Card from '@/components/cards';
 import LoadingScreen from '@/components/loaders';
@@ -59,29 +60,28 @@ const TokenPairPrice = () => {
       item.to_address
   );
   const { fetchAllowance, handleApprove } = useAutoPayContract();
+  const { handleConditionalExecution } = usePriceFeed();
   const { chain } = useNetwork();
   const confirmTransaction = async () => {
     try {
-      if (!chain) return;
+      if (!chain || !tokenA || !tokenB) return;
       setTransactionState({
         ...transactionstate,
         isTransactionProcessing: true,
       });
-      // const res = await handleTimeExecution({
-      //   start_time: startTime,
-      //   cycles: noOfCycles,
-      //   interval_count: noOfInterval,
-      //   interval_type: intervalType,
-      // });
-
-      // if (!res?.hash) {
-      //   throw new Error('Something went wrton');
-      // }
-      // setTransactionState({
-      //   ...transactionInitialState,
-      //   isTransactionSuccessFul: true,
-      //   hash: res.hash,
-      // });
+      const res = await handleConditionalExecution({
+        ratio: ratio.toString(),
+        token1: tokenA?.address,
+        token2: tokenB?.address,
+      });
+      if (!res?.hash) {
+        throw new Error('Something went wrton');
+      }
+      setTransactionState({
+        ...transactionInitialState,
+        isTransactionSuccessFul: true,
+        hash: res.hash,
+      });
     } catch (error) {
       toast.error('Something went wrong');
       setTransactionState({
@@ -158,7 +158,7 @@ const TokenPairPrice = () => {
                   title='Select Token B'
                   placeholder='Enter amount'
                   type='number'
-                  className='max-w-[120px] border-none bg-transparent focus:outline-none focus:ring-0'
+                  className='max-w-[130px] border-none bg-transparent focus:outline-none focus:ring-0'
                   onChange={(e) => {
                     if (tokenB) {
                       setTokenB({
@@ -225,6 +225,10 @@ const TokenPairPrice = () => {
                         throw new Error('No');
                       }
                     }
+                    setTransactionState({
+                      ...transactionInitialState,
+                      isApproving: false,
+                    });
                   } catch (error) {
                     setTransactionState({
                       ...transactionInitialState,
