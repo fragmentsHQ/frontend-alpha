@@ -6,7 +6,7 @@ const config: CodegenConfig = {
   generates: {
     './src/graphql/types_goerli.generated.ts': {
       schema:
-        'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+        'https://api.studio.thegraph.com/query/47865/fragments-mumbai/v0.0.2',
       plugins: [
         'typescript',
         'typescript-operations',
@@ -19,7 +19,7 @@ const config: CodegenConfig = {
     },
     './src/graphql/types_polygon.generated.ts': {
       schema:
-        'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+        'https://api.studio.thegraph.com/query/47865/fragments-graph/v0.0.1',
       plugins: [
         'typescript',
         'typescript-operations',

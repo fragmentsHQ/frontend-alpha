@@ -40,6 +40,16 @@ export const TOKENS: Record<number, Token[]> = {
       image:
         'https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295',
     },
+    {
+      id: '1',
+      name: 'wMatic',
+      symbol: 'wMatic',
+      address: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+      decimals: 18,
+      // logo: require('../../public/weth.png'),
+      image:
+        'https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295',
+    },
   ],
   [goerli.id as number]: [
     {
