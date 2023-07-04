@@ -20,13 +20,13 @@ export default function Header() {
           <Link href='/jobs' title='All Jobs' className='mr-2'>
             All Jobs
           </Link>
-          <Link
+          {/* <Link
             href='/balance'
             title='All Jobs'
             className='mr-2 rounded-lg border border-[#464646] bg-[#262229] px-2 py-2'
           >
             Balance ($4.54)
-          </Link>
+          </Link> */}
           <ConnectButton />
         </div>
       </div>
