@@ -1,4 +1,8 @@
-import { ArrowUpCircleIcon, CheckIcon } from '@heroicons/react/20/solid';
+import {
+  ArrowDownCircleIcon,
+  ArrowUpCircleIcon,
+  CheckIcon,
+} from '@heroicons/react/20/solid';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -137,6 +141,15 @@ export default function TokenTable() {
                 <div>.csv upload</div>
                 <ArrowUpCircleIcon width='1rem' />
               </button>
+              <form method='get' action='/sample.csv'>
+                <button
+                  type='submit'
+                  className='flex w-fit items-center justify-center rounded-md border border-[#464646] bg-[#262229] p-2 font-normal'
+                >
+                  <div className='mr-1'>sample.csv</div>
+                  <ArrowDownCircleIcon width='1rem' />
+                </button>
+              </form>
             </div>
           </>
         )}
