@@ -1,4 +1,10 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client';
 import {
   connectorsForWallets,
   darkTheme,
@@ -57,14 +63,32 @@ const wagmiClient = createClient({
 });
 
 const queryClient = new QueryClient();
-const apolloClient = new ApolloClient({
+
+const endpoint1 = new HttpLink({
   uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+});
+const endpoint2 = new HttpLink({
+  uri: 'https://api.studio.thegraph.com/query/47865/fragments-graph/v0.0.1',
+});
+
+//pass them to apollo-client config
+const client = new ApolloClient({
+  link: ApolloLink.split(
+    (operation) => operation.getContext().clientName === 'endpoint2',
+    endpoint2, //if above
+    endpoint1
+  ),
   cache: new InMemoryCache(),
 });
 
+// const apolloClient = new ApolloClient({
+//   uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+//   cache: new InMemoryCache(),
+// });
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider client={apolloClient}>
+    <ApolloProvider client={client}>
       <QueryClientProvider client={queryClient}>
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider

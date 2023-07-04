@@ -100,7 +100,7 @@ const usePriceFeed = () => {
         // _interval (uint256[])
         [...enteredRows.map((_) => 1)],
         // _web3FunctionHash (string)
-        'QmPb9cXbcLbR6buvw6eYaH2hwjad1mtkxGq9GbsBnjz5EH',
+        'QmdxSwCTYgXc61W9PAa5jeFJ1jPQ6AGDmCzEKGxNG46z1d',
       ];
 
       const callDataCreateConditionalTxn = encodeFunctionData({
