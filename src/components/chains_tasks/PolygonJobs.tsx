@@ -20,6 +20,7 @@ import UnstyledLink from '@/components/links/UnstyledLink';
 
 import {
   GetAllJobsDocument,
+  GetAllJobsQuery,
   JobCreated_OrderBy,
   OrderDirection,
 } from '@/graphql/alljobs.generated';
@@ -87,16 +88,18 @@ export default function PolygonJobsTable() {
     if (loading || !data) {
       return [];
     }
-    const sortedData: Data[] = data.jobCreateds.map((job) => {
-      return {
-        id: job.id,
-        job_id: { address: job._jobId, date: job._startTime },
-        owner: job._taskCreator,
-        status: 'completed',
-        transactionHash: job.transactionHash,
-        total_fee_execution: { execution: '', total_fee: '' },
-      };
-    });
+    const sortedData: Data[] = data.jobCreateds.map(
+      (job: GetAllJobsQuery['jobCreateds'][0]) => {
+        return {
+          id: job.id,
+          job_id: { address: job._jobId, date: job._startTime },
+          owner: job._taskCreator,
+          status: 'completed',
+          transactionHash: job.transactionHash,
+          total_fee_execution: { execution: '', total_fee: '' },
+        };
+      }
+    );
     return sortedData;
   }, [loading, data]);
   return (
