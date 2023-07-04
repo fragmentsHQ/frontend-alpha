@@ -158,7 +158,7 @@ const usePriceFeed = () => {
       });
       // else throw new Error('Please approve the token');
     } catch (e) {
-      toast.error('Please approve the token');
+      console.error('Please approve the token');
     }
   };
 
