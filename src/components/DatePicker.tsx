@@ -22,7 +22,7 @@ export default function DatePicker({
     setError(false);
     const d = dayjs(newValue).unix();
     if (isError) {
-      toast.error('Invalid date');
+      console.error('Invalid date');
       onChange(null);
     } else {
       onChange(d);
@@ -31,7 +31,7 @@ export default function DatePicker({
 
   React.useEffect(() => {
     if (isError) {
-      toast.error('Invalid date');
+      console.error('Invalid date');
       onChange(null);
     } else {
       onChange(dayjs(value).unix());
@@ -56,7 +56,7 @@ export default function DatePicker({
           onError={(data) => {
             setError(!!data);
             if (data) {
-              toast.error('Invalid date selected');
+              console.error('Invalid date selected');
             }
           }}
           onAccept={() => {

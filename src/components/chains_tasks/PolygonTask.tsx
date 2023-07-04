@@ -9,14 +9,17 @@ import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES } from '@/config/contracts';
-import { useGetAllJobsQuery } from '@/graphql/alljobs.generated';
+import {
+  GetAllJobsQuery,
+  useGetAllJobsQuery,
+} from '@/graphql/types_polygon.generated';
 import { GoBackLink } from '@/pages/jobs';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const Task = ({ jobId }: { jobId: string }) => {
+const PolygonTasks = ({ jobId }: { jobId: string }) => {
   const { address } = useAccount();
   const { data, loading } = useGetAllJobsQuery({
     variables: {
@@ -188,9 +191,7 @@ const Task = ({ jobId }: { jobId: string }) => {
           </span>
         </div>
       </div>
-      {data ? (
-        <TaskData transactionHash={data.jobCreateds[0].transactionHash} />
-      ) : null}
+      {data ? <TaskData job={data} /> : null}
       <div className='mt-8 flex flex-col gap-4 rounded-lg bg-[#262229] p-5 px-7'>
         <div className='flex items-center justify-between'>
           <span className='text-3xl font-bold text-[#AFAEAE]'>Execute</span>
@@ -240,23 +241,35 @@ const Task = ({ jobId }: { jobId: string }) => {
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>Trigger</span>
-          <div className='flex'>Time</div>
+          <div className='flex'>{data?.jobCreateds[0]._interval}</div>
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>
             Trigger value
           </span>
-          <div className='flex'>Every "integer" "units of time"</div>
+          <div className='flex'>
+            Every {data?.jobCreateds[0]._interval} time
+          </div>
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>
             Start time
           </span>
-          <div className='flex'>Every "integer" "units of time"</div>
+          <div className='flex'>
+            {dayjs
+              .unix(parseInt(data?.jobCreateds[0]._startTime))
+              .toDate()
+              .toLocaleString()}
+          </div>
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>End time</span>
-          <div className='flex'>Every "integer" "units of time"</div>
+          <div className='flex'>
+            {dayjs
+              .unix(parseInt(data?.jobCreateds[0]._startTime))
+              .toDate()
+              .toLocaleString()}
+          </div>
         </div>
       </div>
       <div className='mt-14'>
@@ -292,27 +305,27 @@ const Task = ({ jobId }: { jobId: string }) => {
   );
 };
 
-export default Task;
+export default PolygonTasks;
 
-const TaskData = ({ transactionHash }: { transactionHash: string }) => {
+const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
   return (
     <div className='mt-8 flex h-[10rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
       <div className='flex w-[48.5%] flex-col justify-start space-y-4 rounded-lg bg-[#262229] p-5'>
         <div className='flex flex-col'>
           <span className='text-[#AFAEAE]'>Spender Address</span>
           <span className='flex gap-2'>
-            0x999802f3376725083A1970E838f7FA90f7c2b7CE{' '}
+            {job.jobCreateds[0]._taskCreator}{' '}
             <ArrowUpRightIcon className='w-4' />
           </span>
         </div>
         <div className='flex justify-start gap-[10rem]'>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Token Sent</span>
-            <span>USDC</span>
+            <span>{job.jobCreateds[0]._fromToken}</span>
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>
-            <span>Arbitrum</span>
+            <span>{job.jobCreateds[0]._destinationDomain}</span>
           </div>
         </div>
       </div>
@@ -323,18 +336,17 @@ const TaskData = ({ transactionHash }: { transactionHash: string }) => {
         <div className='flex flex-col'>
           <span className='text-[#AFAEAE]'>Receiver Address</span>
           <span className='flex gap-2'>
-            0x999802f3376725083A1970E838f7FA90f7c2b7CE{' '}
-            <ArrowUpRightIcon className='w-4' />
+            {job.jobCreateds[0]._to} <ArrowUpRightIcon className='w-4' />
           </span>
         </div>
         <div className='flex justify-start gap-[10rem]'>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Token Sent</span>
-            <span>USDC</span>
+            <span>{job.jobCreateds[0]._toToken}</span>
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>
-            <span>Arbitrum</span>
+            <span>{job.jobCreateds[0]._toChain}</span>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ import clsxm from '@/lib/clsxm';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 
-import { LinkIcon } from './AllJobsTable';
+import { LinkIcon } from '../../components/chains_tasks/GoerliJobs';
 
 interface Column {
   id: 'transaction_hash' | 'transaction' | 'destination_transaction' | 'status';

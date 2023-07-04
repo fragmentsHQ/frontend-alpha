@@ -17,12 +17,11 @@ import useGetGasUsed from '@/hooks/useGetGasUsed';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 
-import { useGetAllJobsQuery } from '@/graphql/alljobs.generated';
-
 import {
   JobCreated_OrderBy,
   OrderDirection,
-} from '../../graphql/alljobs.generated';
+  useGetAllJobsQuery,
+} from '@/graphql/types_goerli.generated';
 
 interface Column {
   id: 'job_id' | 'owner' | 'total_fee_execution' | 'status';
@@ -58,7 +57,7 @@ interface Data {
   status: 'ongoing' | 'completed' | 'failed';
 }
 
-export default function AllJobsTable() {
+export default function GoerliJobsTable() {
   const { address } = useAccount();
   const { data, loading } = useGetAllJobsQuery({
     variables: {

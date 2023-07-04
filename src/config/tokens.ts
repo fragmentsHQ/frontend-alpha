@@ -24,31 +24,21 @@ export const TOKENS: Record<number, Token[]> = {
       id: '0',
       name: 'USDC',
       symbol: 'USDC',
-      address: '0x2058A9D7613eEE744279e3856Ef0eAda5FCbaA7e',
-      decimals: 18,
+      address: '0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747',
+      decimals: 6,
       // logo: require('../../public/logo/tokens'),
       image:
-        'https://assets.coingecko.com/coins/images/325/large/Tether.png?1668148663',
+        'https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389',
     },
     {
       id: '1',
       name: 'WETH',
       symbol: 'WETH',
-      address: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
+      address: '0xFD2AB41e083c75085807c4A65C0A14FDD93d55A9',
       decimals: 18,
       // logo: require('../../public/weth.png'),
       image:
-        'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
-    },
-    {
-      id: '4',
-      name: 'UNI',
-      symbol: 'UNI',
-      address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-      decimals: 18,
-      // logo: require('../../public/weth.png'),
-      image:
-        'https://assets.coingecko.com/coins/images/12504/small/uni.jpg?1687143398',
+        'https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295',
     },
   ],
   [goerli.id as number]: [
@@ -56,8 +46,8 @@ export const TOKENS: Record<number, Token[]> = {
       id: '0',
       symbol: 'USDC',
       name: 'USDC',
-      address: '0x5ffbac75efc9547fbc822166fed19b05cd5890bb',
-      decimals: 18,
+      address: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+      decimals: 6,
       image:
         'https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389',
     },
@@ -65,7 +55,7 @@ export const TOKENS: Record<number, Token[]> = {
       id: '1',
       symbol: 'WETH',
       name: 'WETH',
-      address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
+      address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
       decimals: 18,
       image:
         'https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295',

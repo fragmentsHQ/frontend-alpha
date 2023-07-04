@@ -1,0 +1,25 @@
+query getAJob(
+  $block: Block_height
+  $id: ID!
+  $subgraphError: _SubgraphErrorPolicy_! = deny
+) {
+  jobCreated(block: $block, id: $id, subgraphError: $subgraphError) {
+    _to
+    _fromToken
+    _cycles
+    _destinationContract
+    _gelatoTaskId
+    _interval
+    _jobId
+    _startTime
+    _taskCreator
+    _toChain
+    _toToken
+    blockNumber
+    blockTimestamp
+    id
+    option
+    transactionHash
+    _amount
+  }
+}

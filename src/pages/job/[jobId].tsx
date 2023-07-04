@@ -1,12 +1,15 @@
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useNetwork } from 'wagmi';
+import { goerli, polygonMumbai } from 'wagmi/chains';
 
+import PolygonTasks from '@/components/chains_tasks/PolygonTask';
 import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
-import Task from '@/components/Task';
 
 const Job = () => {
   const router = useRouter();
+  const { chain } = useNetwork();
   const jobId = router.query.jobId;
 
   if (!jobId) {
@@ -20,7 +23,10 @@ const Job = () => {
   return (
     <Layout>
       <Seo />
-      <Task jobId={jobId as string} />
+      {chain?.id === polygonMumbai.id && (
+        <PolygonTasks jobId={jobId as string} />
+      )}
+      {chain?.id === goerli.id && <PolygonTasks jobId={jobId as string} />}
     </Layout>
   );
 };

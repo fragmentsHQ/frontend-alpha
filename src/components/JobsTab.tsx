@@ -1,13 +1,17 @@
 import { Tab } from '@headlessui/react';
 import { useState } from 'react';
+import { useNetwork } from 'wagmi';
+import { goerli, polygonMumbai } from 'wagmi/chains';
 
-import AllJobsTable from './table/AllJobsTable';
+import GoerliJobsTable from '@/components/chains_tasks/GoerliJobs';
+import PolygonJobsTable from '@/components/chains_tasks/PolygonJobs';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function JobsTab() {
+  const { chain } = useNetwork();
   const [categories] = useState({
     All: {},
     Ongoing: {},
@@ -43,7 +47,8 @@ export default function JobsTab() {
                 'w-full rounded-xl  bg-[#272E3C] px-6 py-6'
               )}
             >
-              <AllJobsTable />
+              {chain?.id === polygonMumbai.id && <PolygonJobsTable />}
+              {chain?.id === goerli.id && <GoerliJobsTable />}
             </Tab.Panel>
           ))}
         </Tab.Panels>
