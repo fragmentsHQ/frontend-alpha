@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,10 +19,10 @@ import useGetGasUsed from '@/hooks/useGetGasUsed';
 import UnstyledLink from '@/components/links/UnstyledLink';
 
 import {
+  GetAllJobsDocument,
   JobCreated_OrderBy,
   OrderDirection,
-  useGetAllJobsQuery,
-} from '@/graphql/types_polygon.generated';
+} from '@/graphql/alljobs.generated';
 
 interface Column {
   id: 'job_id' | 'owner' | 'total_fee_execution' | 'status';
@@ -59,7 +60,7 @@ interface Data {
 
 export default function PolygonJobsTable() {
   const { address } = useAccount();
-  const { data, loading } = useGetAllJobsQuery({
+  const { data, loading } = useQuery(GetAllJobsDocument, {
     variables: {
       where: {
         _taskCreator: address,
@@ -67,6 +68,7 @@ export default function PolygonJobsTable() {
       orderBy: JobCreated_OrderBy.BlockTimestamp,
       orderDirection: OrderDirection.Desc,
     },
+    context: { clientName: 'endpoint2' },
   });
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);

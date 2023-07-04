@@ -151,7 +151,7 @@ const useAutoPayContract = () => {
                   : interval_type === 'years'
                   ? 31536000
                   : 1)
-              : 0
+              : 1
           ),
         ],
         'QmRDg82h63AP1ytAXFMaYKRE98ZjRjc21L9Ldbv3hnUmgh',

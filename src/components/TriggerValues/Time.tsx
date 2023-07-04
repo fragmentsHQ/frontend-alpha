@@ -164,10 +164,18 @@ const Time = () => {
                     const allowance = await fetchAllowance(chain);
                     if (allowance) {
                       setApproved(true);
+                      setTransactionState({
+                        ...transactionInitialState,
+                        isApproving: false,
+                      });
                     } else {
                       const res = await handleApprove();
                       if (res) {
                         setApproved(true);
+                        setTransactionState({
+                          ...transactionInitialState,
+                          isApproving: false,
+                        });
                       } else {
                         throw new Error('No');
                       }

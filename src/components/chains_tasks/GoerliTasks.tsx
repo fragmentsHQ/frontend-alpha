@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Tab } from '@headlessui/react';
 import { ArrowRightIcon, ArrowUpRightIcon } from '@heroicons/react/20/solid';
 import dayjs from 'dayjs';
@@ -10,9 +11,9 @@ import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES } from '@/config/contracts';
 import {
+  GetAllJobsDocument,
   GetAllJobsQuery,
-  useGetAllJobsQuery,
-} from '@/graphql/types_goerli.generated';
+} from '@/graphql/alljobs.generated';
 import { GoBackLink } from '@/pages/jobs';
 
 function classNames(...classes: string[]) {
@@ -21,13 +22,14 @@ function classNames(...classes: string[]) {
 
 const GoerliTasks = ({ jobId }: { jobId: string }) => {
   const { address } = useAccount();
-  const { data, loading } = useGetAllJobsQuery({
+  const { data, loading } = useQuery(GetAllJobsDocument, {
     variables: {
       where: {
         _taskCreator: address,
         id: jobId,
       },
     },
+    context: { clientName: 'endpoint2' },
   });
   const { chain } = useNetwork();
   const [selectedTableCategory, setSelectedTableCategory] =
@@ -248,7 +250,17 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
             Trigger value
           </span>
           <div className='flex'>
-            Every {data?.jobCreateds[0]._interval} time
+            Every{' '}
+            {data?.jobCreateds[0]._interval === 86400
+              ? 'days'
+              : data?.jobCreateds[0]._interval === 2629800
+              ? 'months'
+              : data?.jobCreateds[0]._interval === 604800
+              ? 'weeks'
+              : data?.jobCreateds[0]._interval === 31536000
+              ? 'years'
+              : null}
+            time
           </div>
         </div>
         <div className='flex items-center gap-7'>

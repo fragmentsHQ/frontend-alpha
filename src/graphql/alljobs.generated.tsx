@@ -1,3 +1,5 @@
+import * as Types from './types.generated';
+
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -3041,27 +3043,18 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type GetAllJobsQueryVariables = Exact<{
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<JobCreated_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<JobCreated_Filter>;
+export type GetAllJobsQueryVariables = Types.Exact<{
+  block?: Types.InputMaybe<Types.Block_Height>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  orderBy?: Types.InputMaybe<Types.JobCreated_OrderBy>;
+  orderDirection?: Types.InputMaybe<Types.OrderDirection>;
+  skip?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  subgraphError?: Types._SubgraphErrorPolicy_;
+  where?: Types.InputMaybe<Types.JobCreated_Filter>;
 }>;
 
 
 export type GetAllJobsQuery = { __typename?: 'Query', jobCreateds: Array<{ __typename?: 'JobCreated', id: string, transactionHash: any, option: number, blockNumber: any, blockTimestamp: any, _toToken: any, _toChain: any, _to: any, _taskCreator: any, _startTime: any, _jobId: any, _interval: any, _gelatoTaskId: any, _destinationDomain: any, _fromToken: any, _destinationContract: any, _cycles: any, _amount: any }> };
-
-export type GetAJobQueryVariables = Exact<{
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-}>;
-
-
-export type GetAJobQuery = { __typename?: 'Query', jobCreated?: { __typename?: 'JobCreated', _to: any, _fromToken: any, _cycles: any, _destinationContract: any, _gelatoTaskId: any, _interval: any, _jobId: any, _startTime: any, _taskCreator: any, _toChain: any, _toToken: any, blockNumber: any, blockTimestamp: any, id: string, option: number, transactionHash: any, _amount: any } | null };
 
 
 export const GetAllJobsDocument = gql`
@@ -3130,56 +3123,3 @@ export function useGetAllJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetAllJobsQueryHookResult = ReturnType<typeof useGetAllJobsQuery>;
 export type GetAllJobsLazyQueryHookResult = ReturnType<typeof useGetAllJobsLazyQuery>;
 export type GetAllJobsQueryResult = Apollo.QueryResult<GetAllJobsQuery, GetAllJobsQueryVariables>;
-export const GetAJobDocument = gql`
-    query getAJob($block: Block_height, $id: ID!, $subgraphError: _SubgraphErrorPolicy_! = deny) {
-  jobCreated(block: $block, id: $id, subgraphError: $subgraphError) {
-    _to
-    _fromToken
-    _cycles
-    _destinationContract
-    _gelatoTaskId
-    _interval
-    _jobId
-    _startTime
-    _taskCreator
-    _toChain
-    _toToken
-    blockNumber
-    blockTimestamp
-    id
-    option
-    transactionHash
-    _amount
-  }
-}
-    `;
-
-/**
- * __useGetAJobQuery__
- *
- * To run a query within a React component, call `useGetAJobQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAJobQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAJobQuery({
- *   variables: {
- *      block: // value for 'block'
- *      id: // value for 'id'
- *      subgraphError: // value for 'subgraphError'
- *   },
- * });
- */
-export function useGetAJobQuery(baseOptions: Apollo.QueryHookOptions<GetAJobQuery, GetAJobQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAJobQuery, GetAJobQueryVariables>(GetAJobDocument, options);
-      }
-export function useGetAJobLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAJobQuery, GetAJobQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAJobQuery, GetAJobQueryVariables>(GetAJobDocument, options);
-        }
-export type GetAJobQueryHookResult = ReturnType<typeof useGetAJobQuery>;
-export type GetAJobLazyQueryHookResult = ReturnType<typeof useGetAJobLazyQuery>;
-export type GetAJobQueryResult = Apollo.QueryResult<GetAJobQuery, GetAJobQueryVariables>;

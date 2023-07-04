@@ -21,7 +21,7 @@ import {
   JobCreated_OrderBy,
   OrderDirection,
   useGetAllJobsQuery,
-} from '@/graphql/types_goerli.generated';
+} from '@/graphql/alljobs.generated';
 
 interface Column {
   id: 'job_id' | 'owner' | 'total_fee_execution' | 'status';

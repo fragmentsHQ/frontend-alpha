@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Tab } from '@headlessui/react';
 import { ArrowRightIcon, ArrowUpRightIcon } from '@heroicons/react/20/solid';
 import dayjs from 'dayjs';
@@ -10,9 +11,9 @@ import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES } from '@/config/contracts';
 import {
+  GetAllJobsDocument,
   GetAllJobsQuery,
-  useGetAllJobsQuery,
-} from '@/graphql/types_polygon.generated';
+} from '@/graphql/alljobs.generated';
 import { GoBackLink } from '@/pages/jobs';
 
 function classNames(...classes: string[]) {
@@ -21,14 +22,16 @@ function classNames(...classes: string[]) {
 
 const PolygonTasks = ({ jobId }: { jobId: string }) => {
   const { address } = useAccount();
-  const { data, loading } = useGetAllJobsQuery({
+  const { data, loading } = useQuery(GetAllJobsDocument, {
     variables: {
       where: {
         _taskCreator: address,
         id: jobId,
       },
     },
+    context: { clientName: 'endpoint2' },
   });
+
   const { chain } = useNetwork();
   const [selectedTableCategory, setSelectedTableCategory] =
     useState('Executions');

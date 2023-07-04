@@ -28,6 +28,23 @@ import '../styles/globals.css';
 import InitiateProvider from '@/components/InitiateProvider';
 import Seo from '@/components/Seo';
 
+const endpoint1 = new HttpLink({
+  uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+});
+const endpoint2 = new HttpLink({
+  uri: 'https://api.studio.thegraph.com/query/47865/fragments-graph/v0.0.2',
+});
+
+//pass them to apollo-client config
+export const client = new ApolloClient({
+  link: ApolloLink.split(
+    (operation) => operation.getContext().clientName === 'endpoint2',
+    endpoint2, //if above
+    endpoint1
+  ),
+  cache: new InMemoryCache(),
+});
+
 const { chains, provider, webSocketProvider } = configureChains(
   // [mainnet, polygonMumbai, goerli, gnosis, bsc, arbitrum, polygonZkEvm],
   [polygonMumbai, goerli],
@@ -63,23 +80,6 @@ const wagmiClient = createClient({
 });
 
 const queryClient = new QueryClient();
-
-const endpoint1 = new HttpLink({
-  uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
-});
-const endpoint2 = new HttpLink({
-  uri: 'https://api.studio.thegraph.com/query/47865/fragments-graph/v0.0.1',
-});
-
-//pass them to apollo-client config
-const client = new ApolloClient({
-  link: ApolloLink.split(
-    (operation) => operation.getContext().clientName === 'endpoint2',
-    endpoint2, //if above
-    endpoint1
-  ),
-  cache: new InMemoryCache(),
-});
 
 // const apolloClient = new ApolloClient({
 //   uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',

@@ -47,8 +47,8 @@ export default function JobsTab() {
                 'w-full rounded-xl  bg-[#272E3C] px-6 py-6'
               )}
             >
-              {chain?.id === polygonMumbai.id && <GoerliJobsTable />}
-              {chain?.id === goerli.id && <PolygonJobsTable />}
+              {chain?.id === polygonMumbai.id && <PolygonJobsTable />}
+              {chain?.id === goerli.id && <GoerliJobsTable />}
             </Tab.Panel>
           ))}
         </Tab.Panels>
