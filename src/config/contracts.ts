@@ -9,6 +9,7 @@ import {
 
 import Autopay from '../abi/Autopay.json';
 import Conditional from '../abi/Conditional.json';
+import Treasury from '../abi/Treasury.json';
 
 const ISPRODUCTION = false;
 
@@ -108,10 +109,10 @@ const TREASURY_CONTRACT = (chain: Chain) =>
   getContract({
     address: chain
       ? TREASURY_CONTRACT_ADDRESSES[chain?.testnet ? 'testnets' : 'mainnets'][
-          chain?.network
+          chain.id
         ]
       : TREASURY_CONTRACT_ADDRESSES['testnets']['goerli'],
-    abi: Autopay.abi,
+    abi: Treasury.abi,
   });
 
 const ERC20_CONTRACT = (tokenAddress: string) =>

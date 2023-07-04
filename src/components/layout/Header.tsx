@@ -2,7 +2,11 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import * as React from 'react';
 
+import useGetTreasuryBalance from '@/hooks/useGetTreasuryBalance';
+
 export default function Header() {
+  const balance = useGetTreasuryBalance();
+  console.log(balance);
   return (
     <header className='z-50'>
       <div className='flex w-full items-center justify-between px-4 py-6'>
