@@ -1,20 +1,28 @@
 import { useQuery } from '@apollo/client';
 import { Tab } from '@headlessui/react';
 import { ArrowRightIcon, ArrowUpRightIcon } from '@heroicons/react/20/solid';
+import {
+  prepareSendTransaction,
+  sendTransaction,
+  waitForTransaction,
+} from '@wagmi/core';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
+import { encodeFunctionData } from 'viem';
 import { useAccount, useNetwork } from 'wagmi';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
 
-import { AUTOPAY_CONTRACT_ADDRESSES } from '@/config/contracts';
+import { AUTOPAY_CONTRACT_ADDRESSES, ZERO_ADDRESS } from '@/config/contracts';
 import {
   GetAllJobsDocument,
   GetAllJobsQuery,
 } from '@/graphql/alljobs.generated';
 import { GoBackLink } from '@/pages/jobs';
+
+import AutoPayAbi from '../../abi/Autopay.json';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -29,7 +37,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
         id: jobId,
       },
     },
-    context: { clientName: 'endpoint2' },
+    context: { clientName: 'endpoint1' },
   });
   const { chain } = useNetwork();
   const [selectedTableCategory, setSelectedTableCategory] =
@@ -136,7 +144,10 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
 
   return (
     <div className='mx-auto w-full max-w-5xl py-10'>
-      <GoBackLink />
+      <div className='flex items-center justify-between'>
+        <GoBackLink />
+        <CancelJob jobId={data?.jobCreateds[0].id} />
+      </div>
       <div className='mt-8 flex flex-col'>
         <div className='flex gap-2'>
           <span>
@@ -363,5 +374,48 @@ const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
         </div>
       </div>
     </div>
+  );
+};
+
+export const CancelJob = ({ jobId }: { jobId: string }) => {
+  const { chain } = useNetwork();
+  const cancelJob = async () => {
+    try {
+      const args = [jobId];
+      const callDataCreateTimeTxn = encodeFunctionData({
+        abi: AutoPayAbi.abi,
+        functionName: '_cancelJob',
+        args: args,
+      });
+
+      const request = await prepareSendTransaction({
+        request: {
+          to: chain
+            ? AUTOPAY_CONTRACT_ADDRESSES[
+                chain?.testnet ? 'testnets' : 'mainnets'
+              ][chain?.id]
+            : ZERO_ADDRESS,
+          data: callDataCreateTimeTxn,
+          value: BigInt(0),
+        },
+      });
+      const { hash } = await sendTransaction(request);
+      const res = await waitForTransaction({
+        hash,
+      });
+      return { hash: res.transactionHash };
+    } catch (error) {
+      return { hash: null };
+    }
+  };
+  return (
+    <button
+      onClick={() => {
+        cancelJob();
+      }}
+      className='rounded-xl bg-[#1867FD] px-5 py-2'
+    >
+      Cancel job
+    </button>
   );
 };

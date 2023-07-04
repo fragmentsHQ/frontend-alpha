@@ -25,9 +25,9 @@ const Job = () => {
     <Layout>
       <Seo />
       {chain?.id === polygonMumbai.id && (
-        <GoerliTasks jobId={jobId as string} />
+        <PolygonTasks jobId={jobId as string} />
       )}
-      {chain?.id === goerli.id && <PolygonTasks jobId={jobId as string} />}
+      {chain?.id === goerli.id && <GoerliTasks jobId={jobId as string} />}
     </Layout>
   );
 };
