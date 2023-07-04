@@ -48,7 +48,7 @@ export const TOKENS: Record<number, Token[]> = {
       decimals: 18,
       // logo: require('../../public/weth.png'),
       image:
-        'https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295',
+        'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912',
     },
   ],
   [goerli.id as number]: [

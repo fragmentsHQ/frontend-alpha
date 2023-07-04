@@ -173,6 +173,7 @@ const Time = () => {
                       }
                     }
                   } catch (error) {
+                    setApproved(false);
                     setTransactionState({
                       ...transactionInitialState,
                       isApproving: false,

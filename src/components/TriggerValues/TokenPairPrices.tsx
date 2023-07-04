@@ -230,6 +230,7 @@ const TokenPairPrice = () => {
                       isApproving: false,
                     });
                   } catch (error) {
+                    setApproved(false);
                     setTransactionState({
                       ...transactionInitialState,
                       isApproving: false,
