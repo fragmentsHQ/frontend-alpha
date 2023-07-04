@@ -6,7 +6,7 @@ const config: CodegenConfig = {
   generates: {
     './src/graphql/types_goerli.generated.ts': {
       schema:
-        'https://api.studio.thegraph.com/query/47865/fragments-mumbai/v0.0.2',
+        'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
       plugins: [
         'typescript',
         'typescript-operations',
