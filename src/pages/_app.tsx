@@ -29,12 +29,12 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { wallets } = getDefaultWallets({
-  appName: 'Secure stables',
+  appName: 'Fragments',
   chains,
 });
 
 const demoAppInfo = {
-  appName: 'Secure stables',
+  appName: 'Fragments',
 };
 
 const connectors = connectorsForWallets([
