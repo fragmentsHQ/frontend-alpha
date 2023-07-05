@@ -32,7 +32,7 @@ const endpoint1 = new HttpLink({
   uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
 });
 const endpoint2 = new HttpLink({
-  uri: 'https://api.studio.thegraph.com/query/47865/fragments-graph/v0.0.2',
+  uri: 'https://api.studio.thegraph.com/query/47865/fragments-graph/v0.0.1',
 });
 
 //pass them to apollo-client config
