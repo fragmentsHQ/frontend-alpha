@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { encodeFunctionData } from 'viem';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount, useNetwork, useToken } from 'wagmi';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
@@ -40,6 +40,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
     context: { clientName: 'endpoint1' },
   });
   const { chain } = useNetwork();
+
   const [selectedTableCategory, setSelectedTableCategory] =
     useState('Executions');
   // const [dataRows, setDataRows] = useState([
@@ -127,11 +128,11 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
   //   }
   // };
 
-  `  // useEffect(() => {
-  //   if (address) {
-  //     fetchPrevTransactions();
-  //   }
-  // }, [address]);`;
+  // `  // useEffect(() => {
+  // //   if (address) {
+  // //     fetchPrevTransactions();
+  // //   }
+  // // }, [address]);`;
 
   if (loading) {
     return (
@@ -143,7 +144,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
   }
 
   return (
-    <div className='mx-auto w-full max-w-5xl py-10'>
+    <div className='mx-auto w-full max-w-6xl py-10'>
       <div className='flex items-center justify-between'>
         <GoBackLink />
         <CancelJob jobId={data?.jobCreateds[0].id} />
@@ -330,7 +331,14 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
 
 export default GoerliTasks;
 
-const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
+export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
+  const { chain } = useNetwork();
+  const { data: fromToken } = useToken({
+    address: job.jobCreateds[0]._fromToken,
+  });
+  const { data: toToken } = useToken({
+    address: job.jobCreateds[0]._toToken,
+  });
   return (
     <div className='mt-8 flex h-[10rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
       <div className='flex w-[48.5%] flex-col justify-start space-y-4 rounded-lg bg-[#262229] p-5'>
@@ -344,11 +352,16 @@ const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
         <div className='flex justify-start gap-[10rem]'>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Token Sent</span>
-            <span>{job.jobCreateds[0]._fromToken}</span>
+            {/* <span>{job.jobCreateds[0]._fromToken}</span> */}
+            <span>{fromToken?.symbol}</span>
+          </div>
+          <div className='flex flex-col'>
+            <span className='text-[#AFAEAE]'>Amount</span>
+            {job?.jobCreateds[0]._amount / Math.pow(10, fromToken?.decimals)}
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>
-            <span>{job.jobCreateds[0]._destinationDomain}</span>
+            <span>{chain?.id}</span>
           </div>
         </div>
       </div>
@@ -364,8 +377,12 @@ const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
         </div>
         <div className='flex justify-start gap-[10rem]'>
           <div className='flex flex-col'>
-            <span className='text-[#AFAEAE]'>Token Sent</span>
-            <span>{job.jobCreateds[0]._toToken}</span>
+            <span className='text-[#AFAEAE]'>Token Received</span>
+            <span>{toToken?.symbol}</span>
+          </div>
+          <div className='flex flex-col'>
+            <span className='text-[#AFAEAE]'>Amount</span>
+            {job?.jobCreateds[0]._amount / Math.pow(10, toToken?.decimals)}
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>

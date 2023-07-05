@@ -1,19 +1,17 @@
 import { useQuery } from '@apollo/client';
 import { Tab } from '@headlessui/react';
-import { ArrowRightIcon, ArrowUpRightIcon } from '@heroicons/react/20/solid';
+import { ArrowUpRightIcon } from '@heroicons/react/20/solid';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useNetwork } from 'wagmi';
 
+import { TaskData } from '@/components/chains_tasks/GoerliTasks';
 import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES } from '@/config/contracts';
-import {
-  GetAllJobsDocument,
-  GetAllJobsQuery,
-} from '@/graphql/alljobs.generated';
+import { GetAllJobsDocument } from '@/graphql/alljobs.generated';
 import { GoBackLink } from '@/pages/jobs';
 
 function classNames(...classes: string[]) {
@@ -243,6 +241,10 @@ const PolygonTasks = ({ jobId }: { jobId: string }) => {
           <div className='flex'>Autopay</div>
         </div>
         <div className='flex items-center gap-7'>
+          <span className='text-lg font-semibold text-[#AFAEAE]'>Amount</span>
+          <div className='flex'>Autopay</div>
+        </div>
+        <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>Trigger</span>
           <div className='flex'>{data?.jobCreateds[0]._interval}</div>
         </div>
@@ -309,50 +311,3 @@ const PolygonTasks = ({ jobId }: { jobId: string }) => {
 };
 
 export default PolygonTasks;
-
-const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
-  return (
-    <div className='mt-8 flex h-[10rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
-      <div className='flex w-[48.5%] flex-col justify-start space-y-4 rounded-lg bg-[#262229] p-5'>
-        <div className='flex flex-col'>
-          <span className='text-[#AFAEAE]'>Spender Address</span>
-          <span className='flex gap-2'>
-            {job.jobCreateds[0]._taskCreator}{' '}
-            <ArrowUpRightIcon className='w-4' />
-          </span>
-        </div>
-        <div className='flex justify-start gap-[10rem]'>
-          <div className='flex flex-col'>
-            <span className='text-[#AFAEAE]'>Token Sent</span>
-            <span>{job.jobCreateds[0]._fromToken}</span>
-          </div>
-          <div className='flex flex-col'>
-            <span className='text-[#AFAEAE]'>Chain</span>
-            <span>{job.jobCreateds[0]._destinationDomain}</span>
-          </div>
-        </div>
-      </div>
-      <div className='flex w-[3%] items-center justify-center bg-[#3c3c3c]'>
-        <ArrowRightIcon className='w-5' />
-      </div>
-      <div className='flex w-[48.5%] flex-col justify-start space-y-4 rounded-lg bg-black p-5'>
-        <div className='flex flex-col'>
-          <span className='text-[#AFAEAE]'>Receiver Address</span>
-          <span className='flex gap-2'>
-            {job.jobCreateds[0]._to} <ArrowUpRightIcon className='w-4' />
-          </span>
-        </div>
-        <div className='flex justify-start gap-[10rem]'>
-          <div className='flex flex-col'>
-            <span className='text-[#AFAEAE]'>Token Sent</span>
-            <span>{job.jobCreateds[0]._toToken}</span>
-          </div>
-          <div className='flex flex-col'>
-            <span className='text-[#AFAEAE]'>Chain</span>
-            <span>{job.jobCreateds[0]._toChain}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
