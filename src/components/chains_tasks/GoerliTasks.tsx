@@ -144,7 +144,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
   }
 
   return (
-    <div className='mx-auto w-full max-w-6xl py-10'>
+    <div className='mx-auto w-full max-w-5xl py-10'>
       <div className='flex items-center justify-between'>
         <GoBackLink />
         <CancelJob jobId={data?.jobCreateds[0].id} />
@@ -262,7 +262,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
             Trigger value
           </span>
           <div className='flex'>
-            Every{' '}
+            One{' '}
             {data?.jobCreateds[0]._interval === 86400
               ? 'days'
               : data?.jobCreateds[0]._interval === 2629800
@@ -349,7 +349,7 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
             <ArrowUpRightIcon className='w-4' />
           </span>
         </div>
-        <div className='flex justify-start gap-[10rem]'>
+        <div className='flex justify-start space-x-12'>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Token Sent</span>
             {/* <span>{job.jobCreateds[0]._fromToken}</span> */}
@@ -376,9 +376,9 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
             {job.jobCreateds[0]._to} <ArrowUpRightIcon className='w-4' />
           </span>
         </div>
-        <div className='flex justify-start gap-[10rem]'>
+        <div className='flex justify-start space-x-12'>
           <div className='flex flex-col'>
-            <span className='text-[#AFAEAE]'>Token Received</span>
+            <span className='text-[#AFAEAE]'>Token&nbsp;Received</span>
             <span>{toToken?.symbol}</span>
           </div>
           <div className='flex flex-col'>
