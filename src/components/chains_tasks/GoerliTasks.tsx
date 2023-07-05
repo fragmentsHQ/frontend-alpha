@@ -357,7 +357,8 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Amount</span>
-            {job?.jobCreateds[0]._amount / Math.pow(10, fromToken?.decimals)}
+            {job?.jobCreateds[0]._amount /
+              Math.pow(10, fromToken?.decimals as number)}
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>
@@ -382,7 +383,8 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Amount</span>
-            {job?.jobCreateds[0]._amount / Math.pow(10, toToken?.decimals)}
+            {job?.jobCreateds[0]._amount /
+              Math.pow(10, toToken?.decimals as number)}
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>
