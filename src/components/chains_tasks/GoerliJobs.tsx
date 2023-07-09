@@ -184,16 +184,16 @@ export const LinkIcon = () => {
       <path
         d='M5.25 12.75L12.75 5.25'
         stroke='#AFAEAE'
-        stroke-width='2'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M5.25 5.25H12.75V12.75'
         stroke='#AFAEAE'
-        stroke-width='2'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </svg>
   );

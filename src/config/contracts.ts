@@ -61,8 +61,8 @@ const TREASURY_CONTRACT_ADDRESSES: ContractAddresses = {
     bsc: '0x',
   },
   testnets: {
-    800001: '0x1Ff5C1D4713772C5AA17d551039d9599Bc65C31C',
-    5: '0x6e2b6959c81183dCe1EB5819E573092bee28511b',
+    [polygonMumbai.id]: '0x1Ff5C1D4713772C5AA17d551039d9599Bc65C31C',
+    [goerli.id]: '0x6e2b6959c81183dCe1EB5819E573092bee28511b',
   },
 };
 
@@ -105,15 +105,18 @@ const CONDITIONAL_CONTRACT = (chain: Chain) =>
     abi: Conditional.abi,
   });
 
-const TREASURY_CONTRACT = (chain: Chain) =>
-  getContract({
-    address: chain
-      ? TREASURY_CONTRACT_ADDRESSES[chain?.testnet ? 'testnets' : 'mainnets'][
-          chain.id
-        ]
-      : TREASURY_CONTRACT_ADDRESSES['testnets']['goerli'],
-    abi: Treasury.abi,
-  });
+const TREASURY_CONTRACT = (chain: Chain) => {
+  {
+    return getContract({
+      address: chain
+        ? TREASURY_CONTRACT_ADDRESSES[chain?.testnet ? 'testnets' : 'mainnets'][
+            chain.id
+          ]
+        : TREASURY_CONTRACT_ADDRESSES['testnets'][goerli.id],
+      abi: Treasury.abi,
+    });
+  }
+};
 
 const ERC20_CONTRACT = (tokenAddress: string) =>
   getContract({

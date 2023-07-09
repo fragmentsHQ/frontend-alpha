@@ -59,12 +59,12 @@ const Landing: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Row className=' ' isCentered={true}>
+      <div className='flex items-center justify-center'>
         <div className=''>
           <p className='mb-6 mt-20 text-center text-[24px] font-bold leading-[29.05px] text-white '>
             The Fragments way of automating smart contracts{' '}
           </p>
-          <Card className='w-[864px] bg-[#272E3C] p-[26px] shadow-none'>
+          <Card className='mx-auto w-[864px] bg-[#272E3C] p-[26px] shadow-none'>
             <Menu />
             <div className='mt-4'>
               {isConnected &&
@@ -84,7 +84,7 @@ const Landing: React.FC = () => {
           chain?.id &&
           !chain?.unsupported &&
           sourceToken?.name ? (
-            <div className='flex w-[864px] justify-center'>
+            <div className='mx-auto flex w-[864px] justify-center'>
               <Card className='mt-6 w-[400px] bg-[#373A40] shadow-none'>
                 <TabsMenu
                   options={autoplayItems}
@@ -151,7 +151,7 @@ const Landing: React.FC = () => {
             TriggerValues.filter((f) => f.id === selectedTriggerValue)[0]
               .component}
         </div>
-      </Row>
+      </div>
     </React.Fragment>
   );
 };

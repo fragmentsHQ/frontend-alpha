@@ -1,6 +1,8 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import React from 'react';
 
+import { useAutoConnect } from '@/hooks/useAutoConnect';
+
 import Landing from '@/components/landing/Landing';
 import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
@@ -36,7 +38,7 @@ const darkTheme = createTheme({
 });
 
 const Home = () => {
-  // useAutoConnect();
+  useAutoConnect();
   return (
     <ThemeProvider theme={darkTheme}>
       <Layout>

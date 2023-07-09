@@ -12,6 +12,7 @@ import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES } from '@/config/contracts';
 import { GetAllJobsDocument } from '@/graphql/alljobs.generated';
+import { GelatoIcon } from '@/pages/job/[jobId]';
 import { GoBackLink } from '@/pages/jobs';
 
 function classNames(...classes: string[]) {
@@ -126,7 +127,7 @@ const PolygonTasks = ({ jobId }: { jobId: string }) => {
 
   if (loading) {
     return (
-      <div className='flex h-[300px] w-full w-full flex-col items-center justify-center'>
+      <div className='flex h-[300px] w-full  flex-col items-center justify-center'>
         <ImSpinner2 className='animate-spin' size={30} />
         <p className='mt-4 text-[18px]'>Fetching Job Data.....</p>
       </div>
@@ -284,7 +285,7 @@ const PolygonTasks = ({ jobId }: { jobId: string }) => {
               {['Executions', 'Task Logs'].map((category) => (
                 <Tab
                   key={category}
-                  className={({ selected }) =>
+                  className={() =>
                     classNames(
                       'w-full rounded-xl px-4 py-2.5 text-sm font-medium leading-5 text-white',
                       selectedTableCategory === category
@@ -303,7 +304,11 @@ const PolygonTasks = ({ jobId }: { jobId: string }) => {
           </Tab.Group>
         </div>
         <div className='mt-4 rounded-[10px] bg-[#272E3C] p-5'>
-          <TransactionTable />
+          {selectedTableCategory === 'Executions' ? (
+            <TransactionTable />
+          ) : (
+            <GelatoIcon />
+          )}
         </div>
       </div>
     </div>

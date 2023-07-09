@@ -20,6 +20,7 @@ import {
   GetAllJobsDocument,
   GetAllJobsQuery,
 } from '@/graphql/alljobs.generated';
+import { GelatoIcon } from '@/pages/job/[jobId]';
 import { GoBackLink } from '@/pages/jobs';
 
 import AutoPayAbi from '../../abi/Autopay.json';
@@ -136,7 +137,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
 
   if (loading) {
     return (
-      <div className='flex h-[300px] w-full w-full flex-col items-center justify-center'>
+      <div className='flex h-[300px] w-full  flex-col items-center justify-center'>
         <ImSpinner2 className='animate-spin' size={30} />
         <p className='mt-4 text-[18px]'>Fetching Job Data.....</p>
       </div>
@@ -303,7 +304,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
               {['Executions', 'Task Logs'].map((category) => (
                 <Tab
                   key={category}
-                  className={({ selected }) =>
+                  className={() =>
                     classNames(
                       'w-full rounded-xl px-4 py-2.5 text-sm font-medium leading-5 text-white',
                       selectedTableCategory === category
@@ -322,7 +323,21 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
           </Tab.Group>
         </div>
         <div className='mt-4 rounded-[10px] bg-[#272E3C] p-5'>
-          <TransactionTable />
+          {selectedTableCategory === 'Executions' ? (
+            <TransactionTable />
+          ) : (
+            <div className='flex h-[300px] items-center justify-center'>
+              <a
+                href={`https://beta.app.gelato.network/task/${data?.jobCreateds[0]?._gelatoTaskId}?chainId=${chain?.id}`}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex cursor-pointer items-center justify-center rounded-lg bg-[#1867FD] px-4 py-3'
+              >
+                <span className='mr-2 text-[20px] font-bold'>View logs on</span>{' '}
+                <GelatoIcon />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

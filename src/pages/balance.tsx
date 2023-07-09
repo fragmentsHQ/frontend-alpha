@@ -13,6 +13,8 @@ import {
   useSendTransaction,
 } from 'wagmi';
 
+import { useAutoConnect } from '@/hooks/useAutoConnect';
+
 import Layout from '@/components/layout/Layout';
 import TransactionTable from '@/components/table/TransactionTable';
 
@@ -55,6 +57,7 @@ const getEclipsedText = (text: string) => {
 };
 
 const Profile = () => {
+  useAutoConnect();
   // useAutoConnect();
 
   const router = useRouter();
