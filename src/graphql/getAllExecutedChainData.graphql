@@ -1,0 +1,13 @@
+query getExecutedSourceChains($where: ExecutedSourceChain_filter) {
+  executedSourceChains(where: $where) {
+    _amountOut
+    _from
+    _fundsUsed
+    _jobId
+    _timesExecuted
+    blockNumber
+    blockTimestamp
+    id
+    transactionHash
+  }
+}

@@ -33,8 +33,8 @@ const AUTOPAY_CONTRACT_ADDRESSES: ContractAddresses = {
     bsc: '0x',
   },
   testnets: {
-    [polygonMumbai.id as number]: '0x7f464d4f3D46552F936cb68c21a0A2dB3E32919F',
-    [goerli.id as number]: '0xa8e3315ce15caddb4616aefd073e4cbf002c5d73',
+    [polygonMumbai.id as number]: '0x7f464d4f3d46552f936cb68c21a0a2db3e32919f',
+    [goerli.id as number]: '0xA8e3315CE15cADdB4616AefD073e4CBF002C5D73',
   },
 };
 

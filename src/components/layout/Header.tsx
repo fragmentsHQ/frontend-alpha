@@ -24,7 +24,7 @@ export default function Header() {
             title='All Jobs'
             className='mr-2 rounded-lg border border-[#464646] bg-[#262229] px-2 py-2'
           >
-            Balance (${balance})
+            Balance ({balance} ETH)
           </Link>
           <ConnectButton />
         </div>

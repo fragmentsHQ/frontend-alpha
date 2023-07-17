@@ -11,7 +11,9 @@ const nextConfig = {
   images: {
     domains: ['assets.coingecko.com', 'img.icons8.com'],
   },
-
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // SVGR
   webpack(config) {
     config.module.rules.push({

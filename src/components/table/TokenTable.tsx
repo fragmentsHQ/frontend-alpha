@@ -228,6 +228,7 @@ export default function TokenTable() {
                             {column.id === 'destination_token' && (
                               <TokenMenu
                                 initialToken={row.destination_token}
+                                selectedChain={row.destination_chain}
                                 onTokenChange={(token) => {
                                   const newdata = enteredRows.map((er) => {
                                     return er.id === row.id

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,14 +14,15 @@ import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useNetwork } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
+import useCheckIfValidJob from '@/hooks/useCheckIfValidJob';
 import useGetGasUsed from '@/hooks/useGetGasUsed';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 
 import {
+  GetAllJobsDocument,
   JobCreated_OrderBy,
   OrderDirection,
-  useGetAllJobsQuery,
 } from '@/graphql/alljobs.generated';
 
 interface Column {
@@ -57,9 +59,14 @@ interface Data {
   status: 'ongoing' | 'completed' | 'failed';
 }
 
-export default function GoerliJobsTable() {
+export default function GoerliJobsTable({
+  client,
+}: {
+  client: 'endpoint1' | 'endpoint2';
+}) {
   const { address } = useAccount();
-  const { data, loading } = useGetAllJobsQuery({
+
+  const { data, loading } = useQuery(GetAllJobsDocument, {
     variables: {
       where: {
         _taskCreator: address,
@@ -67,6 +74,7 @@ export default function GoerliJobsTable() {
       orderBy: JobCreated_OrderBy.BlockTimestamp,
       orderDirection: OrderDirection.Desc,
     },
+    context: { clientName: client },
   });
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -206,6 +214,13 @@ const JobRow = ({ row }: { row: Data }) => {
     hash: row.transactionHash,
   });
 
+  const { data } = useCheckIfValidJob({
+    job_id: row.job_id.address,
+  });
+  // if (!isValid) {
+  //   return null;
+  // }
+
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
       {columns.map((column) => {
@@ -254,13 +269,15 @@ const JobRow = ({ row }: { row: Data }) => {
                 text-[#AFAEAE]'
                 >
                   Execution :{' '}
-                  <span className='text-white'>
-                    {(value as Data['total_fee_execution']).execution}
-                  </span>
+                  {data && (
+                    <span className='text-white'>
+                      {data.isCompleted ? parseInt(data?.execution) + 1 : 0}
+                    </span>
+                  )}
                 </span>
               </div>
             )}
-            {column.id === 'status' && (
+            {column.id === 'status' && data && (
               <UnstyledLink
                 href={
                   chain?.blockExplorers?.default.url +
@@ -271,14 +288,14 @@ const JobRow = ({ row }: { row: Data }) => {
                   e.stopPropagation();
                 }}
                 className={clsxm(
-                  'block flex items-center justify-end',
+                  ' flex items-center justify-end',
                   'capitalize',
-                  value === 'ongoing' && 'text-[#1867FD]',
-                  value === 'completed' && 'text-[#00C1A3]'
+                  !data.isCompleted && 'text-[#1867FD]',
+                  data.isCompleted && 'text-[#00C1A3]'
                 )}
               >
-                {value as string}
-
+                {data.isCompleted && 'Completed'}
+                {!data.isCompleted && 'Ongoing'}
                 <LinkIcon />
               </UnstyledLink>
             )}

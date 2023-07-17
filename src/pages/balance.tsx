@@ -1,221 +1,36 @@
 import { Tab } from '@headlessui/react';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
-import { Button } from '@mui/material';
-import { ethers } from 'ethers';
-import { parseEther } from 'ethers/lib/utils';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import {
-  useAccount,
-  useNetwork,
-  usePrepareSendTransaction,
-  useSendTransaction,
-} from 'wagmi';
+import React, { useState } from 'react';
 
-import { useAutoConnect } from '@/hooks/useAutoConnect';
+import useDepositBalance from '@/hooks/useDepositBalance';
+import useGetTreasuryBalance from '@/hooks/useGetTreasuryBalance';
+import useWithdrawBalance from '@/hooks/useWithdrawBalance';
 
 import Layout from '@/components/layout/Layout';
-import TransactionTable from '@/components/table/TransactionTable';
-
-import {
-  ETH,
-  TREASURY_CONTRACT,
-  TREASURY_CONTRACT_ADDRESSES,
-  ZERO_ADDRESS,
-} from '@/config/contracts';
+import AllTransactionTable from '@/components/table/transactions/AllTransactions';
+import DepositTransactionTable from '@/components/table/transactions/DepositTransactions';
+import WithdrawTransactionTable from '@/components/table/transactions/WithdrawTransactions';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const headers = [
-  {
-    key: 'date',
-    header: 'Date',
-  },
-  {
-    key: 'txnHash',
-    header: 'Txn Hash',
-  },
-  {
-    key: 'status',
-    header: 'Status',
-  },
-  {
-    key: 'txnAmount',
-    header: 'Txn Amount',
-  },
-  {
-    key: 'gasPaid',
-    header: 'Gas Paid',
-  },
-];
-
-const getEclipsedText = (text: string) => {
-  return text.slice(0, 6) + '.....' + text.slice(text.length - 6, text.length);
-};
-
 const Profile = () => {
-  useAutoConnect();
-  // useAutoConnect();
-
   const router = useRouter();
-
-  const { chain } = useNetwork();
-  // const { address } = getAccount();
-  // const provider = getProvider();
-  const { address } = useAccount();
-  const provider = ethers.getDefaultProvider();
   const [selectedCategory, setSelectedCategory] = useState('Deposit');
   const [selectedTableCategory, setSelectedTableCategory] = useState('All');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [inputAmount, setInputAmount] = useState(0);
-  const [balanceEth, setBalanceEth] = useState(0);
-  const [balanceDollar, setBalanceDollar] = useState(0);
-
-  const [dataRows, setDataRows] = useState([
-    {
-      id: '0',
-      date: 'May 27, 2023, 24:12',
-      txnHash: '0x0F5D2........68908cC942',
-      status: 'Success',
-      txnAmount: '0.00055 ETH',
-      gasPaid: '0.00005 ETH ',
-    },
-  ]);
-
-  const [callDataDeposit, setCallDataDeposit] = useState('');
-  const [callDataWithdraw, setCallDataWithdraw] = useState('');
-
-  const fetchPrevTransactions = async () => {
-    try {
-      if (!chain) return;
-
-      const contract = TREASURY_CONTRACT(chain);
-
-      const filter = contract.filters.FundsDeposited(address, null, null);
-
-      const events = await contract.queryFilter(filter);
-
-      console.log('*** DEBUG', events);
-
-      const rows = events.map((event) => {
-        return {
-          id: event.transactionHash,
-          date: event.args ? event.args.token.toLocaleString() : '',
-          txnHash: event.transactionHash,
-          status: 'Success',
-          txnAmount: event.args ? `${event.args.amount.toString()} ETH` : '',
-          gasPaid: '0.00005 ETH ',
-        };
-      });
-      setDataRows(rows);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const convertDollar = async (priceInETH: number) => {
-    try {
-      const amount = await fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      const amountJson = await amount.json();
-      const amountInDollar = amountJson.ethereum.usd;
-
-      console.log(convertDollar);
-
-      setBalanceDollar(priceInETH * amountInDollar);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchBalance = async () => {
-    try {
-      if (!chain) return;
-
-      const contract = TREASURY_CONTRACT(chain);
-
-      const checkBalance = await contract.userTokenBalance(address, ETH);
-
-      const allowance = checkBalance.toString();
-      console.log('***', allowance);
-
-      setBalanceEth(allowance);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const { config: configWithdraw } = usePrepareSendTransaction({
-    request: {
-      to: chain
-        ? TREASURY_CONTRACT_ADDRESSES[chain?.testnet ? 'testnets' : 'mainnets'][
-            chain?.network
-          ]
-        : ZERO_ADDRESS,
-      data: callDataDeposit,
-    },
+  const [inputAmount, setInputAmount] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const balanceETH = useGetTreasuryBalance();
+  const { sendWithdrawTokenAsyncTxn } = useWithdrawBalance({
+    inputAmount: parseFloat(withdrawAmount),
   });
 
-  const { sendTransactionAsync: sendWithdrawTokenAsyncTxn } =
-    useSendTransaction(configWithdraw);
-
-  const { config: configDeposit } = usePrepareSendTransaction({
-    request: {
-      to: chain
-        ? TREASURY_CONTRACT_ADDRESSES[chain?.testnet ? 'testnets' : 'mainnets'][
-            chain?.network
-          ]
-        : ZERO_ADDRESS,
-      data: callDataDeposit,
-    },
+  const { sendDepositTokenAsyncTxn } = useDepositBalance({
+    inputAmount: parseFloat(inputAmount),
   });
-
-  const { sendTransactionAsync: sendDepositTokenAsyncTxn } =
-    useSendTransaction(configDeposit);
-
-  const handleUpdateDeposit = async () => {
-    if (!chain) return;
-    const TreasuryContract = TREASURY_CONTRACT(chain);
-
-    setCallDataDeposit(
-      TreasuryContract.interface.encodeFunctionData('depositFunds', [
-        address,
-        ETH,
-        parseEther(inputAmount.toString()),
-      ])
-    );
-  };
-
-  const handleUpdateWithdraw = async () => {
-    if (!chain) return;
-    const TreasuryContract = TREASURY_CONTRACT(chain);
-
-    setCallDataWithdraw(
-      TreasuryContract.interface.encodeFunctionData('withdrawFunds', [
-        address,
-        ETH,
-        parseEther(inputAmount.toString()),
-      ])
-    );
-  };
-
-  useEffect(() => {
-    if (address) {
-      handleUpdateDeposit();
-      handleUpdateWithdraw();
-    }
-  }, [inputAmount]);
-  useEffect(() => {
-    if (address) {
-      fetchBalance();
-      fetchPrevTransactions();
-    }
-  }, [address]);
 
   const panels = {
     Deposit: (
@@ -225,7 +40,7 @@ const Profile = () => {
           type='number'
           className='col-span-3 h-12 rounded-xl bg-[#262229] focus:outline-none'
           onChange={(e) => {
-            setInputAmount(Number(e.target.value));
+            setInputAmount(e.target.value);
           }}
           value={inputAmount}
         />
@@ -239,15 +54,21 @@ const Profile = () => {
     ),
     Withdraw: (
       <div className='W-full grid grid-cols-4 gap-6'>
-        <div className='col-span-3 flex h-12 items-center justify-center rounded-xl bg-[#262229]'>
-          Your Balance to Withdraw is: $69.420
-        </div>
-        <Button
+        <input
+          placeholder={` Your Balance to Withdraw is: ${balanceETH} ETH`}
+          type='number'
+          className='col-span-3 h-12 rounded-xl bg-[#262229] focus:outline-none'
+          onChange={(e) => {
+            setWithdrawAmount(e.target.value);
+          }}
+          value={withdrawAmount}
+        />
+        <button
           onClick={() => sendWithdrawTokenAsyncTxn?.()}
           className='col-span-1 h-12 rounded-xl bg-[#1867FD] font-semibold text-white'
         >
           Withdraw
-        </Button>
+        </button>
       </div>
     ),
   };
@@ -265,8 +86,15 @@ const Profile = () => {
         <div className='mt-8 flex items-center justify-between'>
           <div className='flex flex-col gap-2'>
             <div className='flex items-end gap-6'>
-              <span className='text-3xl font-bold'>{balanceEth} ETH</span>
-              <span className='text-lg font-medium'>$ {balanceDollar}</span>
+              <span className='text-3xl font-bold'>
+                {balanceETH.toFixed(4) || '-'} ETH
+              </span>
+              {/* <span className='text-lg font-medium'>
+                ${' '}
+                {data?.formatted
+                  ? JSON.stringify(convertDollar(parseFloat(data?.formatted)))
+                  : '-'}
+              </span> */}
             </div>
             <div>
               <div className='text-[#AFAEAE]'>Your account balance</div>
@@ -281,7 +109,7 @@ const Profile = () => {
               height={20}
               className='w-5 rounded-full'
               alt='Eth'
-              src={`/logo/chains/${chain?.network}.png`}
+              src='/logo/chains/Goerli.png'
             />
             Ethereum
           </div>
@@ -292,7 +120,7 @@ const Profile = () => {
               {Object.keys(panels).map((category, index) => (
                 <Tab
                   key={index}
-                  className={({ selected }) =>
+                  className={() =>
                     classNames(
                       'w-full rounded-xl py-2.5 text-sm font-medium leading-5 text-white',
                       selectedCategory === category
@@ -328,7 +156,7 @@ const Profile = () => {
                 {['All', 'Deposits', 'Withdrawals'].map((category, index) => (
                   <Tab
                     key={index}
-                    className={({ selected }) =>
+                    className={() =>
                       classNames(
                         'w-full rounded-xl px-4 py-2.5 text-sm font-medium leading-5 text-white',
                         selectedTableCategory === category
@@ -347,80 +175,13 @@ const Profile = () => {
             </Tab.Group>
           </div>
           <div className='mt-4 bg-[#272E3C] p-5'>
-            {/* <DataTable
-              rows={dataRows.slice(
-                (currentPage - 1) * pageSize,
-                (currentPage - 1) * pageSize + pageSize
-              )}
-              headers={headers}
-            >
-              {({
-                rows,
-                headers,
-                getTableProps,
-                getHeaderProps,
-                getRowProps,
-              }) => (
-                <Table className='overflow-visible' {...getTableProps()}>
-                  <TableHead align='center'>
-                    <TableRow>
-                      {headers.map((header, index) => (
-                        <TableHeader
-                          key={index}
-                          {...getHeaderProps({ header })}
-                        >
-                          {header.header}
-                        </TableHeader>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row, rowIdx) => (
-                      <TableRow {...getRowProps({ row })} key={rowIdx}>
-                        {(() => {
-                          return row.cells.map((cell, index) => {
-                            return (
-                              <TableCell key={index}>
-                                {cell.id.includes('date') ? (
-                                  <div className='text-[#AFAEAE]'>
-                                    {getEclipsedText(cell.value)}
-                                  </div>
-                                ) : cell.id.includes('txnHash') ? (
-                                  <div>{getEclipsedText(cell.value)}</div>
-                                ) : cell.id.includes('status') ? (
-                                  <div className='text-[#00FFA9]'>
-                                    {cell.value}
-                                  </div>
-                                ) : cell.id.includes('txnAmount') ? (
-                                  <div>{cell.value}</div>
-                                ) : cell.id.includes('gasPaid') ? (
-                                  <div>{cell.value}</div>
-                                ) : null}
-                              </TableCell>
-                            );
-                          });
-                        })()}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </DataTable>
-            <Pagination
-              backwardText='Previous page'
-              forwardText='Next page'
-              itemsPerPageText='Items per page:'
-              onChange={(e) => {
-                setPageSize(e.pageSize);
-                setCurrentPage(e.page);
-              }}
-              page={currentPage}
-              pageSize={pageSize}
-              pageSizes={[10, 20, 30, 40, 50]}
-              totalItems={dataRows.length}
-              // className="w-full"
-            /> */}
-            <TransactionTable />
+            {selectedTableCategory === 'All' && <AllTransactionTable />}
+            {selectedTableCategory === 'Deposits' && (
+              <DepositTransactionTable />
+            )}
+            {selectedTableCategory === 'Withdrawals' && (
+              <WithdrawTransactionTable />
+            )}
           </div>
         </div>
       </div>

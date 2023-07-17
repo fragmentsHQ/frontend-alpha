@@ -1,7 +1,7 @@
 query getAJob(
   $block: Block_height
   $id: ID!
-  $subgraphError: _SubgraphErrorPolicy_! = deny
+  $subgraphError: _SubgraphErrorPolicy_ = deny
 ) {
   jobCreated(block: $block, id: $id, subgraphError: $subgraphError) {
     _to

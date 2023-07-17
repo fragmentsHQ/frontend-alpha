@@ -1,0 +1,19 @@
+query getFundsDepositeds(
+  $orderBy: FundsDeposited_orderBy
+  $orderDirection: OrderDirection
+  $where: FundsDeposited_filter
+) {
+  fundsDepositeds(
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    where: $where
+  ) {
+    amount
+    blockNumber
+    blockTimestamp
+    id
+    sender
+    token
+    transactionHash
+  }
+}

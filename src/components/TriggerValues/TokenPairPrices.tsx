@@ -196,7 +196,7 @@ const TokenPairPrice = () => {
       {tokenA?.value !== '' && tokenB?.value !== '' && <TokenTable />}
       <div className='h-[50px]' />
       {isValid && tokenA?.value !== '' && tokenB?.value !== '' && (
-        <Card className='flex w-[864px] flex-col space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
+        <Card className='mx-auto flex w-[864px] flex-col space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
           <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
             Choose how the task should be paid for. The cost of each execution
             equals the network fee.

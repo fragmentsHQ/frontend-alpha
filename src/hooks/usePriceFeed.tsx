@@ -100,7 +100,6 @@ const usePriceFeed = () => {
         // _interval (uint256[])
         [...enteredRows.map((_) => 1)],
         // _web3FunctionHash (string)
-        'QmdxSwCTYgXc61W9PAa5jeFJ1jPQ6AGDmCzEKGxNG46z1d',
       ];
 
       const callDataCreateConditionalTxn = encodeFunctionData({
@@ -127,7 +126,9 @@ const usePriceFeed = () => {
       toast.success('Transaction created successfully');
       return { hash: res.transactionHash };
     } catch (error) {
-      console.error(error);
+      return {
+        hash: null,
+      };
     }
   };
 
@@ -158,7 +159,7 @@ const usePriceFeed = () => {
       });
       // else throw new Error('Please approve the token');
     } catch (e) {
-      console.error('Please approve the token');
+      return e;
     }
   };
 

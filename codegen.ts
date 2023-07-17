@@ -1,8 +1,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema:
-    'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+  schema: 'https://api.studio.thegraph.com/proxy/47865/fragments-graph/v0.0.5',
   documents: ['src/**/*.graphql'],
   overwrite: true,
   generates: {

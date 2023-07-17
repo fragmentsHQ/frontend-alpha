@@ -1,14 +1,13 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { useAutoConnect } from '@/hooks/useAutoConnect';
+import useAutoConnect from '@/hooks/useAutoConnect';
 
 import JobsTab from '@/components/JobsTab';
 import Layout from '@/components/layout/Layout';
 
 const Jobs = () => {
   useAutoConnect();
-
   return (
     <Layout>
       <div className='mx-auto  my-10 max-w-5xl'>

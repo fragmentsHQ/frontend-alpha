@@ -1,0 +1,18 @@
+query getFundsWithdrawns(
+  $orderBy: FundsWithdrawn_orderBy
+  $orderDirection: OrderDirection
+  $where: FundsWithdrawn_filter
+) {
+  fundsWithdrawns(
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    where: $where
+  ) {
+    amount
+    blockNumber
+    blockTimestamp
+    id
+    token
+    transactionHash
+  }
+}

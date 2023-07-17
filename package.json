@@ -45,7 +45,7 @@
     "typechain": "^8.1.1",
     "uuid": "^9.0.0",
     "viem": "^0.2.5",
-    "wagmi": "^0.12.9",
+    "wagmi": "^0.12.19",
     "zustand": "^4.3.8"
   },
   "devDependencies": {

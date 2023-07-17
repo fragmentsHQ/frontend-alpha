@@ -1,7 +1,5 @@
-'use client';
-
-import { SafeConnector } from '@wagmi/connectors/safe';
 import { connect, getAccount, getNetwork } from '@wagmi/core';
+import { SafeConnector } from '@wagmi/core/connectors/safe';
 import { useEffect } from 'react';
 
 function useAutoConnect() {
@@ -28,4 +26,4 @@ function useAutoConnect() {
   }, [connect, chains, address]);
 }
 
-export { useAutoConnect };
+export default useAutoConnect;

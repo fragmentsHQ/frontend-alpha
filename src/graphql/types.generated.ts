@@ -1,34 +1,21 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T
-> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  BigDecimal: { input: any; output: any };
-  BigInt: { input: any; output: any };
-  Bytes: { input: any; output: any };
-  Int8: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  BigDecimal: { input: any; output: any; }
+  BigInt: { input: any; output: any; }
+  Bytes: { input: any; output: any; }
+  Int8: { input: any; output: any; }
 };
 
 export type AdminChanged = {
@@ -120,7 +107,7 @@ export enum AdminChanged_OrderBy {
   Id = 'id',
   NewAdmin = 'newAdmin',
   PreviousAdmin = 'previousAdmin',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type BeaconUpgraded = {
@@ -200,7 +187,7 @@ export enum BeaconUpgraded_OrderBy {
   BlockNumber = 'blockNumber',
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type BlockChangedFilter = {
@@ -212,6 +199,128 @@ export type Block_Height = {
   number?: InputMaybe<Scalars['Int']['input']>;
   number_gte?: InputMaybe<Scalars['Int']['input']>;
 };
+
+export type ExecutedSourceChain = {
+  __typename?: 'ExecutedSourceChain';
+  _amountOut: Scalars['BigInt']['output'];
+  _from: Scalars['Bytes']['output'];
+  _fundsUsed: Scalars['BigInt']['output'];
+  _jobId: Scalars['Bytes']['output'];
+  _timesExecuted: Scalars['BigInt']['output'];
+  blockNumber: Scalars['BigInt']['output'];
+  blockTimestamp: Scalars['BigInt']['output'];
+  id: Scalars['String']['output'];
+  transactionHash: Scalars['Bytes']['output'];
+};
+
+export type ExecutedSourceChain_Filter = {
+  _amountOut?: InputMaybe<Scalars['BigInt']['input']>;
+  _amountOut_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  _amountOut_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  _amountOut_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  _amountOut_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  _amountOut_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  _amountOut_not?: InputMaybe<Scalars['BigInt']['input']>;
+  _amountOut_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  _from?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  _from_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_not?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  _from_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  _fundsUsed?: InputMaybe<Scalars['BigInt']['input']>;
+  _fundsUsed_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  _fundsUsed_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  _fundsUsed_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  _fundsUsed_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  _fundsUsed_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  _fundsUsed_not?: InputMaybe<Scalars['BigInt']['input']>;
+  _fundsUsed_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  _jobId?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  _jobId_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_not?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  _jobId_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  _timesExecuted?: InputMaybe<Scalars['BigInt']['input']>;
+  _timesExecuted_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  _timesExecuted_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  _timesExecuted_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  _timesExecuted_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  _timesExecuted_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  _timesExecuted_not?: InputMaybe<Scalars['BigInt']['input']>;
+  _timesExecuted_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  and?: InputMaybe<Array<InputMaybe<ExecutedSourceChain_Filter>>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  blockTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  blockTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  id_contains?: InputMaybe<Scalars['String']['input']>;
+  id_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_ends_with?: InputMaybe<Scalars['String']['input']>;
+  id_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_gt?: InputMaybe<Scalars['String']['input']>;
+  id_gte?: InputMaybe<Scalars['String']['input']>;
+  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_lt?: InputMaybe<Scalars['String']['input']>;
+  id_lte?: InputMaybe<Scalars['String']['input']>;
+  id_not?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_starts_with?: InputMaybe<Scalars['String']['input']>;
+  id_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  or?: InputMaybe<Array<InputMaybe<ExecutedSourceChain_Filter>>>;
+  transactionHash?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
+  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+};
+
+export enum ExecutedSourceChain_OrderBy {
+  AmountOut = '_amountOut',
+  From = '_from',
+  FundsUsed = '_fundsUsed',
+  JobId = '_jobId',
+  TimesExecuted = '_timesExecuted',
+  BlockNumber = 'blockNumber',
+  BlockTimestamp = 'blockTimestamp',
+  Id = 'id',
+  TransactionHash = 'transactionHash'
+}
 
 export type FundsDeposited = {
   __typename?: 'FundsDeposited';
@@ -312,7 +421,7 @@ export enum FundsDeposited_OrderBy {
   Id = 'id',
   Sender = 'sender',
   Token = 'token',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type FundsWithdrawn = {
@@ -426,7 +535,7 @@ export enum FundsWithdrawn_OrderBy {
   Initiator = 'initiator',
   Receiver = 'receiver',
   Token = 'token',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type Initialized = {
@@ -504,7 +613,7 @@ export enum Initialized_OrderBy {
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
   TransactionHash = 'transactionHash',
-  Version = 'version',
+  Version = 'version'
 }
 
 export type JobCreated = {
@@ -758,7 +867,7 @@ export enum JobCreated1_OrderBy {
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
   Option = 'option',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type JobCreated_Filter = {
@@ -958,7 +1067,7 @@ export enum JobCreated_OrderBy {
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
   Option = 'option',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type JobSuccess = {
@@ -1090,13 +1199,13 @@ export enum JobSuccess_OrderBy {
   Id = 'id',
   TaskId = 'taskId',
   TransactionHash = 'transactionHash',
-  TxFee = 'txFee',
+  TxFee = 'txFee'
 }
 
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
-  Desc = 'desc',
+  Desc = 'desc'
 }
 
 export type OwnershipTransferred = {
@@ -1188,7 +1297,7 @@ export enum OwnershipTransferred_OrderBy {
   Id = 'id',
   NewOwner = 'newOwner',
   PreviousOwner = 'previousOwner',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type Query = {
@@ -1199,6 +1308,8 @@ export type Query = {
   adminChangeds: Array<AdminChanged>;
   beaconUpgraded?: Maybe<BeaconUpgraded>;
   beaconUpgradeds: Array<BeaconUpgraded>;
+  executedSourceChain?: Maybe<ExecutedSourceChain>;
+  executedSourceChains: Array<ExecutedSourceChain>;
   fundsDeposited?: Maybe<FundsDeposited>;
   fundsDepositeds: Array<FundsDeposited>;
   fundsWithdrawn?: Maybe<FundsWithdrawn>;
@@ -1235,15 +1346,18 @@ export type Query = {
   xtransferDatas: Array<XTransferData>;
 };
 
+
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
+
 
 export type QueryAdminChangedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryAdminChangedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1255,11 +1369,13 @@ export type QueryAdminChangedsArgs = {
   where?: InputMaybe<AdminChanged_Filter>;
 };
 
+
 export type QueryBeaconUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryBeaconUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1271,11 +1387,31 @@ export type QueryBeaconUpgradedsArgs = {
   where?: InputMaybe<BeaconUpgraded_Filter>;
 };
 
+
+export type QueryExecutedSourceChainArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryExecutedSourceChainsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExecutedSourceChain_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<ExecutedSourceChain_Filter>;
+};
+
+
 export type QueryFundsDepositedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryFundsDepositedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1287,11 +1423,13 @@ export type QueryFundsDepositedsArgs = {
   where?: InputMaybe<FundsDeposited_Filter>;
 };
 
+
 export type QueryFundsWithdrawnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryFundsWithdrawnsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1303,11 +1441,13 @@ export type QueryFundsWithdrawnsArgs = {
   where?: InputMaybe<FundsWithdrawn_Filter>;
 };
 
+
 export type QueryInitializedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryInitializedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1319,17 +1459,20 @@ export type QueryInitializedsArgs = {
   where?: InputMaybe<Initialized_Filter>;
 };
 
+
 export type QueryJobCreatedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type QueryJobCreated1Args = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryJobCreated1SArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1341,6 +1484,7 @@ export type QueryJobCreated1SArgs = {
   where?: InputMaybe<JobCreated1_Filter>;
 };
 
+
 export type QueryJobCreatedsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -1351,11 +1495,13 @@ export type QueryJobCreatedsArgs = {
   where?: InputMaybe<JobCreated_Filter>;
 };
 
+
 export type QueryJobSuccessArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryJobSuccessesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1367,11 +1513,13 @@ export type QueryJobSuccessesArgs = {
   where?: InputMaybe<JobSuccess_Filter>;
 };
 
+
 export type QueryOwnershipTransferredArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryOwnershipTransferredsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1383,11 +1531,13 @@ export type QueryOwnershipTransferredsArgs = {
   where?: InputMaybe<OwnershipTransferred_Filter>;
 };
 
+
 export type QueryTreasuryAdminChangedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTreasuryAdminChangedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1399,11 +1549,13 @@ export type QueryTreasuryAdminChangedsArgs = {
   where?: InputMaybe<TreasuryAdminChanged_Filter>;
 };
 
+
 export type QueryTreasuryBeaconUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTreasuryBeaconUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1415,11 +1567,13 @@ export type QueryTreasuryBeaconUpgradedsArgs = {
   where?: InputMaybe<TreasuryBeaconUpgraded_Filter>;
 };
 
+
 export type QueryTreasuryFundsDepositedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTreasuryFundsDepositedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1431,11 +1585,13 @@ export type QueryTreasuryFundsDepositedsArgs = {
   where?: InputMaybe<TreasuryFundsDeposited_Filter>;
 };
 
+
 export type QueryTreasuryFundsWithdrawnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTreasuryFundsWithdrawnsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1447,11 +1603,13 @@ export type QueryTreasuryFundsWithdrawnsArgs = {
   where?: InputMaybe<TreasuryFundsWithdrawn_Filter>;
 };
 
+
 export type QueryTreasuryInitializedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTreasuryInitializedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1463,11 +1621,13 @@ export type QueryTreasuryInitializedsArgs = {
   where?: InputMaybe<TreasuryInitialized_Filter>;
 };
 
+
 export type QueryTreasuryOwnershipTransferredArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTreasuryOwnershipTransferredsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1479,11 +1639,13 @@ export type QueryTreasuryOwnershipTransferredsArgs = {
   where?: InputMaybe<TreasuryOwnershipTransferred_Filter>;
 };
 
+
 export type QueryTreasuryUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryTreasuryUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1495,11 +1657,13 @@ export type QueryTreasuryUpgradedsArgs = {
   where?: InputMaybe<TreasuryUpgraded_Filter>;
 };
 
+
 export type QueryUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1511,11 +1675,13 @@ export type QueryUpgradedsArgs = {
   where?: InputMaybe<Upgraded_Filter>;
 };
 
+
 export type QueryXreceiveDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryXreceiveDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1527,11 +1693,13 @@ export type QueryXreceiveDatasArgs = {
   where?: InputMaybe<XReceiveData_Filter>;
 };
 
+
 export type QueryXtransferDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type QueryXtransferDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1551,6 +1719,8 @@ export type Subscription = {
   adminChangeds: Array<AdminChanged>;
   beaconUpgraded?: Maybe<BeaconUpgraded>;
   beaconUpgradeds: Array<BeaconUpgraded>;
+  executedSourceChain?: Maybe<ExecutedSourceChain>;
+  executedSourceChains: Array<ExecutedSourceChain>;
   fundsDeposited?: Maybe<FundsDeposited>;
   fundsDepositeds: Array<FundsDeposited>;
   fundsWithdrawn?: Maybe<FundsWithdrawn>;
@@ -1587,15 +1757,18 @@ export type Subscription = {
   xtransferDatas: Array<XTransferData>;
 };
 
+
 export type Subscription_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
+
 
 export type SubscriptionAdminChangedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionAdminChangedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1607,11 +1780,13 @@ export type SubscriptionAdminChangedsArgs = {
   where?: InputMaybe<AdminChanged_Filter>;
 };
 
+
 export type SubscriptionBeaconUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionBeaconUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1623,11 +1798,31 @@ export type SubscriptionBeaconUpgradedsArgs = {
   where?: InputMaybe<BeaconUpgraded_Filter>;
 };
 
+
+export type SubscriptionExecutedSourceChainArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionExecutedSourceChainsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExecutedSourceChain_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<ExecutedSourceChain_Filter>;
+};
+
+
 export type SubscriptionFundsDepositedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionFundsDepositedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1639,11 +1834,13 @@ export type SubscriptionFundsDepositedsArgs = {
   where?: InputMaybe<FundsDeposited_Filter>;
 };
 
+
 export type SubscriptionFundsWithdrawnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionFundsWithdrawnsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1655,11 +1852,13 @@ export type SubscriptionFundsWithdrawnsArgs = {
   where?: InputMaybe<FundsWithdrawn_Filter>;
 };
 
+
 export type SubscriptionInitializedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionInitializedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1671,17 +1870,20 @@ export type SubscriptionInitializedsArgs = {
   where?: InputMaybe<Initialized_Filter>;
 };
 
+
 export type SubscriptionJobCreatedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
+
 export type SubscriptionJobCreated1Args = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionJobCreated1SArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1693,6 +1895,7 @@ export type SubscriptionJobCreated1SArgs = {
   where?: InputMaybe<JobCreated1_Filter>;
 };
 
+
 export type SubscriptionJobCreatedsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -1703,11 +1906,13 @@ export type SubscriptionJobCreatedsArgs = {
   where?: InputMaybe<JobCreated_Filter>;
 };
 
+
 export type SubscriptionJobSuccessArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionJobSuccessesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1719,11 +1924,13 @@ export type SubscriptionJobSuccessesArgs = {
   where?: InputMaybe<JobSuccess_Filter>;
 };
 
+
 export type SubscriptionOwnershipTransferredArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionOwnershipTransferredsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1735,11 +1942,13 @@ export type SubscriptionOwnershipTransferredsArgs = {
   where?: InputMaybe<OwnershipTransferred_Filter>;
 };
 
+
 export type SubscriptionTreasuryAdminChangedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTreasuryAdminChangedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1751,11 +1960,13 @@ export type SubscriptionTreasuryAdminChangedsArgs = {
   where?: InputMaybe<TreasuryAdminChanged_Filter>;
 };
 
+
 export type SubscriptionTreasuryBeaconUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTreasuryBeaconUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1767,11 +1978,13 @@ export type SubscriptionTreasuryBeaconUpgradedsArgs = {
   where?: InputMaybe<TreasuryBeaconUpgraded_Filter>;
 };
 
+
 export type SubscriptionTreasuryFundsDepositedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTreasuryFundsDepositedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1783,11 +1996,13 @@ export type SubscriptionTreasuryFundsDepositedsArgs = {
   where?: InputMaybe<TreasuryFundsDeposited_Filter>;
 };
 
+
 export type SubscriptionTreasuryFundsWithdrawnArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTreasuryFundsWithdrawnsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1799,11 +2014,13 @@ export type SubscriptionTreasuryFundsWithdrawnsArgs = {
   where?: InputMaybe<TreasuryFundsWithdrawn_Filter>;
 };
 
+
 export type SubscriptionTreasuryInitializedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTreasuryInitializedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1815,11 +2032,13 @@ export type SubscriptionTreasuryInitializedsArgs = {
   where?: InputMaybe<TreasuryInitialized_Filter>;
 };
 
+
 export type SubscriptionTreasuryOwnershipTransferredArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTreasuryOwnershipTransferredsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1831,11 +2050,13 @@ export type SubscriptionTreasuryOwnershipTransferredsArgs = {
   where?: InputMaybe<TreasuryOwnershipTransferred_Filter>;
 };
 
+
 export type SubscriptionTreasuryUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionTreasuryUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1847,11 +2068,13 @@ export type SubscriptionTreasuryUpgradedsArgs = {
   where?: InputMaybe<TreasuryUpgraded_Filter>;
 };
 
+
 export type SubscriptionUpgradedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionUpgradedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1863,11 +2086,13 @@ export type SubscriptionUpgradedsArgs = {
   where?: InputMaybe<Upgraded_Filter>;
 };
 
+
 export type SubscriptionXreceiveDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionXreceiveDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1879,11 +2104,13 @@ export type SubscriptionXreceiveDatasArgs = {
   where?: InputMaybe<XReceiveData_Filter>;
 };
 
+
 export type SubscriptionXtransferDataArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
+
 
 export type SubscriptionXtransferDatasArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1984,7 +2211,7 @@ export enum TreasuryAdminChanged_OrderBy {
   Id = 'id',
   NewAdmin = 'newAdmin',
   PreviousAdmin = 'previousAdmin',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type TreasuryBeaconUpgraded = {
@@ -2064,7 +2291,7 @@ export enum TreasuryBeaconUpgraded_OrderBy {
   BlockNumber = 'blockNumber',
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type TreasuryFundsDeposited = {
@@ -2166,7 +2393,7 @@ export enum TreasuryFundsDeposited_OrderBy {
   Id = 'id',
   Sender = 'sender',
   Token = 'token',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type TreasuryFundsWithdrawn = {
@@ -2280,7 +2507,7 @@ export enum TreasuryFundsWithdrawn_OrderBy {
   Initiator = 'initiator',
   Receiver = 'receiver',
   Token = 'token',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type TreasuryInitialized = {
@@ -2358,7 +2585,7 @@ export enum TreasuryInitialized_OrderBy {
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
   TransactionHash = 'transactionHash',
-  Version = 'version',
+  Version = 'version'
 }
 
 export type TreasuryOwnershipTransferred = {
@@ -2450,7 +2677,7 @@ export enum TreasuryOwnershipTransferred_OrderBy {
   Id = 'id',
   NewOwner = 'newOwner',
   PreviousOwner = 'previousOwner',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type TreasuryUpgraded = {
@@ -2530,7 +2757,7 @@ export enum TreasuryUpgraded_OrderBy {
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
   Implementation = 'implementation',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type Upgraded = {
@@ -2610,7 +2837,7 @@ export enum Upgraded_OrderBy {
   BlockTimestamp = 'blockTimestamp',
   Id = 'id',
   Implementation = 'implementation',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type XReceiveData = {
@@ -2768,7 +2995,7 @@ export enum XReceiveData_OrderBy {
   ReceiverAccount = 'receiverAccount',
   SenderAccount = 'senderAccount',
   TransactionHash = 'transactionHash',
-  TransferId = 'transferId',
+  TransferId = 'transferId'
 }
 
 export type XTransferData = {
@@ -2878,15 +3105,11 @@ export type XTransferData_Filter = {
   relayerFeeInTransactingAsset?: InputMaybe<Scalars['BigInt']['input']>;
   relayerFeeInTransactingAsset_gt?: InputMaybe<Scalars['BigInt']['input']>;
   relayerFeeInTransactingAsset_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  relayerFeeInTransactingAsset_in?: InputMaybe<
-    Array<Scalars['BigInt']['input']>
-  >;
+  relayerFeeInTransactingAsset_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   relayerFeeInTransactingAsset_lt?: InputMaybe<Scalars['BigInt']['input']>;
   relayerFeeInTransactingAsset_lte?: InputMaybe<Scalars['BigInt']['input']>;
   relayerFeeInTransactingAsset_not?: InputMaybe<Scalars['BigInt']['input']>;
-  relayerFeeInTransactingAsset_not_in?: InputMaybe<
-    Array<Scalars['BigInt']['input']>
-  >;
+  relayerFeeInTransactingAsset_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   sender?: InputMaybe<Scalars['Bytes']['input']>;
   sender_contains?: InputMaybe<Scalars['Bytes']['input']>;
   sender_gt?: InputMaybe<Scalars['Bytes']['input']>;
@@ -2940,7 +3163,7 @@ export enum XTransferData_OrderBy {
   Sender = 'sender',
   StartTime = 'startTime',
   ToToken = 'toToken',
-  TransactionHash = 'transactionHash',
+  TransactionHash = 'transactionHash'
 }
 
 export type _Block_ = {
@@ -2974,5 +3197,5 @@ export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
   Allow = 'allow',
   /** If the subgraph has indexing errors, data will be omitted. The default. */
-  Deny = 'deny',
+  Deny = 'deny'
 }

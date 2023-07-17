@@ -10,16 +10,16 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { encodeFunctionData } from 'viem';
-import { useAccount, useNetwork, useToken } from 'wagmi';
+import { useNetwork, useToken } from 'wagmi';
+
+import useCheckIfValidJob from '@/hooks/useCheckIfValidJob';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES, ZERO_ADDRESS } from '@/config/contracts';
-import {
-  GetAllJobsDocument,
-  GetAllJobsQuery,
-} from '@/graphql/alljobs.generated';
+import { GetAJobDocument, GetAJobQuery } from '@/graphql/getAJob.generated';
+import { GetExecutedSourceChainsDocument } from '@/graphql/getAllExecutedChainData.generated';
 import { GelatoIcon } from '@/pages/job/[jobId]';
 import { GoBackLink } from '@/pages/jobs';
 
@@ -29,113 +29,24 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const GoerliTasks = ({ jobId }: { jobId: string }) => {
-  const { address } = useAccount();
-  const { data, loading } = useQuery(GetAllJobsDocument, {
+const GoerliTasks = ({
+  id,
+  client,
+}: {
+  id: string;
+  client: 'endpoint1' | 'endpoint2';
+}) => {
+  const { data, loading } = useQuery(GetAJobDocument, {
     variables: {
-      where: {
-        _taskCreator: address,
-        id: jobId,
-      },
+      id: id,
     },
-    context: { clientName: 'endpoint1' },
+    context: { clientName: client },
   });
-  const { chain } = useNetwork();
 
+  const { chain } = useNetwork();
   const [selectedTableCategory, setSelectedTableCategory] =
     useState('Executions');
-  // const [dataRows, setDataRows] = useState([
-  //   {
-  //     id: '0',
-  //     sourceTxnHash: {
-  //       hash: '0xf8c929db...04f21d9b',
-  //       date: 'May 27, 2023, 24:12',
-  //     },
-  //     sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
-  //     destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
-  //     status: 'success',
-  //   },
-  // ]);
-
-  // const fetchPrevTransactions = async () => {
-  //   try {
-  //     if (!chain) return;
-  //     const conditionalContract = CONDITIONAL_CONTRACT(chain);
-  //     const autoPaycontract = AUTOPAY_CONTRACT(chain);
-
-  //     let filter = conditionalContract.filters.JobCreated(
-  //       null,
-  //       address,
-  //       null,
-  //       null,
-  //       null,
-  //       null,
-  //       null,
-  //       null
-  //     );
-
-  //     let events = await conditionalContract.queryFilter(filter);
-
-  //     let data = events.map((event) => {
-  //       // const { token, amount } = event.args;
-
-  //       return {
-  //         id: event.args?.taskId.toString(),
-  //         sourceTxnHash: {
-  //           hash: event.transactionHash,
-  //           date: 'May 27, 2023, 24:12',
-  //         },
-  //         sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
-  //         destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
-  //         status: 'success',
-  //       };
-  //     });
-
-  //     setDataRows(data);
-
-  //     filter = autoPaycontract.filters.JobCreated(
-  //       null,
-  //       address,
-  //       null,
-  //       null,
-  //       null,
-  //       null,
-  //       null,
-  //       null
-  //     );
-
-  //     events = await conditionalContract.queryFilter(filter);
-
-  //     console.log('*** DEBUG', events);
-
-  //     data = events.map((event) => {
-  //       // const { token, amount } = event.args;
-
-  //       return {
-  //         id: event.args?.taskId.toString(),
-  //         sourceTxnHash: {
-  //           hash: event.transactionHash,
-  //           date: 'May 27, 2023, 24:12',
-  //         },
-  //         sourceTxn: { token: '0.0245 ETH', chain: 'Arbitrum' },
-  //         destinationTxn: { token: '0.0241 ETH', chain: 'Optimism' },
-  //         status: 'success',
-  //       };
-  //     });
-
-  //     setDataRows([...dataRows, data]);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // `  // useEffect(() => {
-  // //   if (address) {
-  // //     fetchPrevTransactions();
-  // //   }
-  // // }, [address]);`;
-
-  if (loading) {
+  if (loading || !data) {
     return (
       <div className='flex h-[300px] w-full  flex-col items-center justify-center'>
         <ImSpinner2 className='animate-spin' size={30} />
@@ -143,12 +54,11 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
       </div>
     );
   }
-
   return (
     <div className='mx-auto w-full max-w-5xl py-10'>
       <div className='flex items-center justify-between'>
         <GoBackLink />
-        <CancelJob jobId={data?.jobCreateds[0].id} />
+        <CancelJob jobId={data?.jobCreated._jobId} />
       </div>
       <div className='mt-8 flex flex-col'>
         <div className='flex gap-2'>
@@ -158,17 +68,17 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
               href={
                 chain?.blockExplorers?.default.url +
                 '/address/' +
-                data?.jobCreateds[0]?._taskCreator
+                data?.jobCreated?._taskCreator
               }
               className='underline'
             >
-              {data?.jobCreateds[0]?._taskCreator}
+              {data?.jobCreated?._taskCreator}
             </UnstyledLink>
           </span>
           <ArrowUpRightIcon className='w-4' />
           <span className='text-[#AFAEAE]'>
             {dayjs
-              .unix(parseInt(data?.jobCreateds[0]._startTime))
+              .unix(parseInt(data?.jobCreated._startTime))
               .toDate()
               .toLocaleString()}
           </span>
@@ -179,33 +89,17 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
             href={
               chain?.blockExplorers?.default.url +
               '/tx/' +
-              data?.jobCreateds[0]?.transactionHash
+              data?.jobCreated?.transactionHash
             }
             className='underline'
           >
-            {data?.jobCreateds[0].transactionHash}
+            {data?.jobCreated._jobId}
           </UnstyledLink>
         </div>
       </div>
-      <div className='mt-8 flex justify-between'>
-        <div className='flex justify-center gap-8'>
-          <div className='flex flex-col justify-center'>
-            <span className='text-2xl font-bold'>$ 364.26</span>
-            <span className='text-[#AFAEAE]'>Cost</span>
-          </div>
-          <div className='flex flex-col justify-center'>
-            <span className='text-2xl font-bold'>2314</span>
-            <span className='text-[#AFAEAE]'>Executions</span>
-          </div>
-        </div>
-        <div className='flex flex-col gap-[0.3rem] rounded-lg bg-[#282828] p-4'>
-          <span className='ml-auto text-2xl font-bold'>$ 364.26</span>
-          <span className='ml-auto text-[#AFAEAE]'>Gas Paid</span>
-          <span className='ml-auto rounded-[4.5rem] bg-[#393939] p-2 px-3 text-xs'>
-            Forward paying gas
-          </span>
-        </div>
-      </div>
+      {data.jobCreated._jobId && (
+        <ExecutionData jobId={data.jobCreated._jobId} />
+      )}
       {data ? <TaskData job={data} /> : null}
       <div className='mt-8 flex flex-col gap-4 rounded-lg bg-[#262229] p-5 px-7'>
         <div className='flex items-center justify-between'>
@@ -221,11 +115,11 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
               href={
                 chain?.blockExplorers?.default.url +
                 '/address/' +
-                data?.jobCreateds[0]?._destinationContract
+                data?.jobCreated._destinationContract
               }
               className='mr-2 underline'
             >
-              {data?.jobCreateds[0]?._destinationContract}
+              {data?.jobCreated._destinationContract}
             </UnstyledLink>
             <ArrowUpRightIcon className='w-5' />
           </div>
@@ -256,7 +150,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>Trigger</span>
-          <div className='flex'>{data?.jobCreateds[0]._interval}</div>
+          <div className='flex'>{data?.jobCreated._interval}</div>
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>
@@ -264,13 +158,13 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
           </span>
           <div className='flex'>
             One{' '}
-            {data?.jobCreateds[0]._interval === 86400
+            {data?.jobCreated._interval === 86400
               ? 'days'
-              : data?.jobCreateds[0]._interval === 2629800
+              : data?.jobCreated._interval === 2629800
               ? 'months'
-              : data?.jobCreateds[0]._interval === 604800
+              : data?.jobCreated._interval === 604800
               ? 'weeks'
-              : data?.jobCreateds[0]._interval === 31536000
+              : data?.jobCreated._interval === 31536000
               ? 'years'
               : null}
             time
@@ -282,7 +176,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
           </span>
           <div className='flex'>
             {dayjs
-              .unix(parseInt(data?.jobCreateds[0]._startTime))
+              .unix(parseInt(data?.jobCreated._startTime))
               .toDate()
               .toLocaleString()}
           </div>
@@ -291,7 +185,7 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
           <span className='text-lg font-semibold text-[#AFAEAE]'>End time</span>
           <div className='flex'>
             {dayjs
-              .unix(parseInt(data?.jobCreateds[0]._startTime))
+              .unix(parseInt(data?.jobCreated._startTime))
               .toDate()
               .toLocaleString()}
           </div>
@@ -323,12 +217,12 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
           </Tab.Group>
         </div>
         <div className='mt-4 rounded-[10px] bg-[#272E3C] p-5'>
-          {selectedTableCategory === 'Executions' ? (
-            <TransactionTable />
+          {selectedTableCategory === 'Executions' && data.jobCreated._jobId ? (
+            <TransactionTable jobId={data.jobCreated._jobId} />
           ) : (
             <div className='flex h-[300px] items-center justify-center'>
               <a
-                href={`https://beta.app.gelato.network/task/${data?.jobCreateds[0]?._gelatoTaskId}?chainId=${chain?.id}`}
+                href={`https://beta.app.gelato.network/task/${data?.jobCreated?._gelatoTaskId}?chainId=${chain?.id}`}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='flex cursor-pointer items-center justify-center rounded-lg bg-[#1867FD] px-4 py-3'
@@ -346,13 +240,15 @@ const GoerliTasks = ({ jobId }: { jobId: string }) => {
 
 export default GoerliTasks;
 
-export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
+export const TaskData = ({ job }: { job: GetAJobQuery['jobCreated'] }) => {
   const { chain } = useNetwork();
   const { data: fromToken } = useToken({
-    address: job.jobCreateds[0]._fromToken,
+    address: job.jobCreated._fromToken,
+    chainId: chain?.id,
   });
   const { data: toToken } = useToken({
-    address: job.jobCreateds[0]._toToken,
+    address: '0xe6b8a5cf854791412c1f6efc7caf629f5df1c747',
+    chainId: job.jobCreated._toChain,
   });
   return (
     <div className='mt-8 flex h-[10rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
@@ -360,8 +256,7 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
         <div className='flex flex-col'>
           <span className='text-[#AFAEAE]'>Spender Address</span>
           <span className='flex gap-2'>
-            {job.jobCreateds[0]._taskCreator}{' '}
-            <ArrowUpRightIcon className='w-4' />
+            {job.jobCreated._taskCreator} <ArrowUpRightIcon className='w-4' />
           </span>
         </div>
         <div className='flex justify-start space-x-12'>
@@ -372,7 +267,7 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Amount</span>
-            {job?.jobCreateds[0]._amount /
+            {job?.jobCreated._amount /
               Math.pow(10, fromToken?.decimals as number)}
           </div>
           <div className='flex flex-col'>
@@ -388,7 +283,7 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
         <div className='flex flex-col'>
           <span className='text-[#AFAEAE]'>Receiver Address</span>
           <span className='flex gap-2'>
-            {job.jobCreateds[0]._to} <ArrowUpRightIcon className='w-4' />
+            {job.jobCreated._to} <ArrowUpRightIcon className='w-4' />
           </span>
         </div>
         <div className='flex justify-start space-x-12'>
@@ -398,12 +293,14 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Amount</span>
-            {job?.jobCreateds[0]._amount /
-              Math.pow(10, toToken?.decimals as number)}
+            {parseInt(job.jobCreated._toChain) !== chain?.id
+              ? '-'
+              : job?.jobCreated._amount /
+                Math.pow(10, toToken?.decimals as number)}
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>
-            <span>{job.jobCreateds[0]._toChain}</span>
+            <span>{job.jobCreated._toChain}</span>
           </div>
         </div>
       </div>
@@ -413,6 +310,14 @@ export const TaskData = ({ job }: { job: GetAllJobsQuery }) => {
 
 export const CancelJob = ({ jobId }: { jobId: string }) => {
   const { chain } = useNetwork();
+  const { data } = useCheckIfValidJob({
+    job_id: jobId,
+  });
+
+  if (data?.isCancellable) {
+    return null;
+  }
+
   const cancelJob = async () => {
     try {
       const args = [jobId];
@@ -451,5 +356,51 @@ export const CancelJob = ({ jobId }: { jobId: string }) => {
     >
       Cancel job
     </button>
+  );
+};
+
+const ExecutionData = ({ jobId }: { jobId: string }) => {
+  const { data: executionData } = useQuery(GetExecutedSourceChainsDocument, {
+    variables: {
+      where: {
+        _jobId: jobId,
+      },
+    },
+    context: { clientName: 'endpoint1' },
+  });
+  const { data } = useCheckIfValidJob({
+    job_id: jobId,
+  });
+
+  if (executionData && executionData.executedSourceChains.length === 0)
+    return null;
+
+  const costs = executionData?.executedSourceChains.reduce((acc, curr) => {
+    return acc + curr._fundsUsed;
+  }, 0);
+  return (
+    <div className='mt-8 flex justify-between'>
+      <div className='flex justify-center gap-8'>
+        <div className='flex flex-col justify-center'>
+          <span className='text-2xl font-bold'>
+            {(parseFloat(costs) / Math.pow(10, 18)).toFixed(4)} ETH
+          </span>
+          <span className='text-[#AFAEAE]'>Cost</span>
+        </div>
+        <div className='flex flex-col justify-center'>
+          <span className='text-2xl font-bold'>
+            {parseInt(data?.execution) + 1}
+          </span>
+          <span className='text-[#AFAEAE]'>Executions</span>
+        </div>
+      </div>
+      <div className='flex flex-col gap-[0.3rem] rounded-lg bg-[#282828] p-4'>
+        <span className='ml-auto text-2xl font-bold'>$ 364.26</span>
+        <span className='ml-auto text-[#AFAEAE]'>Gas Paid</span>
+        <span className='ml-auto rounded-[4.5rem] bg-[#393939] p-2 px-3 text-xs'>
+          Forward paying gas
+        </span>
+      </div>
+    </div>
   );
 };

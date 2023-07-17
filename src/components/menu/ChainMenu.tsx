@@ -117,12 +117,13 @@ export default function ChainMenu({
 
 export function TokenMenu({
   initialToken,
+  selectedChain,
   onTokenChange,
 }: {
+  selectedChain: number;
   initialToken: string;
   onTokenChange: (token: Token | null) => void;
 }) {
-  const { chain } = useNetwork();
   const [selectedToken, setSelectedToken] = React.useState<Token | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -133,9 +134,9 @@ export function TokenMenu({
     setAnchorEl(null);
   };
   React.useEffect(() => {
-    if (initialToken && chain) {
+    if (initialToken && selectedChain) {
       try {
-        const token = TOKENS[chain.id].filter(
+        const token = TOKENS[selectedChain].filter(
           (d) => d.address === initialToken
         )[0];
         onTokenChange(token);
@@ -145,7 +146,7 @@ export function TokenMenu({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialToken, chain]);
+  }, [initialToken, selectedChain]);
 
   return (
     <div>
@@ -155,6 +156,7 @@ export function TokenMenu({
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        disabled={!selectedChain}
         style={{
           color: '#fff',
         }}
@@ -167,7 +169,9 @@ export function TokenMenu({
             {selectedToken.name}
           </div>
         ) : (
-          <div className='text-white text-opacity-20'>Select a token</div>
+          <div className='text-white text-opacity-20'>
+            {selectedChain ? 'Select a token' : 'Select chain to proceed'}
+          </div>
         )}
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -199,8 +203,8 @@ export function TokenMenu({
           horizontal: 'left',
         }}
       >
-        {chain?.id &&
-          TOKENS[chain.id].map((token, index) => (
+        {selectedChain &&
+          TOKENS[selectedChain].map((token, index) => (
             <MenuItem
               onClick={() => {
                 onTokenChange(token);

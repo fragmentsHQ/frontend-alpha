@@ -7,7 +7,6 @@ import clsxm from '@/lib/clsxm';
 import Card from '@/components/cards';
 import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';
-import Row from '@/components/rows/Row';
 
 import { TriggerValues } from '@/pages';
 

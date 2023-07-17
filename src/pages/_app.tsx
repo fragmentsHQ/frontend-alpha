@@ -29,10 +29,10 @@ import InitiateProvider from '@/components/InitiateProvider';
 import Seo from '@/components/Seo';
 
 const endpoint1 = new HttpLink({
-  uri: 'https://api.studio.thegraph.com/proxy/18071/fragments/version/latest',
+  uri: 'https://api.studio.thegraph.com/proxy/47865/fragments-graph/version/latest',
 });
 const endpoint2 = new HttpLink({
-  uri: 'https://api.studio.thegraph.com/query/47865/fragments-mumbai/v0.0.1',
+  uri: 'https://api.studio.thegraph.com/proxy/47865/fragments-mumbai/version/latest',
 });
 
 //pass them to apollo-client config
