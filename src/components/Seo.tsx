@@ -48,6 +48,11 @@ export default function Seo(props: SeoProps) {
       <meta property='og:url' content={`${meta.url}${router.asPath}`} />
       <link rel='canonical' href={`${meta.url}${router.asPath}`} />
       {/* Open Graph */}
+      <link
+        rel='icon'
+        href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💠</text></svg>'
+      />
+
       <meta property='og:type' content={meta.type} />
       <meta property='og:site_name' content={meta.siteName} />
       <meta property='og:description' content={meta.description} />
@@ -69,11 +74,7 @@ export default function Seo(props: SeoProps) {
             content={meta.date}
           />
           {/* // !STARTERCONF Remove or change to your name */}
-          <meta
-            name='author'
-            property='article:author'
-            content='Theodorus Clarence'
-          />
+          <meta name='author' property='article:author' content='Fragments' />
         </>
       )}
 
@@ -81,9 +82,9 @@ export default function Seo(props: SeoProps) {
       {favicons.map((linkProps) => (
         <link key={linkProps.href} {...linkProps} />
       ))}
-      <meta name='msapplication-TileColor' content='#000' />
+      <meta name='msapplication-TileColor' content='#131822' />
       <meta name='msapplication-config' content='/favicon/browserconfig.xml' />
-      <meta name='theme-color' content='#000' />
+      <meta name='theme-color' content='#131822' />
     </Head>
   );
 }
@@ -114,5 +115,4 @@ const favicons: Array<React.ComponentPropsWithoutRef<'link'>> = [
     href: '/favicon/safari-pinned-tab.svg',
     color: '#00e887',
   },
-  { rel: 'shortcut icon', href: '/favicon/favicon.ico' },
 ];
