@@ -56,7 +56,7 @@ export const TOKENS: Record<number, Token[]> = {
       id: '0',
       symbol: 'USDC',
       name: 'USDC',
-      address: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+      address: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
       decimals: 6,
       image:
         'https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389',

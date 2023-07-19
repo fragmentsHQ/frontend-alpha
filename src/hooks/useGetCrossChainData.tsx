@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { goerli } from 'wagmi';
-import { polygonMumbai } from 'wagmi/dist/chains';
+import { polygonMumbai } from 'wagmi/chains';
 
 const getChain: Record<number, string> = {
   [goerli.id]:
@@ -104,7 +104,9 @@ const useGetCrossChainData = ({
       body: JSON.stringify({ query }),
     };
     const request = new Request(url, options);
-    return fetch(request);
+    return fetch(request, {
+      mode: 'cors',
+    });
   };
   const fetchOriginTransfer = async () => {
     try {
@@ -133,7 +135,6 @@ const useGetCrossChainData = ({
       );
       const data = await res.json();
       return data;
-      return transferId;
     } catch (error) {
       return null;
     }
@@ -151,6 +152,7 @@ const useGetCrossChainData = ({
       throw new Error('No transferId found');
     }
     const data = await fetchDestinationTransfer(transferId);
+    debugger;
     if (!data) {
       throw new Error('No data found');
     }

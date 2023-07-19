@@ -6,7 +6,7 @@ import { devtools, persist } from 'zustand/middleware';
 
 import { Token } from '@/config/tokens';
 
-interface Data {
+export interface Data {
   id: string;
   to_address: string;
   destination_token: string;

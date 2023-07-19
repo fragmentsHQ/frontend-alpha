@@ -11,7 +11,34 @@ import Autopay from '../abi/Autopay.json';
 import Conditional from '../abi/Conditional.json';
 import Treasury from '../abi/Treasury.json';
 
+export const ethReg = /^0x[a-fA-F0-9]{40}$/g;
+
 const ISPRODUCTION = false;
+
+export const URL: Record<number, string> = {
+  1: 'https://api.0x.org/',
+  5: 'https://goerli.api.0x.org/',
+  137: 'https://polygon.api.0x.org/',
+  80001: 'https://mumbai.api.0x.org/',
+  38: 'https://bsc.api.0x.org/',
+  10: 'https://optimism.api.0x.org/',
+  250: 'https://fantom.api.0x.org/',
+  42220: 'https://celo.api.0x.org/',
+  43114: 'https://avalanche.api.0x.org/',
+  42161: 'https://arbitrum.api.0x.org/',
+};
+export const BUY_TOKENS: Record<number, string> = {
+  1: 'ETH',
+  5: 'ETH',
+  137: 'https://polygon.api.0x.org/',
+  80001: 'MATIC',
+  38: 'https://bsc.api.0x.org/',
+  10: 'https://optimism.api.0x.org/',
+  250: 'https://fantom.api.0x.org/',
+  42220: 'https://celo.api.0x.org/',
+  43114: 'https://avalanche.api.0x.org/',
+  42161: 'https://arbitrum.api.0x.org/',
+};
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 

@@ -13,11 +13,13 @@ import { encodeFunctionData } from 'viem';
 import { useNetwork, useToken } from 'wagmi';
 
 import useCheckIfValidJob from '@/hooks/useCheckIfValidJob';
+import useGetCrossChainData from '@/hooks/useGetCrossChainData';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES, ZERO_ADDRESS } from '@/config/contracts';
+import { TOKENS } from '@/config/tokens';
 import { GetAJobDocument, GetAJobQuery } from '@/graphql/getAJob.generated';
 import { GetExecutedSourceChainsDocument } from '@/graphql/getAllExecutedChainData.generated';
 import { GelatoIcon } from '@/pages/job/[jobId]';
@@ -246,9 +248,12 @@ export const TaskData = ({ job }: { job: GetAJobQuery['jobCreated'] }) => {
     address: job.jobCreated._fromToken,
     chainId: chain?.id,
   });
-  const { data: toToken } = useToken({
-    address: '0xe6b8a5cf854791412c1f6efc7caf629f5df1c747',
+  const toToken = TOKENS[job.jobCreated._toChain as number].filter((e) => {
+    return e.address.toLowerCase() === job.jobCreated._toToken.toLowerCase();
+  })[0];
+  const { data } = useGetCrossChainData({
     chainId: job.jobCreated._toChain,
+    transactionHash: job.jobCreated.transactionHash,
   });
   return (
     <div className='mt-8 flex h-[10rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
