@@ -152,7 +152,6 @@ const useGetCrossChainData = ({
       throw new Error('No transferId found');
     }
     const data = await fetchDestinationTransfer(transferId);
-    debugger;
     if (!data) {
       throw new Error('No data found');
     }
