@@ -307,7 +307,9 @@ const PolygonTasks = ({ jobId }: { jobId: string }) => {
           {selectedTableCategory === 'Executions' ? (
             <TransactionTable />
           ) : (
-            <GelatoIcon />
+            <div>
+              <GelatoIcon />
+            </div>
           )}
         </div>
       </div>

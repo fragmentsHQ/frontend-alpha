@@ -24,8 +24,13 @@ const useGetRelayerFee = ({
         '&buyToken=' +
         BUY_TOKENS[toChain] +
         '&sellAmount=1000000000000000000';
+      // sellAMt * token decimal
+
+      // after getting the resp get buyAmount and compare it with the Fee from connext
       const req = await fetch(url);
+
       const res = await req.json();
+      debugger;
       return {
         price: res.price,
       };

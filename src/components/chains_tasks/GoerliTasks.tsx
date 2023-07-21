@@ -13,7 +13,6 @@ import { encodeFunctionData } from 'viem';
 import { useNetwork, useToken } from 'wagmi';
 
 import useCheckIfValidJob from '@/hooks/useCheckIfValidJob';
-import useGetCrossChainData from '@/hooks/useGetCrossChainData';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 import TransactionTable from '@/components/table/TransactionTable';
@@ -251,10 +250,7 @@ export const TaskData = ({ job }: { job: GetAJobQuery['jobCreated'] }) => {
   const toToken = TOKENS[job.jobCreated._toChain as number].filter((e) => {
     return e.address.toLowerCase() === job.jobCreated._toToken.toLowerCase();
   })[0];
-  const { data } = useGetCrossChainData({
-    chainId: job.jobCreated._toChain,
-    transactionHash: job.jobCreated.transactionHash,
-  });
+
   return (
     <div className='mt-8 flex h-[10rem] w-full rounded-lg border border-solid border-[#AFAEAE] bg-[#262229]'>
       <div className='flex w-[48.5%] flex-col justify-start space-y-4 rounded-lg bg-[#262229] p-5'>
@@ -373,6 +369,8 @@ const ExecutionData = ({ jobId }: { jobId: string }) => {
     },
     context: { clientName: 'endpoint1' },
   });
+
+  console.log(executionData);
   const { data } = useCheckIfValidJob({
     job_id: jobId,
   });

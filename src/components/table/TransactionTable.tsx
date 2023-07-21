@@ -14,6 +14,7 @@ import { ImSpinner2 } from 'react-icons/im';
 import { useNetwork, useToken } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
+import useGetCrossChainData from '@/hooks/useGetCrossChainData';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
 
@@ -238,7 +239,7 @@ const TransactionRow = ({ row }: { row: any }) => {
     },
     context: { clientName: 'endpoint1' },
   });
-
+  console.log();
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
       {columns.map((column) => {
@@ -270,9 +271,13 @@ const TransactionRow = ({ row }: { row: any }) => {
             {column.id === 'transaction' && data.jobCreated && (
               <Sender job={data.jobCreated} />
             )}
-            {column.id === 'destination_transaction' && (
-              <Receiver job={data.jobCreated} />
-            )}
+            {column.id === 'destination_transaction' &&
+              row.transaction_hash.address && (
+                <Receiver
+                  job={data.jobCreated}
+                  executedTxnHash={row.transaction_hash.address}
+                />
+              )}
             {column.id === 'status' && (
               <UnstyledLink
                 href='https://etherscan.io'
@@ -322,7 +327,13 @@ text-[#AFAEAE]'
   );
 };
 
-const Receiver = ({ job }: { job: any }) => {
+const Receiver = ({
+  job,
+  executedTxnHash,
+}: {
+  job: any;
+  executedTxnHash: string;
+}) => {
   const { chain } = useNetwork();
   const { data: fromToken } = useToken({
     address: job._toToken as string,
@@ -347,4 +358,43 @@ text-[#AFAEAE]'
       </div>
     );
   }
+
+  if (parseInt(job._toChain) !== chain?.id && executedTxnHash) {
+    return <CrossChain executedTxnHash={executedTxnHash} chainId={chain?.id} />;
+  }
+
+  return null;
+};
+
+export const CrossChain = ({
+  chainId,
+  executedTxnHash,
+}: {
+  chainId: string;
+  executedTxnHash: string;
+}) => {
+  const { amount } = useGetCrossChainData({
+    chainId: parseInt(chainId),
+    transactionHash: executedTxnHash,
+  });
+
+  if (!amount) return null;
+
+  return (
+    <div>
+      <span className='block text-[#AFAEAE]'>
+        Token :{' '}
+        <span className='text-white'>
+          {data.amount}&nbsp;
+          {data.token}
+        </span>
+      </span>
+      <span
+        className='mt-1 block
+text-[#AFAEAE]'
+      >
+        Chain : <span className='text-white'>{data.chain}</span>
+      </span>
+    </div>
+  );
 };

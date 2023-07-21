@@ -225,10 +225,10 @@ const TokenTableRow: React.FC<{
   row: Data;
 }> = ({ row }): JSX.Element => {
   const { data } = useGetRelayerFee({
-    toChain: row.destination_chain,
-    destinationTokenAddress: row.destination_token,
+    toChain: 5,
+    destinationTokenAddress: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
   });
-  console.log(data);
+  console.log(data, 'Relayer fees');
   const { enteredRows, setEnteredRows } = useTableData();
 
   return (
