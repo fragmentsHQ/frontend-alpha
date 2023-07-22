@@ -48,8 +48,10 @@ const Time = () => {
     (item) =>
       item.amount_of_source_token !== '' &&
       item.amount_of_source_token !== '0' &&
+      parseInt(item.amount_of_source_token) !== 0 &&
       item.destination_chain !== 0 &&
       item.destination_token !== '' &&
+      item.isError === false &&
       item.to_address
   );
   const { fetchAllowance, handleApprove, handleTimeExecution } =

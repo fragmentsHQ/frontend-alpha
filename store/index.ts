@@ -12,6 +12,7 @@ export interface Data {
   destination_token: string;
   destination_chain: number;
   amount_of_source_token: string;
+  isError: boolean;
 }
 
 interface GlobalState {
@@ -50,6 +51,7 @@ export const rows: Data[] = [
     destination_token: '',
     amount_of_source_token: '',
     destination_chain: 0,
+    isError: false,
   },
 ];
 
@@ -57,7 +59,6 @@ const useGlobalStore = create<GlobalState>()(
   devtools(
     (set) => ({
       provider: null,
-
       signer: null,
       sourceChain: null,
       sourceToken: null,

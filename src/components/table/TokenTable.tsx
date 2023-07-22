@@ -19,6 +19,8 @@ import { v4 } from 'uuid';
 const TEST_ADD = '0xd67D11499679CBcd33c0c2a7B792FC3d6aE628e9';
 
 import { TextField } from '@mui/material';
+import { ImSpinner2 } from 'react-icons/im';
+import { useNetwork } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
 import useGetRelayerFee from '@/hooks/useGetRelayerFee';
@@ -71,6 +73,7 @@ export default function TokenTable() {
     setPage(0);
   };
 
+  console.log(enteredRows);
   return (
     <div className='mt-4 rounded-[10px] bg-[#272E3C] px-4 py-6'>
       <CSVReader
@@ -224,11 +227,6 @@ export default function TokenTable() {
 const TokenTableRow: React.FC<{
   row: Data;
 }> = ({ row }): JSX.Element => {
-  const { data } = useGetRelayerFee({
-    toChain: 5,
-    destinationTokenAddress: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
-  });
-  console.log(data, 'Relayer fees');
   const { enteredRows, setEnteredRows } = useTableData();
 
   return (
@@ -312,24 +310,14 @@ const TokenTableRow: React.FC<{
               <AmountInput
                 value={value as string}
                 placeholder='Enter amount'
+                destinationChain={row.destination_chain}
                 onValueChange={(value, error) => {
-                  if (error) {
-                    const newdata = enteredRows.map((er) => {
-                      return er.id === row.id
-                        ? {
-                            ...er,
-                            amount_of_source_token: '',
-                          }
-                        : er;
-                    });
-                    setEnteredRows(newdata);
-                    return;
-                  }
                   const newdata = enteredRows.map((er) => {
                     return er.id === row.id
                       ? {
                           ...er,
                           amount_of_source_token: value,
+                          isError: error,
                         }
                       : er;
                   });
@@ -364,6 +352,7 @@ const TokenTableRow: React.FC<{
                     destination_chain: 0,
                     destination_token: '',
                     to_address: '',
+                    isError: false,
                   },
                 ]);
               }}
@@ -444,29 +433,71 @@ const TokenInput: React.FC<
 };
 const AmountInput: React.FC<
   React.ComponentPropsWithoutRef<'input'> & {
+    destinationChain: number;
     onValueChange: (value: string, isError: boolean) => void;
   }
-> = ({ className, onValueChange, ...rest }) => {
+> = ({ className, value, onValueChange, destinationChain, ...rest }) => {
+  const { chain } = useNetwork();
+  const [_value, setValue] = React.useState(value);
+  const { mutateAsync, data, isLoading } = useGetRelayerFee();
   const [isError, setIsError] = React.useState(false);
 
+  React.useEffect(() => {
+    if (_value !== '') {
+      if (chain?.id === destinationChain) {
+        onValueChange(_value as string, false);
+        return;
+      }
+      mutateAsync({
+        amount: parseFloat(_value as string),
+        toChain: destinationChain,
+      })
+        .then((data) => {
+          if (parseFloat(data.fee) > parseFloat(data?.price)) {
+            setIsError(true);
+            onValueChange(_value as string, true);
+          } else {
+            setIsError(false);
+            onValueChange(_value as string, false);
+          }
+        })
+        .catch(() => {
+          setIsError(true);
+          onValueChange(_value as string, true);
+        });
+    }
+  }, [_value]);
+
+  React.useEffect(() => {
+    setValue(value);
+  }, [value]);
   return (
-    <div className='flex flex-col'>
+    <div className='relative flex w-[200px] flex-col'>
+      {isLoading && (
+        <div className='absolute left-3 top-3'>
+          <ImSpinner2 className='animate-spin' />
+        </div>
+      )}
       <input
         className={clsxm(
-          'truncate rounded-sm border border-transparent bg-transparent px-3 py-2 text-end font-medium focus:right-0 focus:border focus:border-white focus:outline-none',
+          ' truncate rounded-sm border border-transparent bg-transparent px-3 py-2 text-end font-medium focus:right-0 focus:border focus:border-white focus:outline-none',
           isError && 'border-2 border-red-700',
+          isLoading && 'border border-white',
           className
         )}
         type='number'
+        value={_value}
         onChange={(e) => {
           setIsError(false);
-          onValueChange(e.target.value, false);
-          setIsError(false);
+          setValue(e.target.value);
+          onValueChange(_value as string, true);
         }}
         {...rest}
       />
       {isError && (
-        <span className='font-bold text-red-700'>Max Limit is 200</span>
+        <span className='font-bold text-red-700'>
+          Minimum price is {parseFloat(data?.fee) / Math.pow(10, 18)} ETH
+        </span>
       )}
     </div>
   );

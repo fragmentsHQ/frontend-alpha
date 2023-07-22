@@ -51,6 +51,14 @@ const useAutoPayContract = () => {
       if (BigNumber.from(allowance).isZero()) {
         return null;
       }
+      const enteredAmount = enteredRows.reduce((acc, curr) => {
+        return Number(acc) + Number(curr.amount_of_source_token);
+      }, 0);
+
+      if (enteredAmount > parseFloat(BigNumber.from(allowance).toString())) {
+        return null;
+      }
+
       return allowance;
     } catch (error) {
       return null;
@@ -180,6 +188,7 @@ const useAutoPayContract = () => {
       toast.success('Transaction created successfully');
       return { hash: res.transactionHash };
     } catch (error) {
+      console.log(error, 'isError');
       return { hash: null };
     }
   };

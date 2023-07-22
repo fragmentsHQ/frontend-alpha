@@ -30,6 +30,7 @@
     "@rainbow-me/rainbowkit": "0.12.6",
     "@typechain/ethers-v5": "^10.2.0",
     "@types/uuid": "^9.0.2",
+    "@uidotdev/usehooks": "^2.0.1",
     "alchemy-sdk": "^2.8.3",
     "clsx": "^1.2.1",
     "dayjs": "^1.11.9",

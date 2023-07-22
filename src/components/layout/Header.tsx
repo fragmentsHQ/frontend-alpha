@@ -26,7 +26,7 @@ export default function Header() {
           >
             Balance ({balance} ETH)
           </Link>
-          <ConnectButton />
+          <ConnectButton showBalance />
         </div>
       </div>
     </header>

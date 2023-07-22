@@ -124,7 +124,7 @@ const LandingMenu = () => {
               aria-hidden='true'
             />
           </Menu.Button>
-          <Menu.Items className='absolute right-0 mt-2 flex w-full origin-top-right flex-col rounded-md bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+          <Menu.Items className='absolute right-0  mt-2 flex w-full origin-top-right flex-col rounded-md bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
             {chain?.id &&
               !chain.unsupported &&
               TOKENS[chain?.id].map((option, index: number) => (
@@ -133,7 +133,7 @@ const LandingMenu = () => {
                     <p
                       className={`${
                         active && 'bg-[#282828]'
-                      } flex w-full cursor-pointer items-center space-x-2 px-4 py-2 text-white`}
+                      } relative z-20 flex w-full cursor-pointer items-center space-x-2 rounded-lg bg-[#262229] px-4 py-2 text-white`}
                       onClick={() => setSourceToken(option as Token)}
                     >
                       {option.image && (
