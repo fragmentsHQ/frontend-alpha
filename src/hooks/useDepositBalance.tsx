@@ -1,7 +1,7 @@
 import { sendTransaction } from '@wagmi/core';
 import { useEffect, useState } from 'react';
 import { parseEther } from 'viem';
-import { useAccount, useNetwork, useProvider } from 'wagmi';
+import { useAccount, useNetwork, usePublicClient } from 'wagmi';
 
 import {
   ETH,
@@ -13,7 +13,7 @@ const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
   const [callDataDeposit, setCallDataDeposit] = useState('');
   const { chain } = useNetwork();
   const { address } = useAccount();
-  const provider = useProvider();
+  const provider = usePublicClient();
 
   const handleWithdraw = async ({ inputAmount }: { inputAmount: number }) => {
     if (chain === undefined) return;

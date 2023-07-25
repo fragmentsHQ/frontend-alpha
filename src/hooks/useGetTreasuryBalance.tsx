@@ -1,7 +1,7 @@
 import { readContract } from '@wagmi/core';
 import { BigNumber } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
-import { useAccount, useNetwork, useSigner } from 'wagmi';
+import { useAccount, useNetwork, useWalletClient } from 'wagmi';
 
 import { ETH } from '@/config/contracts';
 
@@ -11,7 +11,7 @@ const useGetTreasuryBalance = () => {
   const [balance, setBalance] = useState(0);
 
   const { address } = useAccount();
-  const { data: signer } = useSigner();
+  const { data: signer } = useWalletClient();
 
   const fetchB = async () => {
     try {

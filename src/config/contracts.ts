@@ -1,6 +1,7 @@
-import { getContract, goerli } from '@wagmi/core';
+import { getContract } from '@wagmi/core';
 import { Chain, erc20ABI } from 'wagmi';
 import {
+  goerli,
   arbitrumGoerli,
   optimismGoerli,
   polygonMumbai,
