@@ -42,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <WalletConfiguration>
           <Seo />
-          <InitiateProvider />
+          {/* <InitiateProvider /> */}
           <Component {...pageProps} />
         </WalletConfiguration>
       </QueryClientProvider>
