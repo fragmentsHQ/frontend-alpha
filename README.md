@@ -1,1 +1,1 @@
-# Get Funds deposited data from Graph
+# Alpha frontend for Autopay
