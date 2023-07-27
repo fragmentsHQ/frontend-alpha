@@ -5,20 +5,13 @@ import {
 } from '@rainbow-me/rainbowkit';
 import React, { ComponentProps } from 'react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import {
-  goerli,
-  polygonMumbai,
-} from 'wagmi/chains';
+import { goerli, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
-      ? [goerli, polygonMumbai]
-      : []),
-  ],
+  [goerli, polygonMumbai],
   [publicProvider()]
 );
 
