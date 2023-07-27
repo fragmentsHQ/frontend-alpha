@@ -2,8 +2,6 @@ import * as React from 'react';
 import useGlobalStore from 'store';
 import { useAccount, useNetwork } from 'wagmi';
 
-import clsxm from '@/lib/clsxm';
-
 import Card from '@/components/cards';
 import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';

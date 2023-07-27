@@ -1,21 +1,17 @@
-import React, { ComponentProps } from 'react';
-import '@rainbow-me/rainbowkit/styles.css';
 import {
   darkTheme,
   getDefaultWallets,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
-import type { AppProps } from 'next/app';
+import React, { ComponentProps } from 'react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import {
-  arbitrum,
   goerli,
-  mainnet,
-  polygon,
   polygonMumbai,
-  zora,
 } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+
+import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [

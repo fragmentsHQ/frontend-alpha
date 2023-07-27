@@ -11,11 +11,8 @@ export default async function fetchCrossChainData(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(req.body);
   const { chain_id } = req.body;
   const { transaction_hash } = req.body;
-  console.log(chain_id);
-  console.log(transaction_hash);
   res.status(200).json({ transferId: '' });
 
   const getTransferId = await fetch(getChain[chain_id as number], {
@@ -27,7 +24,6 @@ export default async function fetchCrossChainData(
   });
   const transferData = await getTransferId.json();
   const transferId = transferData.data.originTransfers[0].transferId;
-  console.log(transferId);
   const getDestinationData = await fetch(getChain[chain_id as number], {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -36,5 +32,5 @@ export default async function fetchCrossChainData(
     }),
   });
   const destinationData = await getDestinationData.json();
-  res.status(200).json({ transferId });
+  res.status(200).json({ transferId, destinationData });
 }

@@ -1,5 +1,6 @@
-import useAutoConnect from '@/hooks/useAutoConnect';
 import { ComponentProps } from 'react';
+
+import useAutoConnect from '@/hooks/useAutoConnect';
 
 const SafeProviderWrapper: React.FC<ComponentProps<'div'>> = ({ children }) => {
   useAutoConnect();

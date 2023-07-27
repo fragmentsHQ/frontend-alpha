@@ -5,13 +5,14 @@ import {
   HttpLink,
   InMemoryCache,
 } from '@apollo/client';
-import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import InitiateProvider from '@/components/InitiateProvider';
+
+import '../styles/globals.css';
+
+import SafeProviderWrapper from '@/components/SafeProvider';
 import Seo from '@/components/Seo';
 import WalletConfiguration from '@/components/WalletConfiguration';
-import SafeProviderWrapper from '@/components/SafeProvider';
 
 const endpoint1 = new HttpLink({
   uri: 'https://api.studio.thegraph.com/proxy/47865/fragments-graph/version/latest',

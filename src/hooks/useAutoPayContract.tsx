@@ -8,6 +8,7 @@ import {
   sendTransaction,
   waitForTransaction,
 } from '@wagmi/core';
+import { BigNumber } from 'alchemy-sdk';
 import { MaxUint256 } from 'ethers';
 import toast from 'react-hot-toast';
 import useGlobalStore, { useTableData } from 'store';
@@ -19,7 +20,6 @@ import {
   CONNEXT_DOMAINS,
   ZERO_ADDRESS,
 } from '../config/contracts';
-import { BigNumber } from 'alchemy-sdk';
 
 type AutomationArguments = {
   start_time: number;
@@ -166,7 +166,6 @@ const useAutoPayContract = () => {
         ],
         true,
       ];
-      debugger;
       const callDataCreateTimeTxn = encodeFunctionData({
         abi: AutoPayAbi.abi,
         functionName: '_createMultipleTimeAutomate',

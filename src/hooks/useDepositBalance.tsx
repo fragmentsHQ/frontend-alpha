@@ -1,8 +1,8 @@
 import { sendTransaction } from '@wagmi/core';
 import { useEffect, useState } from 'react';
 import { Address, parseEther } from 'viem';
-import { useAccount, useNetwork, usePublicClient } from 'wagmi';
 import { encodeFunctionData } from 'viem';
+import { useAccount, useNetwork, usePublicClient } from 'wagmi';
 
 import {
   ETH,

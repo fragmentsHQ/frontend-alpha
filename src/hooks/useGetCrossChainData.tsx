@@ -16,9 +16,9 @@ const useGetCrossChainData = ({
         }),
       });
       const data = await response.json();
-      console.log(data);
+      return data;
     } catch (error) {
-      console.log(error);
+      return null;
     }
   };
   React.useEffect(() => {
