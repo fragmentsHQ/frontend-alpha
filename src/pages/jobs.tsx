@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import useAutoConnect from '@/hooks/useAutoConnect';
-
 import JobsTab from '@/components/JobsTab';
 import Layout from '@/components/layout/Layout';
 
