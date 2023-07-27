@@ -1,5 +1,5 @@
 import { getContract } from '@wagmi/core';
-import { Chain, erc20ABI } from 'wagmi';
+import { Chain, erc20ABI, Address } from 'wagmi';
 import {
   goerli,
   arbitrumGoerli,
@@ -146,7 +146,7 @@ const TREASURY_CONTRACT = (chain: Chain) => {
   }
 };
 
-const ERC20_CONTRACT = (tokenAddress: string) =>
+const ERC20_CONTRACT = (tokenAddress: Address) =>
   getContract({
     address: tokenAddress,
     abi: erc20ABI,

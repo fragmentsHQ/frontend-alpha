@@ -1,7 +1,8 @@
 import { sendTransaction } from '@wagmi/core';
 import { useEffect, useState } from 'react';
-import { parseEther } from 'viem';
+import { Address, parseEther } from 'viem';
 import { useAccount, useNetwork, usePublicClient } from 'wagmi';
+import { encodeFunctionData } from 'viem';
 
 import {
   ETH,
@@ -10,7 +11,7 @@ import {
 } from '@/config/contracts';
 
 const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
-  const [callDataDeposit, setCallDataDeposit] = useState('');
+  const [callDataDeposit, setCallDataDeposit] = useState<Address | null>(null);
   const { chain } = useNetwork();
   const { address } = useAccount();
   const provider = usePublicClient();
@@ -19,14 +20,12 @@ const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
     if (chain === undefined) return;
     if (!provider) return;
     const TreasuryContract = TREASURY_CONTRACT(chain);
-
-    setCallDataDeposit(
-      TreasuryContract.interface.encodeFunctionData('depositFunds', [
-        address,
-        ETH,
-        parseEther(`${inputAmount}`, 'wei'),
-      ])
-    );
+    const callData = encodeFunctionData({
+      abi: TreasuryContract.abi,
+      functionName: 'depositFunds',
+      args: [address, ETH, parseEther(`${inputAmount}`, 'wei')],
+    });
+    setCallDataDeposit(callData);
   };
 
   useEffect(() => {
@@ -37,16 +36,14 @@ const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
 
   const sendDepositTokenAsyncTxn = async () => {
     try {
+      if (!callDataDeposit) return;
       if (chain === undefined) return;
       const { hash } = await sendTransaction({
-        request: {
-          to: TREASURY_CONTRACT_ADDRESSES[
-            chain?.testnet ? 'testnets' : 'mainnets'
-          ][chain?.id],
-          value: parseEther(`${inputAmount}`, 'wei'),
-          data: callDataDeposit,
-          gasLimit: 180000,
-        },
+        to: TREASURY_CONTRACT_ADDRESSES[
+          chain?.testnet ? 'testnets' : 'mainnets'
+        ][chain?.id],
+        value: parseEther(`${inputAmount}`, 'wei'),
+        data: callDataDeposit,
         mode: 'prepared',
       });
       return hash;

@@ -7,7 +7,6 @@ import JobsTab from '@/components/JobsTab';
 import Layout from '@/components/layout/Layout';
 
 const Jobs = () => {
-  useAutoConnect();
   return (
     <Layout>
       <div className='mx-auto  my-10 max-w-5xl'>

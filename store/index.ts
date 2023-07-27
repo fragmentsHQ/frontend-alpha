@@ -1,5 +1,5 @@
-import { Chain, Provider } from '@wagmi/core';
-import { Signer } from 'ethers';
+import { Chain } from '@wagmi/core';
+import { Provider, Signer } from 'ethers';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
@@ -62,8 +62,8 @@ const useGlobalStore = create<GlobalState>()(
       signer: null,
       sourceChain: null,
       sourceToken: null,
-      sourceType: null,
-      sourceTypeMode: null,
+      sourceType: 'Autopay',
+      sourceTypeMode: 'conditional',
       paymentMethod: null,
       onetimeSubOption: null,
       recurringSubOption: null,

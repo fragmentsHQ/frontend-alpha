@@ -8,11 +8,10 @@ import {
   sendTransaction,
   waitForTransaction,
 } from '@wagmi/core';
-import { BigNumber, ethers } from 'ethers';
-import { parseUnits } from 'ethers/lib/utils';
+import { MaxUint256 } from 'ethers';
 import toast from 'react-hot-toast';
 import useGlobalStore, { useTableData } from 'store';
-import { encodeFunctionData } from 'viem';
+import { encodeFunctionData, parseUnits } from 'viem';
 
 import AutoPayAbi from '../abi/Autopay.json';
 import {
@@ -20,6 +19,7 @@ import {
   CONNEXT_DOMAINS,
   ZERO_ADDRESS,
 } from '../config/contracts';
+import { BigNumber } from 'alchemy-sdk';
 
 type AutomationArguments = {
   start_time: number;
@@ -81,16 +81,14 @@ const useAutoPayContract = () => {
                 chain?.testnet ? 'testnets' : 'mainnets'
               ][chain?.id]
             : ZERO_ADDRESS,
-          ethers.constants.MaxUint256.toBigInt(),
+          MaxUint256,
         ],
       });
 
       const request = await prepareSendTransaction({
-        request: {
-          to: sourceToken.address,
-          data: callDataApproval,
-          value: BigInt(0),
-        },
+        to: sourceToken.address,
+        data: callDataApproval,
+        value: BigInt(0),
       });
       const { hash } = await sendTransaction(request);
 
@@ -101,6 +99,7 @@ const useAutoPayContract = () => {
       await fetchAllowance(chain);
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   };
@@ -121,7 +120,10 @@ const useAutoPayContract = () => {
         [
           ...enteredRows.map((e) =>
             e.amount_of_source_token
-              ? parseUnits(e.amount_of_source_token, sourceToken?.decimals)
+              ? parseUnits(
+                  e.amount_of_source_token,
+                  sourceToken?.decimals as number
+                )
               : '0'
           ),
         ],
@@ -162,8 +164,9 @@ const useAutoPayContract = () => {
               : 1
           ),
         ],
+        true,
       ];
-
+      debugger;
       const callDataCreateTimeTxn = encodeFunctionData({
         abi: AutoPayAbi.abi,
         functionName: '_createMultipleTimeAutomate',
@@ -171,15 +174,14 @@ const useAutoPayContract = () => {
       });
 
       const request = await prepareSendTransaction({
-        request: {
-          to: chain
-            ? AUTOPAY_CONTRACT_ADDRESSES[
-                chain?.testnet ? 'testnets' : 'mainnets'
-              ][chain?.id]
-            : ZERO_ADDRESS,
-          data: callDataCreateTimeTxn,
-          value: BigInt(0),
-        },
+        to: chain
+          ? AUTOPAY_CONTRACT_ADDRESSES[
+              chain?.testnet ? 'testnets' : 'mainnets'
+            ][chain?.id]
+          : ZERO_ADDRESS,
+        data: callDataCreateTimeTxn,
+
+        value: BigInt(0),
       });
       const { hash } = await sendTransaction(request);
       const res = await waitForTransaction({

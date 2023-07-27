@@ -16,16 +16,6 @@ export const TriggerValues = [
     name: 'Time',
     component: <Time />,
   },
-  {
-    id: 2,
-    name: 'Token Pair Price',
-    component: <TokenPairPrices />,
-  },
-  {
-    id: 3,
-    name: 'Gas Price',
-    component: <GasPrices />,
-  },
 ];
 
 const darkTheme = createTheme({
@@ -38,7 +28,6 @@ const darkTheme = createTheme({
 });
 
 const Home = () => {
-  useAutoConnect();
   return (
     <ThemeProvider theme={darkTheme}>
       <Layout>

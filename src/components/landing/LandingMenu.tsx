@@ -30,7 +30,7 @@ const LandingMenu = () => {
     <React.Fragment>
       <Row className='gap-[30px] ' direction='row'>
         <Menu as='div' className='relative w-full'>
-          <div className='mb-1 text-[18px] font-medium text-white'>
+          <div className='mb-3 text-[16px] font-medium text-white'>
             Source Chain
           </div>
           <Menu.Button
@@ -94,7 +94,7 @@ const LandingMenu = () => {
         </Menu>
 
         <Menu as='div' className='relative w-full'>
-          <div className='mb-1 text-[18px] font-medium text-white'>
+          <div className='mb-3 text-[16px] font-medium text-white'>
             Source Token
           </div>
 

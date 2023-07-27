@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import InitiateProvider from '@/components/InitiateProvider';
 import Seo from '@/components/Seo';
 import WalletConfiguration from '@/components/WalletConfiguration';
+import SafeProviderWrapper from '@/components/SafeProvider';
 
 const endpoint1 = new HttpLink({
   uri: 'https://api.studio.thegraph.com/proxy/47865/fragments-graph/version/latest',
@@ -43,6 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <WalletConfiguration>
           <Seo />
           {/* <InitiateProvider /> */}
+          <SafeProviderWrapper />
           <Component {...pageProps} />
         </WalletConfiguration>
       </QueryClientProvider>

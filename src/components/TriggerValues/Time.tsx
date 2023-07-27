@@ -43,12 +43,14 @@ const Time = () => {
   >(null);
   const [isError, setError] = React.useState(false);
   const { enteredRows } = useTableData();
-  const { sourceTypeMode, sourceToken } = useGlobalStore();
+  const { sourceTypeMode, sourceToken, sourceType, setSourceTypeMode } =
+    useGlobalStore();
   const isValid = enteredRows.every(
     (item) =>
       item.amount_of_source_token !== '' &&
       item.amount_of_source_token !== '0' &&
-      parseInt(item.amount_of_source_token) !== 0 &&
+      parseFloat(item.amount_of_source_token) !== 0 &&
+      parseFloat(item.amount_of_source_token) > 0 &&
       item.destination_chain !== 0 &&
       item.destination_token !== '' &&
       item.isError === false &&
@@ -99,37 +101,93 @@ const Time = () => {
   }, [chain, sourceToken]);
 
   return (
-    <div className='mt-6 w-full'>
+    <div className=' mx-auto mt-6 w-full max-w-[80%]'>
       <LoadingScreen
         {...transactionstate}
         handleClose={() => {
           setTransactionState(transactionInitialState);
         }}
       />
-      <div className='flex  w-full items-end justify-between space-x-4 rounded-[10px] bg-[#272E3C] px-4 py-3'>
-        <div className='w-[30%]'>
-          <p className='mb-2'>Start Time</p>
-          <DatePicker
-            isError={isError}
-            setError={setError}
-            onChange={(date) => {
-              setStartTime(date);
-            }}
-          />
-        </div>
-        {sourceTypeMode === 'Recurring' && (
-          <div className='flex w-[70%] items-end justify-between space-x-4'>
+      <div className='mx-auto rounded-[10px] bg-[#272E3C] px-6 py-4'>
+        <div className='mb-2 flex  h-[60px] items-center justify-center space-x-10'>
+          <div className='flex items-center '>
             <input
-              title='No of cycles'
-              placeholder='Enter no of cycles'
-              className='w-full rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
-              onChange={(e) => {
-                setNoOfCycles(parseInt(e.target.value));
+              id='default-radio-1'
+              type='radio'
+              checked={sourceTypeMode === 'conditional'}
+              onChange={() => {
+                setSourceTypeMode('conditional');
+              }}
+              name='default-radio'
+              className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
+            />
+            <label
+              htmlFor='default-radio-1'
+              className='ml-2 text-[16px] font-medium '
+            >
+              Conditional
+            </label>
+          </div>
+          <div className='flex items-center'>
+            <input
+              defaultChecked
+              id='default-radio-2'
+              type='radio'
+              name='default-radio'
+              checked={sourceTypeMode === 'recurring'}
+              onChange={() => {
+                setSourceTypeMode('recurring');
+              }}
+              className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
+            />
+            <label
+              htmlFor='default-radio-2'
+              className='ml-2 text-[16px] font-medium text-gray-900 dark:text-gray-300'
+            >
+              Recurring
+            </label>
+          </div>
+        </div>
+        <div className='flex  items-center justify-start space-x-6 '>
+          <div className='w-full max-w-[50%]'>
+            <p className='mb-2'>Start Time</p>
+            <DatePicker
+              isError={isError}
+              setError={setError}
+              onChange={(date) => {
+                setStartTime(date);
               }}
             />
+          </div>
+          {sourceType?.toLocaleLowerCase() === 'xstream' && (
             <div className='w-full'>
-              <p className='mb-2'>Select Frequency</p>
+              <p className='mb-2'>End Time</p>
+              <DatePicker
+                isError={isError}
+                setError={setError}
+                onChange={(date) => {
+                  setStartTime(date);
+                }}
+              />
+            </div>
+          )}
 
+          {sourceTypeMode === 'recurring' && (
+            <div className='w-full'>
+              <p className='mb-2'>Enter cycles</p>
+              <input
+                title='No of cycles'
+                placeholder='Enter no of cycles'
+                className='w-full rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
+                onChange={(e) => {
+                  setNoOfCycles(parseInt(e.target.value));
+                }}
+              />
+            </div>
+          )}
+          {sourceTypeMode === 'recurring' && (
+            <div className='w-full min-w-[200px]'>
+              <p className='mb-2'>Select Frequency</p>
               <FrequencyDialog
                 setOpen={setDialogOpen}
                 open={isDialogOpen}
@@ -139,22 +197,22 @@ const Time = () => {
                 setNoOfInterval={setNoOfInterval}
               />
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {!isError && startTime && <TokenTable />}
-      <div className='h-[50px]' />
-      {!isError && startTime && isValid && (
-        <Card className='mx-auto flex w-[864px] flex-col space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
+      {!isError && startTime && isValid && sourceToken && (
+        <Card className='mx-auto mt-6 flex w-full flex-col  space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
           <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
             Choose how the task should be paid for. The cost of each execution
             equals the network fee.
           </p>
-
-          <PreviewTabMenu />
+          <div className='mx-auto w-full max-w-[80%]'>
+            <PreviewTabMenu />
+          </div>
 
           {paymentMethod && (
-            <div className=' flex justify-center space-x-3'>
+            <div className=' mx-auto flex w-full max-w-[80%] justify-center space-x-3'>
               <button
                 onClick={async () => {
                   try {

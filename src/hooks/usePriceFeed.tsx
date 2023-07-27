@@ -5,10 +5,10 @@ import {
   waitForTransaction,
 } from '@wagmi/core';
 import dayjs from 'dayjs';
-import { parseUnits } from 'ethers/lib/utils';
+
 import toast from 'react-hot-toast';
 import useGlobalStore, { useTableData } from 'store';
-import { encodeFunctionData } from 'viem';
+import { encodeFunctionData, parseUnits } from 'viem';
 
 import {
   AUTOPAY_CONTRACT_ADDRESSES,

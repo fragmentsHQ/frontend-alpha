@@ -21,7 +21,7 @@ function useAutoConnect() {
         connector: safeConnector,
       });
     }
-    handleConnect();
+    // handleConnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, chains, address]);
 }

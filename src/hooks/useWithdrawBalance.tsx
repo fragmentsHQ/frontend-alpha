@@ -1,8 +1,8 @@
 import { sendTransaction } from '@wagmi/core';
 import { useEffect, useState } from 'react';
-import { parseEther } from 'viem';
-import { useAccount, useNetwork, useProvider } from 'wagmi';
-
+import { Address, parseEther } from 'viem';
+import { useAccount, useNetwork, usePublicClient } from 'wagmi';
+import { encodeFunctionData } from 'viem';
 import {
   ETH,
   TREASURY_CONTRACT,
@@ -10,10 +10,12 @@ import {
 } from '@/config/contracts';
 
 const useWithdrawBalance = ({ inputAmount }: { inputAmount: number }) => {
-  const [callDataWithdraw, setCallDataWithdraw] = useState('');
+  const [callDataWithdraw, setCallDataWithdraw] = useState<Address | null>(
+    null
+  );
   const { chain } = useNetwork();
   const { address } = useAccount();
-  const provider = useProvider();
+  const provider = usePublicClient();
 
   const handleUpdateWithdraw = async ({
     inputAmount,
@@ -23,14 +25,12 @@ const useWithdrawBalance = ({ inputAmount }: { inputAmount: number }) => {
     if (chain === undefined) return;
     if (!provider) return;
     const TreasuryContract = TREASURY_CONTRACT(chain);
-
-    setCallDataWithdraw(
-      TreasuryContract.interface.encodeFunctionData('withdrawFunds', [
-        address,
-        ETH,
-        parseEther(`${inputAmount}`, 'wei'),
-      ])
-    );
+    const callData = encodeFunctionData({
+      abi: TreasuryContract.abi,
+      functionName: 'withdrawFunds',
+      args: [address, ETH, parseEther(`${inputAmount}`, 'wei')],
+    });
+    setCallDataWithdraw(callData);
   };
 
   useEffect(() => {
@@ -41,16 +41,14 @@ const useWithdrawBalance = ({ inputAmount }: { inputAmount: number }) => {
 
   const sendWithdrawTokenAsyncTxn = async () => {
     try {
+      if (!callDataWithdraw) return;
       if (chain === undefined) return;
       const { hash } = await sendTransaction({
-        request: {
-          to: TREASURY_CONTRACT_ADDRESSES[
-            chain?.testnet ? 'testnets' : 'mainnets'
-          ][chain?.id],
-          value: parseEther(`${inputAmount}`, 'wei'),
-          data: callDataWithdraw,
-          gasLimit: 100000,
-        },
+        to: TREASURY_CONTRACT_ADDRESSES[
+          chain?.testnet ? 'testnets' : 'mainnets'
+        ][chain?.id],
+        value: parseEther(`${inputAmount}`, 'wei'),
+        data: callDataWithdraw,
         mode: 'prepared',
       });
       return hash;

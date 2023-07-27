@@ -86,6 +86,12 @@
           "internalType": "uint256",
           "name": "_amountOut",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "_isForwardPaying",
+          "type": "bool"
         }
       ],
       "name": "ExecutedSourceChain",
@@ -243,100 +249,9 @@
         },
         {
           "indexed": false,
-          "internalType": "enum AutoPay.Option",
-          "name": "option",
-          "type": "uint8"
-        }
-      ],
-      "name": "JobCreated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_taskCreator",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "_jobId",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "_gelatoTaskId",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_to",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_price",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "_fromToken",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "_toToken",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_toChain",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint32",
-          "name": "_destinationDomain",
-          "type": "uint32"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "_destinationContract",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_cycles",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_startTime",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_interval",
-          "type": "uint256"
+          "internalType": "bool",
+          "name": "_isForwardPaying",
+          "type": "bool"
         },
         {
           "indexed": false,
@@ -585,129 +500,6 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_from", "type": "address" },
-        { "internalType": "address", "name": "_to", "type": "address" },
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "_price", "type": "uint256" },
-        { "internalType": "address", "name": "_fromToken", "type": "address" },
-        { "internalType": "address", "name": "_toToken", "type": "address" },
-        { "internalType": "uint256", "name": "_toChain", "type": "uint256" },
-        {
-          "internalType": "uint32",
-          "name": "_destinationDomain",
-          "type": "uint32"
-        },
-        {
-          "internalType": "address",
-          "name": "_destinationContract",
-          "type": "address"
-        },
-        { "internalType": "uint256", "name": "_cycles", "type": "uint256" },
-        { "internalType": "uint256", "name": "_startTime", "type": "uint256" },
-        { "internalType": "uint256", "name": "_interval", "type": "uint256" },
-        {
-          "internalType": "uint256",
-          "name": "_relayerFeeInTransactingAsset",
-          "type": "uint256"
-        },
-        { "internalType": "address", "name": "_swapper", "type": "address" },
-        { "internalType": "bytes", "name": "_swapData", "type": "bytes" }
-      ],
-      "name": "_conditionalAutomateCron",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "_to", "type": "address" },
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "_price", "type": "uint256" },
-        { "internalType": "address", "name": "_fromToken", "type": "address" },
-        { "internalType": "address", "name": "_toToken", "type": "address" },
-        { "internalType": "address", "name": "_tokenA", "type": "address" },
-        { "internalType": "address", "name": "_tokenB", "type": "address" },
-        { "internalType": "uint256", "name": "_toChain", "type": "uint256" },
-        {
-          "internalType": "uint32",
-          "name": "_destinationDomain",
-          "type": "uint32"
-        },
-        {
-          "internalType": "address",
-          "name": "_destinationContract",
-          "type": "address"
-        },
-        { "internalType": "uint256", "name": "_cycles", "type": "uint256" },
-        { "internalType": "uint256", "name": "_startTime", "type": "uint256" },
-        { "internalType": "uint256", "name": "_interval", "type": "uint256" },
-        {
-          "internalType": "string",
-          "name": "_web3FunctionHash",
-          "type": "string"
-        }
-      ],
-      "name": "_createConditionalAutomate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address[]", "name": "_to", "type": "address[]" },
-        { "internalType": "uint256[]", "name": "_amount", "type": "uint256[]" },
-        { "internalType": "uint256[]", "name": "_price", "type": "uint256[]" },
-        {
-          "internalType": "address[]",
-          "name": "_fromToken",
-          "type": "address[]"
-        },
-        {
-          "internalType": "address[]",
-          "name": "_toToken",
-          "type": "address[]"
-        },
-        { "internalType": "address[]", "name": "_tokenA", "type": "address[]" },
-        { "internalType": "address[]", "name": "_tokenB", "type": "address[]" },
-        {
-          "internalType": "uint256[]",
-          "name": "_toChain",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "uint32[]",
-          "name": "_destinationDomain",
-          "type": "uint32[]"
-        },
-        {
-          "internalType": "address[]",
-          "name": "_destinationContract",
-          "type": "address[]"
-        },
-        { "internalType": "uint256[]", "name": "_cycles", "type": "uint256[]" },
-        {
-          "internalType": "uint256[]",
-          "name": "_startTime",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "_interval",
-          "type": "uint256[]"
-        },
-        {
-          "internalType": "string",
-          "name": "_web3FunctionHash",
-          "type": "string"
-        }
-      ],
-      "name": "_createMultipleConditionalAutomate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
         { "internalType": "address[]", "name": "_to", "type": "address[]" },
         { "internalType": "uint256[]", "name": "_amount", "type": "uint256[]" },
         {
@@ -745,7 +537,8 @@
           "internalType": "uint256[]",
           "name": "_interval",
           "type": "uint256[]"
-        }
+        },
+        { "internalType": "bool", "name": "_isForwardPaying", "type": "bool" }
       ],
       "name": "_createMultipleTimeAutomate",
       "outputs": [],
@@ -771,7 +564,8 @@
         },
         { "internalType": "uint256", "name": "_cycles", "type": "uint256" },
         { "internalType": "uint256", "name": "_startTime", "type": "uint256" },
-        { "internalType": "uint256", "name": "_interval", "type": "uint256" }
+        { "internalType": "uint256", "name": "_interval", "type": "uint256" },
+        { "internalType": "bool", "name": "_isForwardPaying", "type": "bool" }
       ],
       "name": "_createTimeAutomate",
       "outputs": [],
@@ -800,6 +594,19 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_gelatoTaskID",
+          "type": "bytes32"
+        }
+      ],
+      "name": "_forceCancelGelato",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -834,7 +641,6 @@
         { "internalType": "address", "name": "_from", "type": "address" },
         { "internalType": "address", "name": "_to", "type": "address" },
         { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "_price", "type": "uint256" },
         { "internalType": "address", "name": "_fromToken", "type": "address" },
         { "internalType": "address", "name": "_toToken", "type": "address" },
         { "internalType": "uint256", "name": "_toChain", "type": "uint256" },
@@ -850,64 +656,8 @@
         },
         { "internalType": "uint256", "name": "_cycles", "type": "uint256" },
         { "internalType": "uint256", "name": "_startTime", "type": "uint256" },
-        { "internalType": "uint256", "name": "_interval", "type": "uint256" }
-      ],
-      "name": "_getConditionalJobId",
-      "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-      "stateMutability": "pure",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "_from", "type": "address" },
-        { "internalType": "address", "name": "_to", "type": "address" },
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-        { "internalType": "address", "name": "_fromToken", "type": "address" },
-        { "internalType": "address", "name": "_toToken", "type": "address" },
-        { "internalType": "uint256", "name": "_toChain", "type": "uint256" },
-        {
-          "internalType": "uint32",
-          "name": "_destinationDomain",
-          "type": "uint32"
-        },
-        {
-          "internalType": "address",
-          "name": "_destinationContract",
-          "type": "address"
-        },
-        { "internalType": "uint256", "name": "_cycles", "type": "uint256" },
-        { "internalType": "uint256", "name": "_startTime", "type": "uint256" },
-        { "internalType": "uint256", "name": "_interval", "type": "uint256" }
-      ],
-      "name": "_getWeb3FunctionHash",
-      "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "_from", "type": "address" },
-        { "internalType": "address", "name": "_to", "type": "address" },
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-        { "internalType": "uint256", "name": "_price", "type": "uint256" },
-        { "internalType": "address", "name": "_fromToken", "type": "address" },
-        { "internalType": "address", "name": "_toToken", "type": "address" },
-        { "internalType": "address", "name": "_tokenA", "type": "address" },
-        { "internalType": "address", "name": "_tokenB", "type": "address" },
-        { "internalType": "uint256", "name": "_toChain", "type": "uint256" },
-        {
-          "internalType": "uint32",
-          "name": "_destinationDomain",
-          "type": "uint32"
-        },
-        {
-          "internalType": "address",
-          "name": "_destinationContract",
-          "type": "address"
-        },
-        { "internalType": "uint256", "name": "_cycles", "type": "uint256" },
-        { "internalType": "uint256", "name": "_startTime", "type": "uint256" },
-        { "internalType": "uint256", "name": "_interval", "type": "uint256" }
+        { "internalType": "uint256", "name": "_interval", "type": "uint256" },
+        { "internalType": "bool", "name": "_isForwardPaying", "type": "bool" }
       ],
       "name": "_getWeb3FunctionHash",
       "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
@@ -955,19 +705,13 @@
           "name": "_relayerFeeInTransactingAsset",
           "type": "uint256"
         },
+        { "internalType": "bool", "name": "_isForwardPaying", "type": "bool" },
         { "internalType": "address", "name": "_swapper", "type": "address" },
         { "internalType": "bytes", "name": "_swapData", "type": "bytes" }
       ],
       "name": "_timeAutomateCron",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "_transferGas",
-      "outputs": [],
-      "stateMutability": "payable",
       "type": "function"
     },
     {

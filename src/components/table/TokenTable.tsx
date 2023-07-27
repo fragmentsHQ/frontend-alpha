@@ -75,7 +75,7 @@ export default function TokenTable() {
 
   console.log(enteredRows);
   return (
-    <div className='mt-4 rounded-[10px] bg-[#272E3C] px-4 py-6'>
+    <div className='mx-auto mt-6 w-full rounded-[10px] bg-[#272E3C] px-4 py-6'>
       <CSVReader
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onUploadAccepted={(results: any) => {

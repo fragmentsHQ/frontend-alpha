@@ -34,7 +34,7 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
       <div
         className={`flex ${getWidthClassName(
           width
-        )} space-x-3 rounded-[16px] bg-[#373A40] p-2`}
+        )} mx-auto w-[40%] space-x-3 rounded-[16px] bg-[#272E3C] p-2`}
       >
         {options.map((option) => (
           <a
@@ -42,7 +42,7 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
               currentTab === option.value
                 ? 'bg-[#0047CE] font-medium text-white'
                 : 'bg-[#232323] text-white'
-            } flex w-full flex-1  cursor-pointer items-center justify-center rounded-[12px] py-2  text-[16px] transition-all  duration-200 focus:outline-none`}
+            } flex w-full flex-1  cursor-pointer items-center justify-center rounded-[12px] py-4  text-[18px] transition-all  duration-200 focus:outline-none`}
             key={option.value}
             onClick={() => onChange && onChange(option.value)}
           >
