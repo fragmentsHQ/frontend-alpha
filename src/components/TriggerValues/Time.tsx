@@ -101,7 +101,7 @@ const Time = () => {
   }, [chain, sourceToken]);
 
   return (
-    <div className=' mx-auto mt-6 w-full max-w-[80%]'>
+    <div className=' mx-auto mt-6 w-full'>
       <LoadingScreen
         {...transactionstate}
         handleClose={() => {

@@ -44,7 +44,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <WalletConfiguration>
           <Seo />
-          {/* <InitiateProvider /> */}
           <SafeProviderWrapper />
           <Component {...pageProps} />
         </WalletConfiguration>

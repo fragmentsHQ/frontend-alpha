@@ -34,7 +34,7 @@ const TabsMenu: React.FC<TabsMenuProps> = ({
       <div
         className={`flex ${getWidthClassName(
           width
-        )} mx-auto max-w-[40%] space-x-3 rounded-[16px] bg-[#272E3C] p-2`}
+        )} mx-auto max-w-full space-x-3 rounded-[16px] bg-[#272E3C] p-2`}
       >
         {options.map((option) => (
           <a

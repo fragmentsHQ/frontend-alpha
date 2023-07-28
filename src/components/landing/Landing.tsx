@@ -20,7 +20,7 @@ const tabMenus = [
 ];
 
 const Landing: React.FC = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { chain } = useNetwork();
   const {
     sourceToken,
@@ -43,7 +43,7 @@ const Landing: React.FC = () => {
 
   return (
     <React.Fragment>
-      <div className='mx-auto flex w-full flex-col space-y-6'>
+      <div className='mx-auto flex w-full max-w-[75%] flex-col space-y-6'>
         <p className='mb-6 mt-20 text-center text-[24px] font-bold leading-[29.05px] text-white '>
           The Fragments way of automating smart contracts{' '}
         </p>
@@ -52,10 +52,11 @@ const Landing: React.FC = () => {
           onChange={setSourceType}
           currentTab={sourceType}
         />
-        <Card className='mx-auto  w-[50%] bg-[#272E3C] p-4 shadow-none'>
+        <Card className='mx-auto  w-full bg-[#272E3C] p-4 shadow-none'>
           <Menu />
         </Card>
-        {isConnected &&
+        {address &&
+          isConnected &&
           chain?.id &&
           !chain?.unsupported &&
           TriggerValues[0].component}

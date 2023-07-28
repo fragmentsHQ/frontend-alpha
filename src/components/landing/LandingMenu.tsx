@@ -35,7 +35,7 @@ const LandingMenu = () => {
           </div>
           <Menu.Button
             disabled={chain?.unsupported || !isConnected}
-            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-2 text-[18px] disabled:cursor-not-allowed  '
+            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-4 text-[18px] disabled:cursor-not-allowed  '
           >
             <div className='font-normal text-white'>
               <div className='flex items-center space-x-2'>
@@ -100,7 +100,7 @@ const LandingMenu = () => {
 
           <Menu.Button
             disabled={chain?.unsupported || !isConnected}
-            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-2 text-[18px] disabled:cursor-not-allowed'
+            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-4 text-[18px] disabled:cursor-not-allowed'
           >
             <div className='font-mormal text-white'>
               {!sourceToken ? (
