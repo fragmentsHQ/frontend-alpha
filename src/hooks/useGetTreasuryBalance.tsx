@@ -34,7 +34,6 @@ const useGetTreasuryBalance = () => {
         )
       );
     } catch (error) {
-      debugger;
       setBalance(0);
     }
   };

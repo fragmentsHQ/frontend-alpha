@@ -170,7 +170,6 @@ const useAutoPayContract = () => {
         ],
         isForwardPayingGas,
       ];
-      debugger;
       const callDataCreateTimeTxn = encodeFunctionData({
         abi: AutoPayAbi.abi,
         functionName: '_createMultipleTimeAutomate',
