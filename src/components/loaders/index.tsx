@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { TransactionStates } from '@/components/TriggerValues/Time';
+import { useNetwork } from 'wagmi';
 
 export default function LoadingScreen({
   isApproving,
@@ -11,6 +12,7 @@ export default function LoadingScreen({
   isTransactionFailed,
   isTransactionProcessing,
   handleClose,
+  showJobSection,
   hash,
 }: TransactionStates & {
   handleClose: () => void;
@@ -38,6 +40,7 @@ export default function LoadingScreen({
         {isTransactionSuccessFul && (
           <TransactionSuccessfull
             handleClose={handleClose}
+            showJobSection={showJobSection}
             hash={hash as string}
           />
         )}
@@ -92,11 +95,15 @@ const TransactionPending = () => {
 const TransactionSuccessfull = ({
   hash,
   handleClose,
+  showJobSection,
 }: {
   hash: string;
   handleClose: () => void;
+  showJobSection?: boolean;
 }) => {
   const router = useRouter();
+  const { chain } = useNetwork();
+
   return (
     <div className='flex  w-[300px] flex-col items-center justify-center rounded-[10px] bg-[#262229] p-4'>
       <Image
@@ -108,7 +115,7 @@ const TransactionSuccessfull = ({
         alt='Loading'
       />
       <a
-        href={hash}
+        href={chain?.blockExplorers?.default.url + '/tx/' + hash}
         className='etherscan mb-2 flex items-center justify-center text-[14px] text-[#A0A0A0] underline'
       >
         view on etherscan <Arrow />
@@ -116,22 +123,26 @@ const TransactionSuccessfull = ({
       <p className='mx-auto w-[80%] text-center font-bold'>
         Transaction Successful
       </p>
-      <button
-        onClick={() => {
-          router.push('/jobs');
-        }}
-        className=' mt-4 w-[90%] rounded-lg bg-white px-4 py-4 text-[#1867FD]'
-      >
-        View Job
-      </button>
-      <button
-        onClick={() => {
-          handleClose();
-        }}
-        className='mt-2 w-[90%] rounded-lg bg-[#1867FD] px-4 py-4'
-      >
-        Create new job
-      </button>
+      {showJobSection && (
+        <>
+          <button
+            onClick={() => {
+              router.push('/jobs');
+            }}
+            className=' mt-4 w-[90%] rounded-lg bg-white px-4 py-4 text-[#1867FD]'
+          >
+            View Job
+          </button>
+          <button
+            onClick={() => {
+              handleClose();
+            }}
+            className='mt-2 w-[90%] rounded-lg bg-[#1867FD] px-4 py-4'
+          >
+            Create new job
+          </button>
+        </>
+      )}
     </div>
   );
 };
@@ -142,6 +153,7 @@ const TransactionFailed = ({
   handleClose: () => void;
   hash: string;
 }) => {
+  const { chain } = useNetwork();
   return (
     <div className='flex  w-[300px] flex-col items-center justify-center rounded-[10px] bg-[#262229] p-4'>
       <Image
@@ -153,7 +165,7 @@ const TransactionFailed = ({
         alt='Loading'
       />
       <a
-        href={hash}
+        href={chain?.blockExplorers?.default.url + '/tx/' + hash}
         className='etherscan mb-2 flex items-center justify-center text-[14px] text-[#A0A0A0] underline'
       >
         view on etherscan <Arrow />

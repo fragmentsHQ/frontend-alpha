@@ -68,7 +68,7 @@ export default function TransactionTable({
   }[];
 }) {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(4);
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -150,7 +150,7 @@ export default function TransactionTable({
                     className='flex h-[300px] w-full flex-col items-center 
                    justify-center text-white '
                   >
-                    <p className='mt-2'>No Deposits/withdrawals found</p>
+                    <p className='mt-2'>No Transactions found</p>
                   </div>
                 </TableCell>
               </TableRow>
@@ -182,7 +182,7 @@ export default function TransactionTable({
       </TableContainer>
       {fundsdata.length > 0 && (
         <TablePagination
-          rowsPerPageOptions={[2, 5, 10]}
+          rowsPerPageOptions={[2, 4, 8, 10]}
           component='div'
           style={{
             color: '#fff',

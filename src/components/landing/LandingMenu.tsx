@@ -8,6 +8,7 @@ import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import Row from '@/components/rows/Row';
 
 import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
+import clsxm from '@/lib/clsxm';
 
 export const getLogo = (name: string | undefined) => {
   switch (name) {
@@ -35,12 +36,12 @@ const LandingMenu = () => {
           </div>
           <Menu.Button
             disabled={chain?.unsupported || !isConnected}
-            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-4 text-[18px] disabled:cursor-not-allowed  '
+            className='align-left flex h-[50px] w-full items-center justify-between rounded-[10px] bg-[#262229] px-4 py-3 text-[18px] font-semibold disabled:cursor-not-allowed  '
           >
-            <div className='font-normal text-white'>
+            <div className='font-semibold text-white'>
               <div className='flex items-center space-x-2'>
                 {chain?.id && !chain.unsupported && (
-                  <div className='relative h-[20px] w-[20px]'>
+                  <div className='relative h-[30px] w-[30px]'>
                     <Image
                       src={CHAIN_IMAGES[chain?.id].image_url}
                       alt={chain?.name || ''}
@@ -58,24 +59,24 @@ const LandingMenu = () => {
               </div>
             </div>
             <ChevronDownIcon
-              className='-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100'
+              className='-mr-1 ml-2 h-6 w-6 text-violet-200 hover:text-violet-100'
               aria-hidden='true'
             />
           </Menu.Button>
-          <Menu.Items className='absolute right-0 mt-2 flex w-full origin-top-right flex-col rounded-md bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+          <Menu.Items className='absolute right-0  mt-2 flex w-full origin-top-right flex-col overflow-hidden rounded-[10px] bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
             {chains.map((option, index) => (
               <Menu.Item key={index}>
                 {({ active }) => (
                   <div
                     className={`${
                       active && 'bg-[#282828]'
-                    } flex w-full cursor-pointer items-center space-x-2 px-4 py-2 text-white`}
+                    } relative z-20 flex w-full cursor-pointer items-center space-x-2 bg-[#262229] px-4 py-3 text-white`}
                     onClick={() => {
                       switchNetwork?.(option.id);
                     }}
                   >
                     {option.id && (
-                      <div className={`relative h-[20px] w-[20px] `}>
+                      <div className={`relative h-[30px] w-[30px] `}>
                         <Image
                           src={CHAIN_IMAGES[option.id].image_url}
                           alt={option.name || ''}
@@ -100,14 +101,17 @@ const LandingMenu = () => {
 
           <Menu.Button
             disabled={chain?.unsupported || !isConnected}
-            className='align-left flex w-full items-center justify-between rounded-[10px] bg-[#262229] px-5 py-4 text-[18px] disabled:cursor-not-allowed'
+            className={clsxm(
+              'align-left flex h-[50px] w-full items-center justify-between rounded-[10px] bg-[#262229] px-4 py-3 text-[18px] font-semibold disabled:cursor-not-allowed',
+              !sourceToken && 'bg-[#0047CE]'
+            )}
           >
             <div className='font-mormal text-white'>
               {!sourceToken ? (
-                'Select your token'
+                'Select source token'
               ) : (
                 <div className='flex items-center '>
-                  <div className='relative mr-2 h-[20px] w-[20px]'>
+                  <div className='relative mr-2 h-[30px] w-[30px]'>
                     <Image
                       src={sourceToken.image}
                       alt={sourceToken.name || ''}
@@ -120,7 +124,7 @@ const LandingMenu = () => {
               )}
             </div>
             <ChevronDownIcon
-              className='-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100'
+              className='-mr-1 ml-2 h-6 w-6 text-violet-200 hover:text-violet-100'
               aria-hidden='true'
             />
           </Menu.Button>

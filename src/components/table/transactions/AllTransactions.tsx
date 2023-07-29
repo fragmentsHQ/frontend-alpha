@@ -6,6 +6,7 @@ import TransactionTable from '@/components/table/transactions';
 
 import { GetFundsDepositedsDocument } from '@/graphql/getFundsDeposited.generated';
 import { GetFundsWithdrawnsDocument } from '@/graphql/getFundsWithdrawn.generated';
+import { ImSpinner2 } from 'react-icons/im';
 
 const AllTransactions = () => {
   const { address } = useAccount();
@@ -25,7 +26,16 @@ const AllTransactions = () => {
     }
   );
 
-  if (!fundsdata || !withdrawnFunds) return null;
+  if (!fundsdata || !withdrawnFunds)
+    return (
+      <div
+        className='flex h-[300px] w-full flex-col items-center 
+   justify-center text-white '
+      >
+        <ImSpinner2 className='animate-spin' size={20} />
+        <p className='mt-2'>Fetching Transaction history.....</p>
+      </div>
+    );
 
   return (
     <TransactionTable

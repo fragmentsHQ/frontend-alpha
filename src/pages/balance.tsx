@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-import useDepositBalance from '@/hooks/useDepositBalance';
+import useDepositBalance, { TransactionState } from '@/hooks/useDepositBalance';
 import useGetTreasuryBalance from '@/hooks/useGetTreasuryBalance';
 import useWithdrawBalance from '@/hooks/useWithdrawBalance';
 
@@ -12,6 +12,7 @@ import Layout from '@/components/layout/Layout';
 import AllTransactionTable from '@/components/table/transactions/AllTransactions';
 import DepositTransactionTable from '@/components/table/transactions/DepositTransactions';
 import WithdrawTransactionTable from '@/components/table/transactions/WithdrawTransactions';
+import LoadingScreen from '@/components/loaders';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -28,7 +29,12 @@ const Profile = () => {
     inputAmount: parseFloat(withdrawAmount),
   });
 
-  const { sendDepositTokenAsyncTxn } = useDepositBalance({
+  const {
+    sendDepositTokenAsyncTxn,
+    transactionState: depositeTransactionState,
+    hash: despositHash,
+    setTransactionState,
+  } = useDepositBalance({
     inputAmount: parseFloat(inputAmount),
   });
 
@@ -75,6 +81,22 @@ const Profile = () => {
 
   return (
     <Layout>
+      <LoadingScreen
+        isApproving={false}
+        isTransactionFailed={
+          depositeTransactionState === TransactionState.FAILED
+        }
+        isTransactionProcessing={
+          depositeTransactionState === TransactionState.PROCESSING
+        }
+        hash={despositHash}
+        isTransactionSuccessFul={
+          depositeTransactionState === TransactionState.SUCCESS
+        }
+        handleClose={() => {
+          setTransactionState(null);
+        }}
+      />
       <div className='m-auto max-w-[67rem] px-10 py-8'>
         <button
           onClick={() => router.push('/')}

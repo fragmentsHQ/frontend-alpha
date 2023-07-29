@@ -22,6 +22,7 @@ export type TransactionStates = {
   isTransactionProcessing: boolean;
   isTransactionSuccessFul: boolean;
   isTransactionFailed: boolean;
+  showJobSection?: boolean;
   hash?: string;
 };
 
@@ -117,6 +118,7 @@ const Time = () => {
     <div className=' mx-auto mt-6 w-full'>
       <LoadingScreen
         {...transactionstate}
+        showJobSection={true}
         handleClose={() => {
           setTransactionState(transactionInitialState);
         }}

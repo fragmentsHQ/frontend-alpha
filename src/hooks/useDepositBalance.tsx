@@ -1,16 +1,25 @@
-import { sendTransaction } from '@wagmi/core';
+import { sendTransaction, waitForTransaction } from '@wagmi/core';
 import { useEffect, useState } from 'react';
 import { Address, parseEther } from 'viem';
 import { encodeFunctionData } from 'viem';
 import { useAccount, useNetwork, usePublicClient } from 'wagmi';
-
 import {
   ETH,
   TREASURY_CONTRACT,
   TREASURY_CONTRACT_ADDRESSES,
 } from '@/config/contracts';
+import { waitForTransactionReceipt } from 'viem/dist/types/actions/public/waitForTransactionReceipt';
+
+export enum TransactionState {
+  SUCCESS = 'success',
+  FAILED = 'failed',
+  PROCESSING = 'processsing',
+}
 
 const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
+  const [hash, setHash] = useState('');
+  const [transactionState, setTransactionState] =
+    useState<TransactionState | null>(null);
   const [callDataDeposit, setCallDataDeposit] = useState<Address | null>(null);
   const { chain } = useNetwork();
   const { address } = useAccount();
@@ -38,6 +47,7 @@ const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
     try {
       if (!callDataDeposit) return;
       if (chain === undefined) return;
+      setTransactionState(TransactionState.PROCESSING);
       const { hash } = await sendTransaction({
         to: TREASURY_CONTRACT_ADDRESSES[
           chain?.testnet ? 'testnets' : 'mainnets'
@@ -46,14 +56,23 @@ const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
         data: callDataDeposit,
         mode: 'prepared',
       });
+      const res = await waitForTransaction({
+        hash,
+      });
+      setTransactionState(TransactionState.SUCCESS);
+      setHash(hash);
       return hash;
     } catch (error) {
+      setTransactionState(TransactionState.FAILED);
       return null;
     }
   };
 
   return {
     sendDepositTokenAsyncTxn: sendDepositTokenAsyncTxn,
+    transactionState: transactionState,
+    hash: hash,
+    setTransactionState: setTransactionState,
   };
 };
 
