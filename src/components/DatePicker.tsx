@@ -8,15 +8,15 @@ import toast from 'react-hot-toast';
 export default function DatePicker({
   isError,
   setError,
+  defaultDateTime = dayjs().add(30, 'minutes'),
   onChange,
 }: {
   isError: boolean;
   setError: React.Dispatch<React.SetStateAction<boolean>>;
   onChange: (date: number | null) => void;
+  defaultDateTime?: Dayjs | null;
 }) {
-  const [value, setValue] = React.useState<Dayjs | null>(
-    dayjs().add(1, 'hour')
-  );
+  const [value, setValue] = React.useState<Dayjs | null>(defaultDateTime);
 
   const handleChange = (newValue: dayjs.Dayjs) => {
     setError(false);

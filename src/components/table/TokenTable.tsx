@@ -282,27 +282,16 @@ const TokenTableRow: React.FC<{
                 placeholder='Enter Address'
                 className='text-start placeholder:text-white placeholder:text-opacity-20'
                 onValueChange={(value, error) => {
-                  if (error) {
-                    const newdata = enteredRows.map((er) => {
-                      return er.id === row.id
-                        ? {
-                            ...er,
-                            to_address: '',
-                          }
-                        : er;
-                    });
-                    setEnteredRows(newdata);
-                  } else {
-                    const newdata = enteredRows.map((er) => {
-                      return er.id === row.id
-                        ? {
-                            ...er,
-                            to_address: value,
-                          }
-                        : er;
-                    });
-                    setEnteredRows(newdata);
-                  }
+                  const newdata = enteredRows.map((er) => {
+                    return er.id === row.id
+                      ? {
+                          ...er,
+                          to_address: value,
+                          isError: error,
+                        }
+                      : er;
+                  });
+                  setEnteredRows(newdata);
                 }}
               />
             )}
@@ -414,15 +403,15 @@ const TokenInput: React.FC<
       }}
       value={value}
       onChange={(e) => {
-        if (e.target.value === '') {
-          setIsError(false);
-          return;
-        }
-        if (!e.target.value.match(/^0x[a-fA-F0-9]{40}$/g)) {
-          onValueChange(e.target.value, isError);
+        setIsError(false);
+        if (
+          e.target.value === '' ||
+          !e.target.value.match(/^0x[a-fA-F0-9]{40}$/g)
+        ) {
+          onValueChange(e.target.value, true);
           setIsError(true);
         } else {
-          onValueChange(e.target.value, isError);
+          onValueChange(e.target.value, false);
           setIsError(false);
         }
       }}

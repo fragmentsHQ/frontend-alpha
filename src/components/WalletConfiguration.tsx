@@ -43,7 +43,7 @@ const WalletConfiguration: React.FC<ComponentProps<'div'>> = (props) => {
           overlayBlur: 'small',
         })}
         modalSize='compact'
-        initialChain={polygonMumbai}
+        initialChain={goerli}
         showRecentTransactions
         appInfo={demoAppInfo}
         chains={chains}

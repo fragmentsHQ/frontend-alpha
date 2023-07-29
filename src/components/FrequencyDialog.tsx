@@ -50,7 +50,7 @@ export default function FrequencyDialog({
         onClick={handleClickOpen}
         className='w-full cursor-pointer rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
       >
-        Select Frequency ({noOfInterval} {intervalType})
+        Select Frequency ({noOfInterval} {intervalType || 'day'})
       </div>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle

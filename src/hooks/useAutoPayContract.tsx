@@ -20,12 +20,14 @@ import {
   CONNEXT_DOMAINS,
   ZERO_ADDRESS,
 } from '../config/contracts';
+import { useState } from 'react';
 
 type AutomationArguments = {
   start_time: number;
   interval_type: 'days' | 'weeks' | 'months' | 'years' | null;
   cycles: number;
   interval_count: string;
+  isForwardPayingGas: boolean;
 };
 
 const useAutoPayContract = () => {
@@ -33,6 +35,7 @@ const useAutoPayContract = () => {
   const { address } = getAccount();
   const { sourceToken } = useGlobalStore();
   const { enteredRows } = useTableData();
+  const [transactionHash, setTransactionHash] = useState('');
   const fetchAllowance = async (chain: Chain) => {
     try {
       const allowance = await readContract({
@@ -109,6 +112,7 @@ const useAutoPayContract = () => {
     interval_type,
     interval_count = '1',
     cycles,
+    isForwardPayingGas,
   }: AutomationArguments) => {
     try {
       const args = [
@@ -164,14 +168,14 @@ const useAutoPayContract = () => {
               : 1
           ),
         ],
-        true,
+        isForwardPayingGas,
       ];
+      debugger;
       const callDataCreateTimeTxn = encodeFunctionData({
         abi: AutoPayAbi.abi,
         functionName: '_createMultipleTimeAutomate',
         args: args,
       });
-
       const request = await prepareSendTransaction({
         to: chain
           ? AUTOPAY_CONTRACT_ADDRESSES[

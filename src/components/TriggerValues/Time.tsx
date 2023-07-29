@@ -9,8 +9,13 @@ import Card from '@/components/cards';
 import DatePicker from '@/components/DatePicker';
 import FrequencyDialog from '@/components/FrequencyDialog';
 import LoadingScreen from '@/components/loaders';
-import PreviewTabMenu from '@/components/prevoiew/PreviewTab';
+import PreviewTabMenu, {
+  AutomationArguments,
+} from '@/components/prevoiew/PreviewTab';
 import TokenTable from '@/components/table/TokenTable';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import dayjs from 'dayjs';
+import clsxm from '@/lib/clsxm';
 
 export type TransactionStates = {
   isApproving: boolean;
@@ -41,6 +46,9 @@ const Time = () => {
   const [intervalType, setIntervalType] = useState<
     'days' | 'weeks' | 'months' | 'years' | null
   >(null);
+  const [gasMethods, setGasMethods] = useState<AutomationArguments | null>(
+    null
+  );
   const [isError, setError] = React.useState(false);
   const { enteredRows } = useTableData();
   const { sourceTypeMode, sourceToken, sourceType, setSourceTypeMode } =
@@ -71,6 +79,8 @@ const Time = () => {
         cycles: noOfCycles,
         interval_count: noOfInterval,
         interval_type: intervalType,
+        isForwardPayingGas:
+          gasMethods === AutomationArguments.FORWARD_PAYING_GAS,
       });
 
       if (!res?.hash) {
@@ -100,6 +110,9 @@ const Time = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chain, sourceToken]);
 
+  const isRecurring =
+    sourceTypeMode === 'recurring' ? (noOfCycles === 0 ? false : true) : true;
+
   return (
     <div className=' mx-auto mt-6 w-full'>
       <LoadingScreen
@@ -108,48 +121,36 @@ const Time = () => {
           setTransactionState(transactionInitialState);
         }}
       />
-      <div className='mx-auto rounded-[10px] bg-[#272E3C] px-6 py-4'>
-        <div className='mb-2 flex  h-[60px] items-center justify-center space-x-10'>
-          <div className='flex items-center '>
-            <input
-              id='default-radio-1'
-              type='radio'
-              checked={sourceTypeMode === 'conditional'}
-              onChange={() => {
-                setSourceTypeMode('conditional');
-              }}
-              name='default-radio'
-              className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
-            />
-            <label
-              htmlFor='default-radio-1'
-              className='ml-2 text-[16px] font-medium '
-            >
-              Conditional
-            </label>
-          </div>
-          <div className='flex items-center'>
-            <input
-              defaultChecked
-              id='default-radio-2'
-              type='radio'
-              name='default-radio'
+      <div className='relative mx-auto rounded-[10px] bg-[#272E3C] px-6 py-4'>
+        <div className='-mr-2 -mt-2 mb-2 flex items-center justify-end'>
+          {sourceType?.toLocaleLowerCase() === 'autopay' && (
+            <FormControlLabel
               checked={sourceTypeMode === 'recurring'}
               onChange={() => {
+                if (sourceTypeMode === 'recurring') {
+                  setNoOfCycles(0);
+                  setIntervalType(null);
+                  setSourceTypeMode('conditional');
+                  return;
+                }
                 setSourceTypeMode('recurring');
               }}
-              className='h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
+              control={
+                <Checkbox
+                  sx={{
+                    color: '#ffff',
+                    '&.Mui-checked': {
+                      color: '#1867FD',
+                    },
+                  }}
+                />
+              }
+              label='Recurring Payments'
             />
-            <label
-              htmlFor='default-radio-2'
-              className='ml-2 text-[16px] font-medium text-gray-900 dark:text-gray-300'
-            >
-              Recurring
-            </label>
-          </div>
+          )}
         </div>
         <div className='flex  items-center justify-start space-x-6 '>
-          <div className='w-full max-w-[50%]'>
+          <div className='w-full max-w-[48%]'>
             <p className='mb-2'>Start Time</p>
             <DatePicker
               isError={isError}
@@ -164,6 +165,7 @@ const Time = () => {
               <p className='mb-2'>End Time</p>
               <DatePicker
                 isError={isError}
+                defaultDateTime={dayjs().add(2, 'hour')}
                 setError={setError}
                 onChange={(date) => {
                   setStartTime(date);
@@ -172,47 +174,64 @@ const Time = () => {
             </div>
           )}
 
-          {sourceTypeMode === 'recurring' && (
-            <div className='w-full'>
-              <p className='mb-2'>Enter cycles</p>
-              <input
-                title='No of cycles'
-                placeholder='Enter no of cycles'
-                className='w-full rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
-                onChange={(e) => {
-                  setNoOfCycles(parseInt(e.target.value));
-                }}
-              />
-            </div>
-          )}
-          {sourceTypeMode === 'recurring' && (
-            <div className='w-full min-w-[200px]'>
-              <p className='mb-2'>Select Frequency</p>
-              <FrequencyDialog
-                setOpen={setDialogOpen}
-                open={isDialogOpen}
-                intervalType={intervalType}
-                setIntervalType={setIntervalType}
-                noOfInterval={noOfInterval}
-                setNoOfInterval={setNoOfInterval}
-              />
-            </div>
-          )}
+          {sourceTypeMode === 'recurring' &&
+            sourceType?.toLocaleLowerCase() === 'autopay' && (
+              <div className='w-full'>
+                <p className='mb-2'>Enter cycles</p>
+                <input
+                  title='No of cycles'
+                  placeholder='Enter no of cycles'
+                  type='number'
+                  className={clsxm(
+                    'w-full rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:border-[#464646] focus:outline-none focus:ring-0',
+                    !isRecurring && 'border-red-500 placeholder:text-white'
+                  )}
+                  onChange={(e) => {
+                    if (e.target.value === '' || e.target.value === '0') {
+                      setNoOfCycles(0);
+                      return;
+                    }
+                    setNoOfCycles(parseInt(e.target.value));
+                  }}
+                />
+              </div>
+            )}
+          {sourceTypeMode === 'recurring' &&
+            sourceType?.toLocaleLowerCase() === 'autopay' && (
+              <div className='w-full min-w-[200px]'>
+                <p className='mb-2'>Select Frequency</p>
+                <FrequencyDialog
+                  setOpen={setDialogOpen}
+                  open={isDialogOpen}
+                  intervalType={intervalType}
+                  setIntervalType={setIntervalType}
+                  noOfInterval={noOfInterval}
+                  setNoOfInterval={setNoOfInterval}
+                />
+              </div>
+            )}
         </div>
       </div>
       {!isError && startTime && <TokenTable />}
-      {!isError && startTime && isValid && sourceToken && (
-        <Card className='mx-auto mt-6 flex w-full flex-col  space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
-          <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
-            Choose how the task should be paid for. The cost of each execution
-            equals the network fee.
-          </p>
-          <div className='mx-auto w-full max-w-[80%]'>
-            <PreviewTabMenu />
-          </div>
 
-          {paymentMethod && (
-            <div className=' mx-auto flex w-full max-w-[80%] justify-center space-x-3'>
+      {!isError && startTime && isValid && sourceToken && isRecurring && (
+        <>
+          <Card className='mx-auto mt-6 flex w-full flex-col  space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
+            <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
+              Choose how the task should be paid for. The cost of each execution
+              equals the network fee.
+            </p>
+            <div className='mx-auto w-full max-w-[80%]'>
+              <PreviewTabMenu
+                gasMethods={gasMethods}
+                setGasMethods={(value) => {
+                  setGasMethods(value);
+                }}
+              />
+            </div>
+          </Card>
+          {gasMethods && (
+            <div className=' mx-auto mt-6 flex w-full max-w-[100%] justify-center space-x-6'>
               <button
                 onClick={async () => {
                   try {
@@ -249,7 +268,7 @@ const Time = () => {
                   }
                 }}
                 disabled={isApproved}
-                className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-opacity-50 disabled:text-opacity-20'
+                className='w-full rounded-[12px] bg-[#0047CE] px-20 py-4 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#464646] disabled:bg-opacity-50 disabled:text-opacity-20'
               >
                 {' '}
                 Confirm Token Allowance
@@ -259,14 +278,14 @@ const Time = () => {
                 onClick={() => {
                   confirmTransaction();
                 }}
-                className='rounded-[12px] bg-[#0047CE] px-20 py-3 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-[#464646] disabled:bg-opacity-50 disabled:text-opacity-20'
+                className='w-full rounded-[12px] bg-[#0047CE] px-20 py-4 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#464646]  disabled:bg-opacity-50 disabled:text-opacity-20'
               >
                 {' '}
                 Confirm by signing
               </button>
             </div>
           )}
-        </Card>
+        </>
       )}
     </div>
   );
