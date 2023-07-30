@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import useGlobalStore, { useTableData } from 'store';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import useAutoPayContract from '@/hooks/useAutoPayContract';
 
+import Menu from '@/components/landing/LandingMenu';
 import Card from '@/components/cards';
 import DatePicker from '@/components/DatePicker';
 import FrequencyDialog from '@/components/FrequencyDialog';
@@ -37,8 +38,8 @@ const Time = () => {
   const [transactionstate, setTransactionState] = useState<TransactionStates>(
     transactionInitialState
   );
+  const { isConnected, address } = useAccount();
   const [isApproved, setApproved] = useState(false);
-  const { paymentMethod } = useGlobalStore();
 
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
@@ -114,6 +115,14 @@ const Time = () => {
   const isRecurring =
     sourceTypeMode === 'recurring' ? (noOfCycles === 0 ? false : true) : true;
 
+  const isDisabled =
+    isError &&
+    !startTime &&
+    !isValid &&
+    !sourceToken &&
+    !isRecurring &&
+    !gasMethods;
+  console.log(isDisabled);
   return (
     <div className=' mx-auto mt-6 w-full'>
       <LoadingScreen
@@ -215,80 +224,82 @@ const Time = () => {
         </div>
       </div>
       {!isError && startTime && <TokenTable />}
-
-      {!isError && startTime && isValid && sourceToken && isRecurring && (
-        <>
-          <Card className='mx-auto mt-6 flex w-full flex-col  space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
-            <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
-              Choose how the task should be paid for. The cost of each execution
-              equals the network fee.
-            </p>
-            <div className='mx-auto w-full max-w-[80%]'>
-              <PreviewTabMenu
-                gasMethods={gasMethods}
-                setGasMethods={(value) => {
-                  setGasMethods(value);
-                }}
-              />
-            </div>
-          </Card>
-          {gasMethods && (
-            <div className=' mx-auto mt-6 flex w-full max-w-[100%] justify-center space-x-6'>
-              <button
-                onClick={async () => {
-                  try {
-                    if (!chain) return;
-                    setTransactionState({
-                      ...transactionInitialState,
-                      isApproving: true,
-                    });
-                    const allowance = await fetchAllowance(chain);
-                    if (allowance) {
-                      setApproved(true);
-                      setTransactionState({
-                        ...transactionInitialState,
-                        isApproving: false,
-                      });
-                    } else {
-                      const res = await handleApprove();
-                      if (res) {
-                        setApproved(true);
-                        setTransactionState({
-                          ...transactionInitialState,
-                          isApproving: false,
-                        });
-                      } else {
-                        throw new Error('No');
-                      }
-                    }
-                  } catch (error) {
-                    setApproved(false);
+      <Card className='mx-auto  mt-6 w-full bg-[#272E3C] p-4 shadow-none'>
+        <Menu />
+      </Card>
+      {/* {!isError && startTime && isValid && sourceToken && isRecurring && ( */}
+      <>
+        <Card className='mx-auto mt-6 flex w-full flex-col  space-y-10 bg-[#272E3C] p-[26px] shadow-none'>
+          <p className='flex w-full justify-center text-[18px] font-normal leading-[28px] text-white'>
+            Choose how the task should be paid for. The cost of each execution
+            equals the network fee.
+          </p>
+          <div className='mx-auto w-full max-w-[80%]'>
+            <PreviewTabMenu
+              gasMethods={gasMethods}
+              setGasMethods={(value) => {
+                setGasMethods(value);
+              }}
+            />
+          </div>
+        </Card>
+        {/* {gasMethods && ( */}
+        <div className=' mx-auto mt-6 flex w-full max-w-[100%] justify-center space-x-6'>
+          <button
+            onClick={async () => {
+              try {
+                if (!chain) return;
+                setTransactionState({
+                  ...transactionInitialState,
+                  isApproving: true,
+                });
+                const allowance = await fetchAllowance(chain);
+                if (allowance) {
+                  setApproved(true);
+                  setTransactionState({
+                    ...transactionInitialState,
+                    isApproving: false,
+                  });
+                } else {
+                  const res = await handleApprove();
+                  if (res) {
+                    setApproved(true);
                     setTransactionState({
                       ...transactionInitialState,
                       isApproving: false,
                     });
+                  } else {
+                    throw new Error('No');
                   }
-                }}
-                disabled={isApproved}
-                className='w-full rounded-[12px] bg-[#0047CE] px-20 py-4 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#464646] disabled:bg-opacity-50 disabled:text-opacity-20'
-              >
-                {' '}
-                Confirm Token Allowance
-              </button>
-              <button
-                disabled={!isApproved}
-                onClick={() => {
-                  confirmTransaction();
-                }}
-                className='w-full rounded-[12px] bg-[#0047CE] px-20 py-4 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#464646]  disabled:bg-opacity-50 disabled:text-opacity-20'
-              >
-                {' '}
-                Confirm by signing
-              </button>
-            </div>
-          )}
-        </>
-      )}
+                }
+              } catch (error) {
+                setApproved(false);
+                setTransactionState({
+                  ...transactionInitialState,
+                  isApproving: false,
+                });
+              }
+            }}
+            disabled={sourceToken ? isApproved || isDisabled : true}
+            className='w-full rounded-[12px] bg-[#0047CE] px-20 py-4 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#464646] disabled:bg-opacity-50 disabled:text-opacity-20'
+          >
+            {' '}
+            Confirm Token Allowance
+          </button>
+          <button
+            disabled={!isApproved || isDisabled}
+            onClick={() => {
+              confirmTransaction();
+            }}
+            className='w-full rounded-[12px] bg-[#0047CE] px-20 py-4 text-[16px] font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#464646]  disabled:bg-opacity-50 disabled:text-opacity-20'
+          >
+            {' '}
+            Confirm by signing
+          </button>
+        </div>
+        {/* )} */}
+      </>
+      {/* )} */}
     </div>
   );
 };

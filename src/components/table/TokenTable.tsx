@@ -43,14 +43,14 @@ const columns: readonly Column[] = [
   {
     id: 'destination_chain',
     label: 'Destination chain',
-    minWidth: 170,
+    minWidth: 240,
   },
   { id: 'destination_token', label: 'Destination Token', minWidth: 100 },
 
   {
     id: 'amount_of_source_token',
     label: 'Amount of source token',
-    minWidth: 170,
+    minWidth: 100,
     align: 'right',
   },
 ];

@@ -44,7 +44,7 @@ export const GoBackLink = () => {
             d='M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18'
           />
         </svg>
-        <p>Go back</p>
+        <div>Go back</div>
       </div>
     </button>
   );

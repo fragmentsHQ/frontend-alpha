@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Chain, useNetwork } from 'wagmi';
 
 import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
+import { chains } from '@/config/contracts';
 
 export default function ChainMenu({
   initialChain,
@@ -20,7 +21,6 @@ export default function ChainMenu({
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const { chains } = useNetwork();
   const handleClose = () => {
     setAnchorEl(null);
   };

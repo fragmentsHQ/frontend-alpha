@@ -3,7 +3,6 @@ import useGlobalStore from 'store';
 import { useAccount, useNetwork } from 'wagmi';
 
 import Card from '@/components/cards';
-import Menu from '@/components/landing/LandingMenu';
 import TabsMenu from '@/components/landing/Tab';
 
 import { TriggerValues } from '@/pages';
@@ -20,8 +19,6 @@ const tabMenus = [
 ];
 
 const Landing: React.FC = () => {
-  const { isConnected, address } = useAccount();
-  const { chain } = useNetwork();
   const {
     sourceToken,
     setSourceType,
@@ -52,14 +49,7 @@ const Landing: React.FC = () => {
           onChange={setSourceType}
           currentTab={sourceType}
         />
-        <Card className='mx-auto  w-full bg-[#272E3C] p-4 shadow-none'>
-          <Menu />
-        </Card>
-        {address &&
-          isConnected &&
-          chain?.id &&
-          !chain?.unsupported &&
-          TriggerValues[0].component}
+        {TriggerValues[0].component}
       </div>
     </React.Fragment>
   );

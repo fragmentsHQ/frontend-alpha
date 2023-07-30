@@ -1,5 +1,5 @@
 import { getContract } from '@wagmi/core';
-import { Address,Chain, erc20ABI } from 'wagmi';
+import { Address, Chain, erc20ABI } from 'wagmi';
 import {
   arbitrumGoerli,
   goerli,
@@ -15,6 +15,102 @@ import Treasury from '../abi/Treasury.json';
 export const ethReg = /^0x[a-fA-F0-9]{40}$/g;
 
 const ISPRODUCTION = false;
+
+export const chains: Chain[] = [
+  {
+    id: 5,
+    network: 'goerli',
+    name: 'Goerli',
+    nativeCurrency: {
+      name: 'Goerli Ether',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: {
+      alchemy: {
+        http: ['https://eth-goerli.g.alchemy.com/v2'],
+        webSocket: ['wss://eth-goerli.g.alchemy.com/v2'],
+      },
+      infura: {
+        http: ['https://goerli.infura.io/v3'],
+        webSocket: ['wss://goerli.infura.io/ws/v3'],
+      },
+      default: {
+        http: ['https://rpc.ankr.com/eth_goerli'],
+      },
+      public: {
+        http: ['https://rpc.ankr.com/eth_goerli'],
+      },
+    },
+    blockExplorers: {
+      etherscan: {
+        name: 'Etherscan',
+        url: 'https://goerli.etherscan.io',
+      },
+      default: {
+        name: 'Etherscan',
+        url: 'https://goerli.etherscan.io',
+      },
+    },
+    contracts: {
+      ensRegistry: {
+        address: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+      },
+      ensUniversalResolver: {
+        address: '0x56522D00C410a43BFfDF00a9A569489297385790',
+        blockCreated: 8765204,
+      },
+      multicall3: {
+        address: '0xca11bde05977b3631167028862be2a173976ca11',
+        blockCreated: 6507670,
+      },
+    },
+    testnet: true,
+  },
+  {
+    id: 80001,
+    name: 'Polygon Mumbai',
+    network: 'maticmum',
+    nativeCurrency: {
+      name: 'MATIC',
+      symbol: 'MATIC',
+      decimals: 18,
+    },
+    rpcUrls: {
+      alchemy: {
+        http: ['https://polygon-mumbai.g.alchemy.com/v2'],
+        webSocket: ['wss://polygon-mumbai.g.alchemy.com/v2'],
+      },
+      infura: {
+        http: ['https://polygon-mumbai.infura.io/v3'],
+        webSocket: ['wss://polygon-mumbai.infura.io/ws/v3'],
+      },
+      default: {
+        http: ['https://matic-mumbai.chainstacklabs.com'],
+      },
+      public: {
+        http: ['https://matic-mumbai.chainstacklabs.com'],
+      },
+    },
+    blockExplorers: {
+      etherscan: {
+        name: 'PolygonScan',
+        url: 'https://mumbai.polygonscan.com',
+      },
+      default: {
+        name: 'PolygonScan',
+        url: 'https://mumbai.polygonscan.com',
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: '0xca11bde05977b3631167028862be2a173976ca11',
+        blockCreated: 25770160,
+      },
+    },
+    testnet: true,
+  },
+];
 
 export const URL: Record<number, string> = {
   1: 'https://api.0x.org/',
