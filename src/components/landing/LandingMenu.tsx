@@ -30,14 +30,18 @@ const LandingMenu = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <React.Fragment>
-      <TokenModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        onTokenChange={(token) => {
-          setSourceToken(token);
-          setIsOpen(false);
-        }}
-      />
+      {chain && (
+        <TokenModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          onTokenChange={(token) => {
+            setSourceToken(token);
+            setIsOpen(false);
+          }}
+          chainId={chain.id}
+        />
+      )}
+
       <Row className='gap-[30px] ' direction='row'>
         <Menu as='div' className='relative w-full'>
           <div className='mb-3 text-[16px] font-medium text-white'>

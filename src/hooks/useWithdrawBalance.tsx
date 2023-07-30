@@ -1,4 +1,4 @@
-import { sendTransaction } from '@wagmi/core';
+import { sendTransaction, waitForTransaction } from '@wagmi/core';
 import { useEffect, useState } from 'react';
 import { Address, parseEther } from 'viem';
 import { encodeFunctionData } from 'viem';
@@ -9,8 +9,12 @@ import {
   TREASURY_CONTRACT,
   TREASURY_CONTRACT_ADDRESSES,
 } from '@/config/contracts';
+import { TransactionState } from '@/hooks/useDepositBalance';
 
 const useWithdrawBalance = ({ inputAmount }: { inputAmount: number }) => {
+  const [hash, setHash] = useState('');
+  const [transactionState, setTransactionState] =
+    useState<TransactionState | null>(null);
   const [callDataWithdraw, setCallDataWithdraw] = useState<Address | null>(
     null
   );
@@ -44,6 +48,7 @@ const useWithdrawBalance = ({ inputAmount }: { inputAmount: number }) => {
     try {
       if (!callDataWithdraw) return;
       if (chain === undefined) return;
+      setTransactionState(TransactionState.PROCESSING);
       const { hash } = await sendTransaction({
         to: TREASURY_CONTRACT_ADDRESSES[
           chain?.testnet ? 'testnets' : 'mainnets'
@@ -52,14 +57,22 @@ const useWithdrawBalance = ({ inputAmount }: { inputAmount: number }) => {
         data: callDataWithdraw,
         mode: 'prepared',
       });
+      const res = await waitForTransaction({
+        hash,
+      });
+      setTransactionState(TransactionState.SUCCESS);
       return hash;
     } catch (error) {
+      setTransactionState(TransactionState.FAILED);
       return null;
     }
   };
 
   return {
     sendWithdrawTokenAsyncTxn: sendWithdrawTokenAsyncTxn,
+    transactionState: transactionState,
+    hash: hash,
+    setTransactionState: setTransactionState,
   };
 };
 

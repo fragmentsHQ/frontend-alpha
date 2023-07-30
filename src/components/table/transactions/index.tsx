@@ -67,6 +67,7 @@ export default function TransactionTable({
     token: { symbol: string };
   }[];
 }) {
+  const { chain } = useNetwork();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -97,7 +98,10 @@ export default function TransactionTable({
           date: fund.blockTimestamp,
           transaction_hash: fund.transactionHash,
           status: 'success',
-          tx_amount: `${parseFloat(fund.amount) / Math.pow(10, 18)} ETH`,
+          tx_amount:
+            `${parseFloat(fund.amount) / Math.pow(10, 18)}` +
+            ' ' +
+            chain?.nativeCurrency.symbol,
           gas_paid: '0.0000000',
         };
       }

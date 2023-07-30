@@ -13,6 +13,9 @@ import AllTransactionTable from '@/components/table/transactions/AllTransactions
 import DepositTransactionTable from '@/components/table/transactions/DepositTransactions';
 import WithdrawTransactionTable from '@/components/table/transactions/WithdrawTransactions';
 import LoadingScreen from '@/components/loaders';
+import { CHAIN_IMAGES } from '@/config/tokens';
+import { useNetwork } from 'wagmi';
+import { goerli, polygonMumbai } from 'wagmi/chains';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -20,12 +23,18 @@ function classNames(...classes: string[]) {
 
 const Profile = () => {
   const router = useRouter();
+  const { chain } = useNetwork();
   const [selectedCategory, setSelectedCategory] = useState('Deposit');
   const [selectedTableCategory, setSelectedTableCategory] = useState('All');
   const [inputAmount, setInputAmount] = useState('');
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const balanceETH = useGetTreasuryBalance();
-  const { sendWithdrawTokenAsyncTxn } = useWithdrawBalance({
+  const {
+    sendWithdrawTokenAsyncTxn,
+    transactionState: withdrawTransaction,
+    hash: withdrawHash,
+    setTransactionState: setWithdrawTransactionState,
+  } = useWithdrawBalance({
     inputAmount: parseFloat(withdrawAmount),
   });
 
@@ -33,7 +42,7 @@ const Profile = () => {
     sendDepositTokenAsyncTxn,
     transactionState: depositeTransactionState,
     hash: despositHash,
-    setTransactionState,
+    setTransactionState: setDepositTransactionState,
   } = useDepositBalance({
     inputAmount: parseFloat(inputAmount),
   });
@@ -84,17 +93,21 @@ const Profile = () => {
       <LoadingScreen
         isApproving={false}
         isTransactionFailed={
-          depositeTransactionState === TransactionState.FAILED
+          depositeTransactionState === TransactionState.FAILED ||
+          withdrawTransaction === TransactionState.FAILED
         }
         isTransactionProcessing={
-          depositeTransactionState === TransactionState.PROCESSING
+          depositeTransactionState === TransactionState.PROCESSING ||
+          withdrawTransaction === TransactionState.PROCESSING
         }
-        hash={despositHash}
+        hash={despositHash || withdrawHash}
         isTransactionSuccessFul={
-          depositeTransactionState === TransactionState.SUCCESS
+          depositeTransactionState === TransactionState.SUCCESS ||
+          withdrawTransaction === TransactionState.SUCCESS
         }
         handleClose={() => {
-          setTransactionState(null);
+          setDepositTransactionState(null);
+          setWithdrawTransactionState(null);
         }}
       />
       <div className='m-auto max-w-[67rem] px-10 py-8'>
@@ -112,7 +125,7 @@ const Profile = () => {
                 {balanceETH
                   ? parseFloat(balanceETH.toString()).toFixed(4)
                   : '-'}{' '}
-                ETH
+                {chain?.nativeCurrency.symbol}
               </span>
               {/* <span className='text-lg font-medium'>
                 ${' '}
@@ -129,14 +142,16 @@ const Profile = () => {
             </div>
           </div>
           <div className='inline-flex items-center justify-center gap-2 rounded-xl border border-solid border-[#464646] px-4 py-2 font-medium'>
-            <Image
-              width={20}
-              height={20}
-              className='w-5 rounded-full'
-              alt='Eth'
-              src='/logo/chains/Goerli.png'
-            />
-            Ethereum
+            {chain && (
+              <Image
+                width={20}
+                height={20}
+                className='w-5 rounded-full'
+                alt='Eth'
+                src={CHAIN_IMAGES[chain.id].image_url}
+              />
+            )}
+            {chain?.name}
           </div>
         </div>
         <div className='mt-9'>
@@ -200,12 +215,35 @@ const Profile = () => {
             </Tab.Group>
           </div>
           <div className='mt-4 bg-[#272E3C] p-5'>
-            {selectedTableCategory === 'All' && <AllTransactionTable />}
+            {selectedTableCategory === 'All' && (
+              <div>
+                {chain?.id === polygonMumbai.id && (
+                  <AllTransactionTable client='endpoint2' />
+                )}
+                {chain?.id === goerli.id && (
+                  <AllTransactionTable client='endpoint1' />
+                )}
+              </div>
+            )}
             {selectedTableCategory === 'Deposits' && (
-              <DepositTransactionTable />
+              <div>
+                {chain?.id === polygonMumbai.id && (
+                  <DepositTransactionTable client='endpoint2' />
+                )}
+                {chain?.id === goerli.id && (
+                  <DepositTransactionTable client='endpoint1' />
+                )}
+              </div>
             )}
             {selectedTableCategory === 'Withdrawals' && (
-              <WithdrawTransactionTable />
+              <div>
+                {chain?.id === polygonMumbai.id && (
+                  <WithdrawTransactionTable client='endpoint2' />
+                )}
+                {chain?.id === goerli.id && (
+                  <WithdrawTransactionTable client='endpoint1' />
+                )}
+              </div>
             )}
           </div>
         </div>

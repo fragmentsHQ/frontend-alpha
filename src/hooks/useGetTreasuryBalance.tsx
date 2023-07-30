@@ -3,9 +3,10 @@ import { BigNumber } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork, useWalletClient } from 'wagmi';
 
-import { ETH, TREASURY_CONTRACT_ADDRESSES } from '@/config/contracts';
+import { ETH, TREASURY_CONTRACT_ADDRESSES, MATIC } from '@/config/contracts';
 
 import TreasuryAbi from '../abi/Treasury.json';
+import { NATIVE_TOKENS } from '@/config/tokens';
 const useGetTreasuryBalance = () => {
   const { chain } = useNetwork();
   const [balance, setBalance] = useState(0);
@@ -19,12 +20,12 @@ const useGetTreasuryBalance = () => {
       if (!signer) return;
       const data = await readContract({
         address:
-          TREASURY_CONTRACT_ADDRESSES[
-            chain.testnet ? 'testnets' : 'mainnet'
-          ][5],
+          TREASURY_CONTRACT_ADDRESSES[chain.testnet ? 'testnets' : 'mainnet'][
+            chain.id
+          ],
         abi: TreasuryAbi.abi,
         functionName: 'userTokenBalance',
-        args: [address, ETH],
+        args: [address, NATIVE_TOKENS[chain.id]],
       });
       setBalance(
         parseFloat(

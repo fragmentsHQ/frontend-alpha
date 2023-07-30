@@ -59,8 +59,8 @@ const useDepositBalance = ({ inputAmount }: { inputAmount: number }) => {
       const res = await waitForTransaction({
         hash,
       });
-      setTransactionState(TransactionState.SUCCESS);
       setHash(hash);
+      setTransactionState(TransactionState.SUCCESS);
       return hash;
     } catch (error) {
       setTransactionState(TransactionState.FAILED);

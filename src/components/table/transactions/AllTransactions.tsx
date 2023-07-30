@@ -8,13 +8,14 @@ import { GetFundsDepositedsDocument } from '@/graphql/getFundsDeposited.generate
 import { GetFundsWithdrawnsDocument } from '@/graphql/getFundsWithdrawn.generated';
 import { ImSpinner2 } from 'react-icons/im';
 
-const AllTransactions = () => {
+const AllTransactions = ({ client }: { client: 'endpoint1' | 'endpoint2' }) => {
   const { address } = useAccount();
 
   const { data: fundsdata, loading } = useQuery(GetFundsDepositedsDocument, {
     variables: {
       where: { sender: address },
     },
+    context: { clientName: client },
   });
 
   const { data: withdrawnFunds, loading: isWithdrawnLoading } = useQuery(
@@ -23,6 +24,7 @@ const AllTransactions = () => {
       variables: {
         where: { receiver: address },
       },
+      context: { clientName: client },
     }
   );
 

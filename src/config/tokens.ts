@@ -1,3 +1,4 @@
+import { ETH, MATIC } from '@/config/contracts';
 import { Address } from 'viem';
 import { goerli, polygonMumbai } from 'wagmi/chains';
 
@@ -18,6 +19,11 @@ export const CHAIN_IMAGES = {
   [goerli.id as number]: {
     image_url: require('../../public/logo/chains/Goerli.png'),
   },
+};
+
+export const NATIVE_TOKENS = {
+  [polygonMumbai.id as number]: ETH,
+  [goerli.id as number]: MATIC,
 };
 export const TOKENS: Record<number, Token[]> = {
   [polygonMumbai.id as number]: [

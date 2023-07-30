@@ -7,12 +7,16 @@ import React, { ComponentProps } from 'react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { goerli, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [goerli, polygonMumbai],
-  [publicProvider()]
+  [
+    alchemyProvider({ apiKey: 'NzvCDfoZ833NeFoQOXSXQDWfhCHhTa4u' }),
+    publicProvider(),
+  ]
 );
 
 const { connectors } = getDefaultWallets({

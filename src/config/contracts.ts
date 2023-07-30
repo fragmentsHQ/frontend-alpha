@@ -1,5 +1,5 @@
 import { getContract } from '@wagmi/core';
-import { Address,Chain, erc20ABI } from 'wagmi';
+import { Address, Chain, erc20ABI } from 'wagmi';
 import {
   arbitrumGoerli,
   goerli,
@@ -44,7 +44,7 @@ export const BUY_TOKENS: Record<number, string> = {
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 const ETH = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
-
+export const MATIC = '0x0000000000000000000000000000000000001010';
 const Web3FunctionHash = {
   autopay: 'QmbN96rTEy8EYxPNVqCUmZgTZzufvCbNhmsVzM2rephoLa',
   gas: '',

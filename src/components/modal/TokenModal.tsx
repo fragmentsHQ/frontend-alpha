@@ -26,14 +26,14 @@ export default function TokenModal({
   isOpen,
   setIsOpen,
   onTokenChange,
+  chainId,
 }: {
   isOpen: boolean;
+  chainId: number;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   onTokenChange: (token: Token) => void;
 }) {
   const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
-
-  const { chain } = useNetwork();
 
   function closeModal() {
     setIsOpen(false);
@@ -44,10 +44,10 @@ export default function TokenModal({
   }
 
   useEffect(() => {
-    if (chain) {
-      setFilteredTokens(TOKENS[chain?.id]);
+    if (chainId) {
+      setFilteredTokens(TOKENS[chainId]);
     }
-  }, []);
+  }, [chainId]);
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
@@ -124,17 +124,17 @@ export default function TokenModal({
                       placeholder='Search name'
                       onChange={(e) => {
                         const search = e.target.value;
-                        if (!chain) return;
+                        if (!chainId) return;
                         if (search.length > 0) {
                           setFilteredTokens(
-                            TOKENS[chain?.id].filter((token) =>
+                            TOKENS[chainId].filter((token) =>
                               token.name
                                 .toLowerCase()
                                 .includes(search.toLowerCase())
                             )
                           );
                         } else {
-                          setFilteredTokens(TOKENS[chain?.id]);
+                          setFilteredTokens(TOKENS[chainId]);
                         }
                       }}
                       className='ml-1 w-full bg-transparent px-2  py-2.5 focus:outline-none'

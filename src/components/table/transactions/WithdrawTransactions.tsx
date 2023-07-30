@@ -6,12 +6,19 @@ import TransactionTable from '@/components/table/transactions';
 
 import { GetFundsWithdrawnsDocument } from '@/graphql/getFundsWithdrawn.generated';
 
-const DepositTransactions = () => {
+const DepositTransactions = ({
+  client,
+}: {
+  client: 'endpoint1' | 'endpoint2';
+}) => {
   const { address } = useAccount();
 
   const { data: fundsdata, loading } = useQuery(GetFundsWithdrawnsDocument, {
     variables: {
       where: { receiver: address },
+    },
+    context: {
+      clientName: client,
     },
   });
 

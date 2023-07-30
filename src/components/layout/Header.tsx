@@ -3,9 +3,11 @@ import Link from 'next/link';
 import * as React from 'react';
 
 import useGetTreasuryBalance from '@/hooks/useGetTreasuryBalance';
+import { useNetwork } from 'wagmi';
 
 export default function Header() {
   const balance = useGetTreasuryBalance();
+  const { chain } = useNetwork();
   return (
     <header className='z-50'>
       <div className='flex w-full items-center justify-between px-4 py-6'>
@@ -24,7 +26,7 @@ export default function Header() {
             title='All Jobs'
             className='mr-2 rounded-lg border border-[#464646] bg-[#262229] px-2 py-2'
           >
-            Balance ({balance} ETH)
+            Balance ({balance} {chain?.nativeCurrency.symbol})
           </Link>
           <ConnectButton showBalance />
         </div>
