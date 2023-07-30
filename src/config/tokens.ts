@@ -5,6 +5,7 @@ export type Token = {
   id: string;
   symbol: string;
   name: string;
+  isSupportedForwardGas?: boolean;
   address: Address;
   decimals: number;
   image: string;
@@ -25,6 +26,7 @@ export const TOKENS: Record<number, Token[]> = {
       name: 'USDC',
       symbol: 'USDC',
       address: '0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747',
+      isSupportedForwardGas: true,
       decimals: 6,
       // logo: require('../../public/logo/tokens'),
       image:
@@ -32,19 +34,10 @@ export const TOKENS: Record<number, Token[]> = {
     },
     {
       id: '1',
-      name: 'WETH',
-      symbol: 'WETH',
-      address: '0xFD2AB41e083c75085807c4A65C0A14FDD93d55A9',
-      decimals: 18,
-      // logo: require('../../public/weth.png'),
-      image:
-        'https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295',
-    },
-    {
-      id: '1',
       name: 'wMatic',
       symbol: 'wMatic',
       address: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+      isSupportedForwardGas: true,
       decimals: 18,
       // logo: require('../../public/weth.png'),
       image:
@@ -57,6 +50,7 @@ export const TOKENS: Record<number, Token[]> = {
       symbol: 'USDC',
       name: 'USDC',
       address: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
+      isSupportedForwardGas: true,
       decimals: 6,
       image:
         'https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389',
@@ -66,6 +60,7 @@ export const TOKENS: Record<number, Token[]> = {
       symbol: 'WETH',
       name: 'WETH',
       address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
+      isSupportedForwardGas: true,
       decimals: 18,
       image:
         'https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295',
