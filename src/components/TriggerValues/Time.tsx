@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import useGlobalStore, { useTableData } from 'store';
-import { useNetwork } from 'wagmi';
+import { useAccount, useBalance, useNetwork } from 'wagmi';
 
 import useAutoPayContract from '@/hooks/useAutoPayContract';
 
@@ -16,6 +16,7 @@ import TokenTable from '@/components/table/TokenTable';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import dayjs from 'dayjs';
 import clsxm from '@/lib/clsxm';
+import { Token } from '@/config/tokens';
 
 export type TransactionStates = {
   isApproving: boolean;
@@ -54,6 +55,7 @@ const Time = () => {
   const { enteredRows } = useTableData();
   const { sourceTypeMode, sourceToken, sourceType, setSourceTypeMode } =
     useGlobalStore();
+
   const isValid = enteredRows.every(
     (item) =>
       item.amount_of_source_token !== '' &&
@@ -182,6 +184,7 @@ const Time = () => {
                 <p className='mb-2'>Enter cycles</p>
                 <input
                   title='No of cycles'
+                  value={noOfCycles === 0 ? '' : noOfCycles}
                   placeholder='Enter no of cycles'
                   type='number'
                   className={clsxm(
@@ -230,6 +233,7 @@ const Time = () => {
                   setGasMethods(value);
                 }}
               />
+              {sourceToken && <WalletBalance token={sourceToken} />}
             </div>
           </Card>
           {gasMethods && (
@@ -294,3 +298,20 @@ const Time = () => {
 };
 
 export default Time;
+
+const WalletBalance = ({ token }: { token: Token }) => {
+  const { address } = useAccount();
+  const { data } = useBalance({
+    address: address,
+    token: token.address,
+  });
+  if (!data) {
+    return null;
+  }
+  return (
+    <div className='mt-2 text-right'>
+      Wallet balance : {parseFloat(data.formatted).toFixed(5)}&nbsp;
+      {data.symbol}
+    </div>
+  );
+};

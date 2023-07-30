@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -44,13 +45,23 @@ export default function FrequencyDialog({
     }
   };
 
+  React.useEffect(() => {
+    setIntervalType('days');
+    setNoOfInterval('1');
+  }, []);
   return (
     <div>
       <div
         onClick={handleClickOpen}
-        className='w-full cursor-pointer rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
+        className='flex w-full cursor-pointer items-center justify-between rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
       >
         Select Frequency ({noOfInterval} {intervalType || 'day'})
+        <span>
+          <ChevronDownIcon
+            className='-mr-1 ml-2 h-6 w-6 text-violet-200 hover:text-violet-100'
+            aria-hidden='true'
+          />
+        </span>
       </div>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle
@@ -92,7 +103,9 @@ export default function FrequencyDialog({
                 onChange={handleChange}
                 input={<OutlinedInput />}
               >
-                <MenuItem value='days'>days</MenuItem>
+                <MenuItem defaultValue={'days'} value='days'>
+                  days
+                </MenuItem>
                 <MenuItem value='weeks'>weeks</MenuItem>
                 <MenuItem value='months'>months</MenuItem>
                 <MenuItem value='years'>years</MenuItem>

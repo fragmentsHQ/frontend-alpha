@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Chain, useNetwork } from 'wagmi';
 
 import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
+import TokenModal from '@/components/modal/TokenModal';
 
 export default function ChainMenu({
   initialChain,
@@ -126,13 +127,10 @@ export function TokenMenu({
 }) {
   const [selectedToken, setSelectedToken] = React.useState<Token | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   React.useEffect(() => {
     if (initialToken && selectedChain) {
       try {
@@ -150,12 +148,20 @@ export function TokenMenu({
 
   return (
     <div>
+      <TokenModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onTokenChange={(token) => {
+          onTokenChange(token);
+          setIsOpen(false);
+        }}
+      />
       <Button
         id='chains-positioned-button'
         aria-controls={open ? 'chains-positioned-menu' : undefined}
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
+        onClick={() => setIsOpen(true)}
         disabled={!selectedChain}
         style={{
           color: '#fff',
@@ -188,37 +194,6 @@ export function TokenMenu({
           />
         </svg>
       </Button>
-      <Menu
-        id='demo-positioned-menu'
-        aria-labelledby='demo-positioned-button'
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        {selectedChain &&
-          TOKENS[selectedChain].map((token, index) => (
-            <MenuItem
-              onClick={() => {
-                onTokenChange(token);
-                handleClose();
-              }}
-              key={index}
-            >
-              <div className='relative mr-2 h-[1.5rem] w-[1.5rem] overflow-hidden rounded-full py-2'>
-                <Image src={token.image} fill alt='Logo' />
-              </div>
-              {token.name}
-            </MenuItem>
-          ))}
-      </Menu>
     </div>
   );
 }

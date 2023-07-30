@@ -9,6 +9,7 @@ import Row from '@/components/rows/Row';
 
 import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
 import clsxm from '@/lib/clsxm';
+import TokenModal from '@/components/modal/TokenModal';
 
 export const getLogo = (name: string | undefined) => {
   switch (name) {
@@ -26,9 +27,17 @@ const LandingMenu = () => {
   const { sourceToken, setSourceToken } = useGlobalStore();
   const { switchNetwork } = useSwitchNetwork();
   const { chains, chain } = useNetwork();
-
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
     <React.Fragment>
+      <TokenModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onTokenChange={(token) => {
+          setSourceToken(token);
+          setIsOpen(false);
+        }}
+      />
       <Row className='gap-[30px] ' direction='row'>
         <Menu as='div' className='relative w-full'>
           <div className='mb-3 text-[16px] font-medium text-white'>
@@ -94,17 +103,21 @@ const LandingMenu = () => {
           </Menu.Items>
         </Menu>
 
-        <Menu as='div' className='relative w-full'>
+        <div className='w-full'>
           <div className='mb-3 text-[16px] font-medium text-white'>
             Source Token
           </div>
 
-          <Menu.Button
+          <button
             disabled={chain?.unsupported || !isConnected}
             className={clsxm(
               'align-left flex h-[50px] w-full items-center justify-between rounded-[10px] bg-[#262229] px-4 py-3 text-[18px] font-semibold disabled:cursor-not-allowed',
               !sourceToken && 'bg-[#0047CE]'
             )}
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            type='button'
           >
             <div className='font-mormal text-white'>
               {!sourceToken ? (
@@ -127,37 +140,8 @@ const LandingMenu = () => {
               className='-mr-1 ml-2 h-6 w-6 text-violet-200 hover:text-violet-100'
               aria-hidden='true'
             />
-          </Menu.Button>
-          <Menu.Items className='absolute right-0  mt-2 flex w-full origin-top-right flex-col rounded-md bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-            {chain?.id &&
-              !chain.unsupported &&
-              TOKENS[chain?.id].map((option, index: number) => (
-                <Menu.Item key={index}>
-                  {({ active }) => (
-                    <p
-                      className={`${
-                        active && 'bg-[#282828]'
-                      } relative z-20 flex w-full cursor-pointer items-center space-x-2 rounded-lg bg-[#262229] px-4 py-2 text-white`}
-                      onClick={() => setSourceToken(option as Token)}
-                    >
-                      {option.image && (
-                        <div className={`relative h-[20px] w-[20px] `}>
-                          <Image
-                            src={option.image}
-                            alt={option.name || ''}
-                            fill
-                            className='rounded-full'
-                          />
-                        </div>
-                      )}
-
-                      <div>{option.name}</div>
-                    </p>
-                  )}
-                </Menu.Item>
-              ))}
-          </Menu.Items>
-        </Menu>
+          </button>
+        </div>
       </Row>
     </React.Fragment>
   );

@@ -1,7 +1,7 @@
 import { TOKENS } from '@/config/tokens';
 import React from 'react';
 import useGlobalStore from 'store';
-import { useNetwork } from 'wagmi';
+import { useAccount, useBalance, useNetwork } from 'wagmi';
 
 export enum AutomationArguments {
   FORWARD_PAYING_GAS = 'forwardpaying',
@@ -14,6 +14,12 @@ const PreviewTabMenu: React.FC<{
 }> = ({ gasMethods, setGasMethods }) => {
   const { sourceToken } = useGlobalStore();
   const { chain } = useNetwork();
+  const { address } = useAccount();
+  const { data } = useBalance({
+    address: address,
+    token: sourceToken?.address,
+  });
+
   const isForwardPayingGas = chain
     ? !TOKENS[chain?.id].filter(
         (token) =>
@@ -26,13 +32,13 @@ const PreviewTabMenu: React.FC<{
     {
       id: 1,
       name: 'Forward paying gas ',
-      isDisabled: isForwardPayingGas,
+      isDisabled: isForwardPayingGas || data?.formatted === '0',
       value: AutomationArguments.FORWARD_PAYING_GAS,
     },
     {
       id: 2,
       name: 'Pay from gas account ',
-      isDisabled: false,
+      isDisabled: false || data?.formatted === '0',
       value: AutomationArguments.PAY_FROM_GAS_ACCOUNT,
     },
   ];
