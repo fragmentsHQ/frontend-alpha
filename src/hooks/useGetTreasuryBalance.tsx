@@ -25,7 +25,7 @@ const useGetTreasuryBalance = () => {
           ],
         abi: TreasuryAbi.abi,
         functionName: 'userTokenBalance',
-        args: [address, NATIVE_TOKENS[chain.id]],
+        args: [address, ETH],
       });
       setBalance(
         parseFloat(

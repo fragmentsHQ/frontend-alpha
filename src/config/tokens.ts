@@ -23,7 +23,7 @@ export const CHAIN_IMAGES = {
 
 export const NATIVE_TOKENS = {
   [polygonMumbai.id as number]: ETH,
-  [goerli.id as number]: MATIC,
+  [goerli.id as number]: ETH,
 };
 export const TOKENS: Record<number, Token[]> = {
   [polygonMumbai.id as number]: [
