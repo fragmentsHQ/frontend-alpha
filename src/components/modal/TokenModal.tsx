@@ -121,7 +121,22 @@ export default function TokenModal({
                       />
                     </svg>
                     <input
-                      placeholder='Search name or paste address'
+                      placeholder='Search name'
+                      onChange={(e) => {
+                        const search = e.target.value;
+                        if (!chain) return;
+                        if (search.length > 0) {
+                          setFilteredTokens(
+                            TOKENS[chain?.id].filter((token) =>
+                              token.name
+                                .toLowerCase()
+                                .includes(search.toLowerCase())
+                            )
+                          );
+                        } else {
+                          setFilteredTokens(TOKENS[chain?.id]);
+                        }
+                      }}
                       className='ml-1 w-full bg-transparent px-2  py-2.5 focus:outline-none'
                     />
                   </div>
