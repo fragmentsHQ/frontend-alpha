@@ -148,7 +148,7 @@ export function TokenMenu({
 
   return (
     <div>
-      {selectedChain && (
+      {selectedChain ? (
         <TokenModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -158,8 +158,7 @@ export function TokenMenu({
           }}
           chainId={selectedChain}
         />
-      )}
-
+      ) : null}
       <Button
         id='chains-positioned-button'
         aria-controls={open ? 'chains-positioned-menu' : undefined}
