@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { goerli, polygonMumbai } from 'wagmi/chains';
 
-import GoerliJobsTable from '@/components/chains_tasks/GoerliJobs';
+import GoerliJobsTable from '@/components/chains_tasks/JobsTable';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -39,7 +39,7 @@ export default function JobsTab() {
           ))}
         </Tab.List>
         <Tab.Panels className='mt-4'>
-          {Object.values(categories).map((posts, idx) => (
+          {Object.keys(categories).map((key, idx) => (
             <Tab.Panel
               key={idx}
               className={classNames(
@@ -47,10 +47,10 @@ export default function JobsTab() {
               )}
             >
               {chain?.id === polygonMumbai.id && (
-                <GoerliJobsTable client='endpoint2' />
+                <GoerliJobsTable client='endpoint2' filter={key} />
               )}
               {chain?.id === goerli.id && (
-                <GoerliJobsTable client='endpoint1' />
+                <GoerliJobsTable client='endpoint1' filter={key} />
               )}
             </Tab.Panel>
           ))}

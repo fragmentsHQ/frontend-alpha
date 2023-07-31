@@ -26,6 +26,7 @@ query getAllJobs(
     _to
     _taskCreator
     _startTime
+    _isForwardPaying
     _jobId
     _interval
     _gelatoTaskId

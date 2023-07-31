@@ -25,10 +25,8 @@ const useCheckIfValidJob = ({ job_id }: { job_id: string }) => {
       });
       const isCancellable =
         data[0] === '0x0000000000000000000000000000000000000000';
-      const isCompleted = BigNumber.from(data._totalCycles).eq(
-        BigNumber.from(data._executedCycles)
-      );
-      const execution = BigNumber.from(data._executedCycles).toString();
+      const isCompleted = BigNumber.from(data[1]).eq(BigNumber.from(data[2]));
+      const execution = BigNumber.from(data[2]).toString();
       return {
         isCancellable,
         execution,

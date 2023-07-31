@@ -16,6 +16,7 @@ query getAJob(
     _toChain
     _toToken
     blockNumber
+    _isForwardPaying
     blockTimestamp
     id
     option

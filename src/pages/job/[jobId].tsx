@@ -3,7 +3,7 @@ import React from 'react';
 import { useNetwork } from 'wagmi';
 import { goerli, polygonMumbai } from 'wagmi/chains';
 
-import GoerliTasks from '@/components/chains_tasks/GoerliTasks';
+import GoerliTasks from '@/components/chains_tasks/JobTaskData';
 import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
 

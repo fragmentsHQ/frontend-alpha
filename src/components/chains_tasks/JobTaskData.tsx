@@ -25,12 +25,15 @@ import { GelatoIcon } from '@/pages/job/[jobId]';
 import { GoBackLink } from '@/pages/jobs';
 
 import AutoPayAbi from '../../abi/Autopay.json';
+import LoadingModal from '@/components/loading/Loader';
+import LoadingScreen from '@/components/loaders';
+import { TransactionState } from '@/hooks/useDepositBalance';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const GoerliTasks = ({
+const JobTaskData = ({
   id,
   client,
 }: {
@@ -55,6 +58,7 @@ const GoerliTasks = ({
       </div>
     );
   }
+
   return (
     <div className='mx-auto w-full max-w-5xl py-10'>
       <div className='flex items-center justify-between'>
@@ -99,7 +103,11 @@ const GoerliTasks = ({
         </div>
       </div>
       {data.jobCreated._jobId && (
-        <ExecutionData jobId={data.jobCreated._jobId} />
+        <ExecutionData
+          jobId={data.jobCreated._jobId}
+          isForwardPayingGas={data.jobCreated._isForwardPaying}
+          client={client}
+        />
       )}
       {data ? <TaskData job={data} /> : null}
       <div className='mt-8 flex flex-col gap-4 rounded-lg bg-[#262229] p-5 px-7'>
@@ -219,7 +227,7 @@ const GoerliTasks = ({
         </div>
         <div className='mt-4 rounded-[10px] bg-[#272E3C] p-5'>
           {selectedTableCategory === 'Executions' && data.jobCreated._jobId ? (
-            <TransactionTable jobId={data.jobCreated._jobId} />
+            <TransactionTable jobId={data.jobCreated._jobId} client={client} />
           ) : (
             <div className='flex h-[300px] items-center justify-center'>
               <a
@@ -239,7 +247,7 @@ const GoerliTasks = ({
   );
 };
 
-export default GoerliTasks;
+export default JobTaskData;
 
 export const TaskData = ({ job }: { job: GetAJobQuery['jobCreated'] }) => {
   const { chain } = useNetwork();
@@ -310,6 +318,8 @@ export const TaskData = ({ job }: { job: GetAJobQuery['jobCreated'] }) => {
 };
 
 export const CancelJob = ({ jobId }: { jobId: string }) => {
+  const [transactionState, setTransactionState] =
+    useState<TransactionState | null>(null);
   const { chain } = useNetwork();
   const { data } = useCheckIfValidJob({
     job_id: jobId,
@@ -321,6 +331,7 @@ export const CancelJob = ({ jobId }: { jobId: string }) => {
 
   const cancelJob = async () => {
     try {
+      setTransactionState(TransactionState.PROCESSING);
       const args = [jobId];
       const callDataCreateTimeTxn = encodeFunctionData({
         abi: AutoPayAbi.abi,
@@ -329,64 +340,87 @@ export const CancelJob = ({ jobId }: { jobId: string }) => {
       });
 
       const request = await prepareSendTransaction({
-        request: {
-          to: chain
-            ? AUTOPAY_CONTRACT_ADDRESSES[
-                chain?.testnet ? 'testnets' : 'mainnets'
-              ][chain?.id]
-            : ZERO_ADDRESS,
-          data: callDataCreateTimeTxn,
-          value: BigInt(0),
-        },
+        to: chain
+          ? AUTOPAY_CONTRACT_ADDRESSES[
+              chain?.testnet ? 'testnets' : 'mainnets'
+            ][chain?.id]
+          : ZERO_ADDRESS,
+        data: callDataCreateTimeTxn,
+        value: BigInt(0),
       });
       const { hash } = await sendTransaction(request);
       const res = await waitForTransaction({
         hash,
       });
+      setTransactionState(TransactionState.SUCCESS);
       return { hash: res.transactionHash };
     } catch (error) {
+      setTransactionState(TransactionState.FAILED);
       return { hash: null };
     }
   };
   return (
-    <button
-      onClick={() => {
-        cancelJob();
-      }}
-      className='rounded-xl bg-[#1867FD] px-5 py-2'
-    >
-      Cancel job
-    </button>
+    <div>
+      <LoadingScreen
+        handleClose={() => setTransactionState(null)}
+        isTransactionFailed={transactionState === TransactionState.FAILED}
+        isTransactionProcessing={
+          transactionState === TransactionState.PROCESSING
+        }
+        isTransactionSuccessFul={transactionState === TransactionState.SUCCESS}
+        isApproving={false}
+        showJobSection={false}
+        hash=''
+      />
+      <button
+        onClick={() => {
+          cancelJob();
+        }}
+        className='rounded-xl bg-[#1867FD] px-5 py-2'
+      >
+        Cancel job
+      </button>
+    </div>
   );
 };
 
-const ExecutionData = ({ jobId }: { jobId: string }) => {
+const ExecutionData = ({
+  jobId,
+  isForwardPayingGas,
+  client,
+}: {
+  jobId: string;
+  isForwardPayingGas: boolean;
+  client: 'endpoint1' | 'endpoint2';
+}) => {
   const { data: executionData } = useQuery(GetExecutedSourceChainsDocument, {
     variables: {
       where: {
         _jobId: jobId,
       },
     },
-    context: { clientName: 'endpoint1' },
+    context: { clientName: client },
   });
 
-  console.log(executionData);
   const { data } = useCheckIfValidJob({
     job_id: jobId,
   });
 
+  const { chain } = useNetwork();
   if (executionData && executionData.executedSourceChains.length === 0)
     return null;
 
   const costs = executionData?.executedSourceChains.reduce((acc, curr) => {
-    return acc + curr._fundsUsed;
+    return parseFloat(acc) + parseFloat(curr._fundsUsed);
   }, 0);
+
+  console.log(costs);
   return (
     <div className='mt-8 flex justify-between'>
       <div className='flex justify-center gap-8'>
         <div className='flex flex-col justify-center'>
           <span className='text-2xl font-bold'>
-            {(parseFloat(costs) / Math.pow(10, 18)).toFixed(4)} ETH
+            {chain && costs} {chain?.nativeCurrency.symbol}
           </span>
           <span className='text-[#AFAEAE]'>Cost</span>
         </div>
@@ -398,11 +432,13 @@ const ExecutionData = ({ jobId }: { jobId: string }) => {
         </div>
       </div>
       <div className='flex flex-col gap-[0.3rem] rounded-lg bg-[#282828] p-4'>
-        <span className='ml-auto text-2xl font-bold'>$ 364.26</span>
+        <span className='ml-auto text-2xl font-bold'>{costs}</span>
         <span className='ml-auto text-[#AFAEAE]'>Gas Paid</span>
-        <span className='ml-auto rounded-[4.5rem] bg-[#393939] p-2 px-3 text-xs'>
-          Forward paying gas
-        </span>
+        {isForwardPayingGas && (
+          <span className='ml-auto rounded-[4.5rem] bg-[#393939] p-2 px-3 text-xs'>
+            Forward paying gas
+          </span>
+        )}
       </div>
     </div>
   );

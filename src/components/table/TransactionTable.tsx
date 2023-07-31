@@ -21,7 +21,7 @@ import UnstyledLink from '@/components/links/UnstyledLink';
 import { GetAJobDocument } from '@/graphql/getAJob.generated';
 import { GetExecutedSourceChainsDocument } from '@/graphql/getAllExecutedChainData.generated';
 
-import { LinkIcon } from '../../components/chains_tasks/GoerliJobs';
+import { LinkIcon } from '../chains_tasks/JobsTable';
 
 interface Column {
   id: 'transaction_hash' | 'transaction' | 'destination_transaction' | 'status';
@@ -77,7 +77,13 @@ const rows: Data[] = [
   },
 ];
 
-export default function TransactionTable({ jobId }: { jobId: string }) {
+export default function TransactionTable({
+  jobId,
+  client,
+}: {
+  jobId: string;
+  client: 'endpoint1' | 'endpoint2';
+}) {
   const [page, setPage] = React.useState(0);
   const { data: executionData, loading: isExecutionDataLoading } = useQuery(
     GetExecutedSourceChainsDocument,
@@ -205,7 +211,7 @@ export default function TransactionTable({ jobId }: { jobId: string }) {
             {filteredData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
-                return <TransactionRow key={index} row={row} />;
+                return <TransactionRow key={index} row={row} client={client} />;
               })}
           </TableBody>
         </Table>
@@ -230,14 +236,20 @@ export default function TransactionTable({ jobId }: { jobId: string }) {
   );
 }
 
-const TransactionRow = ({ row }: { row: any }) => {
+const TransactionRow = ({
+  row,
+  client,
+}: {
+  row: any;
+  client: 'endpoint1' | 'endpoint2';
+}) => {
   const router = useRouter();
   const id = router.query.jobId;
   const { data } = useQuery(GetAJobDocument, {
     variables: {
       id: id,
     },
-    context: { clientName: 'endpoint1' },
+    context: { clientName: client },
   });
   console.log();
   return (

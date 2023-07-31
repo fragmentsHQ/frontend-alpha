@@ -59,12 +59,18 @@ interface Data {
   status: 'ongoing' | 'completed' | 'failed';
 }
 
-export default function GoerliJobsTable({
+export default function JobsTable({
   client,
+  filter,
 }: {
+  filter: 'All' | 'Ongoing' | 'Completed';
   client: 'endpoint1' | 'endpoint2';
 }) {
   const { address } = useAccount();
+  const [jobMessage, setJobMessage] = React.useState({
+    isEmpty: false,
+    message: '',
+  });
 
   const { data, loading } = useQuery(GetAllJobsDocument, {
     variables: {
@@ -143,7 +149,7 @@ export default function GoerliJobsTable({
                 <TableCell
                   colSpan={12}
                   style={{
-                    backgroundColor: '#373A40',
+                    backgroundColor: '#262229',
                   }}
                 >
                   <div
@@ -156,10 +162,52 @@ export default function GoerliJobsTable({
                 </TableCell>
               </TableRow>
             )}
+            {jobMessage.isEmpty && (
+              <TableRow>
+                <TableCell
+                  colSpan={12}
+                  style={{
+                    backgroundColor: '#262229',
+                  }}
+                >
+                  <div
+                    className='flex h-[300px] w-full flex-col items-center 
+                 justify-center text-white '
+                  >
+                    <p className='mt-2'>{jobMessage.message}</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+            {filteredData.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={12}
+                  style={{
+                    backgroundColor: '#262229',
+                  }}
+                >
+                  <div
+                    className='flex h-[300px] w-full flex-col items-center 
+                 justify-center text-white '
+                  >
+                    <p className='mt-2'>{jobMessage.message}</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
             {filteredData &&
+              !jobMessage.isEmpty &&
               filteredData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => <JobRow row={row} key={index} />)}
+                .map((row, index) => (
+                  <JobRow
+                    row={row}
+                    key={index}
+                    filter={filter}
+                    setJobsMessage={setJobMessage}
+                  />
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -207,7 +255,20 @@ export const LinkIcon = () => {
   );
 };
 
-const JobRow = ({ row }: { row: Data }) => {
+const JobRow = ({
+  row,
+  filter,
+  setJobsMessage,
+}: {
+  row: Data;
+  filter: 'All' | 'Ongoing' | 'Completed';
+  setJobsMessage: React.Dispatch<
+    React.SetStateAction<{
+      isEmpty: boolean;
+      message: string;
+    }>
+  >;
+}) => {
   const router = useRouter();
   const { chain } = useNetwork();
   const gas = useGetGasUsed({
@@ -217,9 +278,30 @@ const JobRow = ({ row }: { row: Data }) => {
   const { data } = useCheckIfValidJob({
     job_id: row.job_id.address,
   });
-  // if (!isValid) {
-  //   return null;
-  // }
+
+  if (!data) {
+    return null;
+  }
+
+  if (filter === 'Ongoing') {
+    if (data.isCompleted) {
+      setJobsMessage({
+        isEmpty: true,
+        message: 'No Ongoing Jobs Found',
+      });
+      return null;
+    }
+  }
+
+  if (filter === 'Completed') {
+    if (!data.isCompleted) {
+      setJobsMessage({
+        isEmpty: true,
+        message: 'No Completed Jobs Found',
+      });
+      return null;
+    }
+  }
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
