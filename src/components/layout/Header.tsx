@@ -10,7 +10,7 @@ export default function Header() {
   const { chain } = useNetwork();
 
   const value =
-    chain && balance !== 0
+    chain && balance !== 0 && chain.unsupported === false
       ? `(${balance} ${chain?.nativeCurrency.symbol})`
       : null;
   return (
@@ -23,12 +23,12 @@ export default function Header() {
         </Link>
 
         <div className=' flex items-center space-x-4'>
-          {chain && (
+          {chain && chain.unsupported === false && (
             <Link href='/jobs' title='All Jobs' className='mr-2'>
               All Jobs
             </Link>
           )}
-          {chain && (
+          {chain && chain.unsupported === false && (
             <Link
               href='/balance'
               title='All Jobs'

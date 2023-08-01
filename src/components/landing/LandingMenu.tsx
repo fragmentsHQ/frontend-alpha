@@ -30,7 +30,7 @@ const LandingMenu = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <React.Fragment>
-      {chain && (
+      {chain && chain?.unsupported === false && (
         <TokenModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -65,16 +65,20 @@ const LandingMenu = () => {
                 )}
 
                 <div>
-                  {chain?.unsupported && 'Unsupported chain'}
+                  {chain?.unsupported && (
+                    <span className='text-[#FE494A]'>Unsupported chain</span>
+                  )}
                   {!chain?.id && 'Connect your wallet'}
                   {chain?.id && !chain.unsupported && chain.name}
                 </div>
               </div>
             </div>
-            <ChevronDownIcon
-              className='-mr-1 ml-2 h-6 w-6 text-violet-200 hover:text-violet-100'
-              aria-hidden='true'
-            />
+            {!chain?.unsupported && chain && (
+              <ChevronDownIcon
+                className='-mr-1 ml-2 h-6 w-6 text-violet-200 hover:text-violet-100'
+                aria-hidden='true'
+              />
+            )}
           </Menu.Button>
           <Menu.Items className='absolute right-0  mt-2 flex w-full origin-top-right flex-col overflow-hidden rounded-[10px] bg-[#262229] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
             {chains.map((option, index) => (
@@ -115,15 +119,15 @@ const LandingMenu = () => {
           <button
             disabled={chain?.unsupported || !isConnected}
             className={clsxm(
-              'align-left flex h-[50px] w-full items-center justify-between rounded-[10px] bg-[#262229] px-4 py-3 text-[18px] font-semibold disabled:cursor-not-allowed',
-              !sourceToken && 'bg-[#0047CE]'
+              'align-left flex h-[50px] w-full items-center justify-between rounded-[10px] bg-[#262229] px-4 py-3 text-[18px] font-semibold disabled:cursor-not-allowed disabled:text-white disabled:text-opacity-40',
+              !sourceToken && !chain?.unsupported && 'bg-[#0047CE]'
             )}
             onClick={() => {
               setIsOpen(true);
             }}
             type='button'
           >
-            <div className='font-mormal text-white'>
+            <div className='font-mormal '>
               {!sourceToken ? (
                 'Select source token'
               ) : (
