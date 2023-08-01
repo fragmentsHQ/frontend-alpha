@@ -30,6 +30,8 @@
     "@rainbow-me/rainbowkit": "^1.0.7",
     "@types/uuid": "^9.0.2",
     "@uidotdev/usehooks": "^2.0.1",
+    "@web3modal/ethereum": "^2.7.1",
+    "@web3modal/react": "^2.7.1",
     "alchemy-sdk": "^2.8.3",
     "clsx": "^1.2.1",
     "dayjs": "^1.11.9",

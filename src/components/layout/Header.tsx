@@ -1,6 +1,6 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import * as React from 'react';
+import { Web3Button } from '@web3modal/react';
 
 import useGetTreasuryBalance from '@/hooks/useGetTreasuryBalance';
 import { useNetwork } from 'wagmi';
@@ -38,7 +38,8 @@ export default function Header() {
             </Link>
           )}
 
-          <ConnectButton showBalance />
+          {/* <ConnectButton showBalance /> */}
+          <Web3Button />
         </div>
       </div>
     </header>

@@ -1,60 +1,48 @@
-import {
-  darkTheme,
-  getDefaultWallets,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
 import React, { ComponentProps } from 'react';
+import {
+  EthereumClient,
+  w3mConnectors,
+  w3mProvider,
+} from '@web3modal/ethereum';
+import { Web3Modal } from '@web3modal/react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { goerli, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 import '@rainbow-me/rainbowkit/styles.css';
+const projectId = '103333b30405efc424b73b939a369d24';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [goerli, polygonMumbai],
-  [
-    alchemyProvider({ apiKey: 'NzvCDfoZ833NeFoQOXSXQDWfhCHhTa4u' }),
-    publicProvider(),
-  ]
+  [w3mProvider({ projectId }), publicProvider()]
 );
-
-const { connectors } = getDefaultWallets({
-  appName: 'Fragments',
-  projectId: '103333b30405efc424b73b939a369d24',
-  chains,
-});
 
 const wagmiConfig = createConfig({
   autoConnect: true,
-  connectors,
+  connectors: w3mConnectors({ projectId, chains }),
   publicClient,
   webSocketPublicClient,
 });
 
-const demoAppInfo = {
-  appName: 'Fragments',
-};
+const ethereumClient = new EthereumClient(wagmiConfig, chains);
+
 const WalletConfiguration: React.FC<ComponentProps<'div'>> = (props) => {
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider
-        theme={darkTheme({
-          accentColor: '#fff',
-          accentColorForeground: 'black',
-          borderRadius: 'large',
-          fontStack: 'system',
-          overlayBlur: 'small',
-        })}
-        modalSize='compact'
-        initialChain={goerli}
-        showRecentTransactions
-        appInfo={demoAppInfo}
-        chains={chains}
-      >
-        {props.children}
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <>
+      <WagmiConfig config={wagmiConfig}>{props.children}</WagmiConfig>
+      <Web3Modal
+        projectId={projectId}
+        ethereumClient={ethereumClient}
+        enableAccountView={true}
+        chainImages={{
+          80001: '/logo/chains/polygon.webp',
+          5: '/logo/chains/Goerli.png',
+        }}
+        enableNetworkView={true}
+        themeMode='dark'
+      />
+    </>
   );
 };
 
