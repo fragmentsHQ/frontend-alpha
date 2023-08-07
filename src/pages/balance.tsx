@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useDepositBalance, { TransactionState } from '@/hooks/useDepositBalance';
 import useGetTreasuryBalance from '@/hooks/useGetTreasuryBalance';
@@ -14,8 +14,9 @@ import DepositTransactionTable from '@/components/table/transactions/DepositTran
 import WithdrawTransactionTable from '@/components/table/transactions/WithdrawTransactions';
 import LoadingScreen from '@/components/loaders';
 import { CHAIN_IMAGES } from '@/config/tokens';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { goerli, polygonMumbai } from 'wagmi/chains';
+import { LoaderIcon } from 'react-hot-toast';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -23,6 +24,7 @@ function classNames(...classes: string[]) {
 
 const Profile = () => {
   const router = useRouter();
+  const { address } = useAccount();
   const { chain } = useNetwork();
   const [selectedCategory, setSelectedCategory] = useState('Deposit');
   const [selectedTableCategory, setSelectedTableCategory] = useState('All');
@@ -47,6 +49,11 @@ const Profile = () => {
     inputAmount: parseFloat(inputAmount),
   });
 
+  useEffect(() => {
+    if (address === undefined || chain === undefined || chain?.unsupported) {
+      router.push('/');
+    }
+  }, [address, chain]);
   const panels = {
     Deposit: (
       <div className='W-full grid grid-cols-4 gap-6'>
@@ -87,6 +94,14 @@ const Profile = () => {
       </div>
     ),
   };
+
+  if (address === undefined || chain === undefined || chain?.unsupported) {
+    return (
+      <div className='flex min-h-screen items-center justify-center'>
+        <LoaderIcon />
+      </div>
+    );
+  }
 
   return (
     <Layout>
