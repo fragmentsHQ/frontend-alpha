@@ -11,7 +11,6 @@ function calculateEndTime(
 
   const endTimeMillis = start.getTime() + totalCyclesMillis;
   const endTime = new Date(endTimeMillis);
-  debugger;
   return endTime.toLocaleDateString();
 }
 
