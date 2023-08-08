@@ -469,7 +469,7 @@ const AmountInput: React.FC<
       )}
       <input
         className={clsxm(
-          ' truncate rounded-sm border border-transparent bg-transparent px-3 py-2 text-end font-medium focus:right-0 focus:border focus:border-white focus:outline-none',
+          ' truncate rounded-sm border border-transparent bg-transparent px-3 py-2 text-end font-medium placeholder:text-white placeholder:text-opacity-20 focus:right-0 focus:border focus:border-white focus:outline-none',
           isError && 'border-2 border-red-700',
           isLoading && 'border border-white',
           className

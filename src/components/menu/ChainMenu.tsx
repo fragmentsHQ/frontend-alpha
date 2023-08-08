@@ -58,7 +58,9 @@ export default function ChainMenu({
             {selectedChain.name}
           </div>
         ) : (
-          <div className='text-white text-opacity-20'>Select a chain</div>
+          <div className='w-full text-[18px] text-white text-opacity-20'>
+            Goerli
+          </div>
         )}
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -178,8 +180,8 @@ export function TokenMenu({
             {selectedToken.name}
           </div>
         ) : (
-          <div className='text-white text-opacity-20'>
-            {selectedChain ? 'Select a token' : 'Select chain to proceed'}
+          <div className='w-full text-[18px] text-white text-opacity-20'>
+            USDC
           </div>
         )}
         <svg
@@ -188,7 +190,7 @@ export function TokenMenu({
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className='ml-2 h-4 w-4'
+          className='ml-2 h-5 w-5'
         >
           <path
             strokeLinecap='round'
