@@ -28,10 +28,13 @@ import AutoPayAbi from '../../abi/Autopay.json';
 import LoadingModal from '@/components/loading/Loader';
 import LoadingScreen from '@/components/loaders';
 import { TransactionState } from '@/hooks/useDepositBalance';
+import calculateEndTime from '@/lib/utils/calculateEnditme';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
+
+const Triggers = ['Time', 'Gas'];
 
 const JobTaskData = ({
   id,
@@ -109,7 +112,7 @@ const JobTaskData = ({
           client={client}
         />
       )}
-      {data ? <TaskData job={data} /> : null}
+      {data.jobCreated._jobId ? <TaskData job={data} /> : null}
       <div className='mt-8 flex flex-col gap-4 rounded-lg bg-[#262229] p-5 px-7'>
         <div className='flex items-center justify-between'>
           <span className='text-3xl font-bold text-[#AFAEAE]'>Execute</span>
@@ -159,15 +162,15 @@ const JobTaskData = ({
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>Trigger</span>
-          <div className='flex'>{data?.jobCreated._interval}</div>
+          <div className='flex'>{Triggers[data?.jobCreated.option]}</div>
         </div>
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>
             Trigger value
           </span>
           <div className='flex'>
-            One{' '}
-            {data?.jobCreated._interval === 86400
+            {data?.jobCreated._cycles}{' '}
+            {/* {data?.jobCreated._interval === 86400
               ? 'days'
               : data?.jobCreated._interval === 2629800
               ? 'months'
@@ -175,7 +178,7 @@ const JobTaskData = ({
               ? 'weeks'
               : data?.jobCreated._interval === 31536000
               ? 'years'
-              : null}
+              : null} */}
             time
           </div>
         </div>
@@ -193,10 +196,14 @@ const JobTaskData = ({
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>End time</span>
           <div className='flex'>
-            {dayjs
-              .unix(parseInt(data?.jobCreated._startTime))
-              .toDate()
-              .toLocaleString()}
+            {calculateEndTime(
+              dayjs
+                .unix(parseInt(data?.jobCreated._startTime))
+                .toDate()
+                .toLocaleString(),
+              data?.jobCreated._cycles,
+              data?.jobCreated._interval
+            )}
           </div>
         </div>
       </div>
@@ -415,12 +422,14 @@ const ExecutionData = ({
   }, 0);
 
   console.log(costs);
+  if (!costs) return null;
   return (
     <div className='mt-8 flex justify-between'>
       <div className='flex justify-center gap-8'>
         <div className='flex flex-col justify-center'>
           <span className='text-2xl font-bold'>
-            {chain && costs} {chain?.nativeCurrency.symbol}
+            {chain && (costs / Math.pow(10, 18)).toFixed(3)}{' '}
+            {chain?.nativeCurrency.symbol}
           </span>
           <span className='text-[#AFAEAE]'>Cost</span>
         </div>
@@ -432,7 +441,9 @@ const ExecutionData = ({
         </div>
       </div>
       <div className='flex flex-col gap-[0.3rem] rounded-lg bg-[#282828] p-4'>
-        <span className='ml-auto text-2xl font-bold'>{costs}</span>
+        <span className='ml-auto text-2xl font-bold'>
+          {(costs / Math.pow(10, 18)).toFixed(3)}
+        </span>
         <span className='ml-auto text-[#AFAEAE]'>Gas Paid</span>
         {isForwardPayingGas && (
           <span className='ml-auto rounded-[4.5rem] bg-[#393939] p-2 px-3 text-xs'>
