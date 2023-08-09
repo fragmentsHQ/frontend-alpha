@@ -280,25 +280,21 @@ const JobRow = ({
   });
 
   if (!data) {
+    setJobsMessage({
+      isEmpty: true,
+      message: 'No  Jobs Found',
+    });
     return null;
   }
 
   if (filter === 'Ongoing') {
     if (data.isCompleted) {
-      setJobsMessage({
-        isEmpty: true,
-        message: 'No Ongoing Jobs Found',
-      });
       return null;
     }
   }
 
   if (filter === 'Completed') {
     if (!data.isCompleted) {
-      setJobsMessage({
-        isEmpty: true,
-        message: 'No Completed Jobs Found',
-      });
       return null;
     }
   }
