@@ -1,10 +1,29 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import JobsTab from '@/components/JobsTab';
 import Layout from '@/components/layout/Layout';
+import { useAccount, useNetwork } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Jobs = () => {
+  const { address } = useAccount();
+  const { chain } = useNetwork();
+  const router = useRouter();
+
+  if (address === undefined || chain === undefined || chain?.unsupported) {
+    return (
+      <Layout>
+        <div className='mt-32 flex flex-col items-center space-y-4'>
+          Please connect your wallet to view your jobs
+          <div className='mt-6'>
+            <ConnectButton />
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className='mx-auto  my-10 max-w-5xl'>

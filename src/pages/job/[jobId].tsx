@@ -1,16 +1,31 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { goerli, polygonMumbai } from 'wagmi/chains';
 
 import GoerliTasks from '@/components/chains_tasks/JobTaskData';
 import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Job = () => {
   const router = useRouter();
+  const { address } = useAccount();
   const { chain } = useNetwork();
   const jobId = router.query.jobId;
+
+  if (address === undefined || chain === undefined || chain?.unsupported) {
+    return (
+      <Layout>
+        <div className='mt-20 flex flex-col items-center space-y-4'>
+          Please connect your wallet to view your jobs
+          <div className='mt-6'>
+            <ConnectButton />
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!jobId) {
     return (
