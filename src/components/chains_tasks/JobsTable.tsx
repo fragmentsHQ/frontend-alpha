@@ -280,10 +280,6 @@ const JobRow = ({
   });
 
   if (!data) {
-    setJobsMessage({
-      isEmpty: true,
-      message: 'No  Jobs Found',
-    });
     return null;
   }
 

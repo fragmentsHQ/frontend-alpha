@@ -169,17 +169,16 @@ const JobTaskData = ({
             Trigger value
           </span>
           <div className='flex'>
-            {data?.jobCreated._cycles}{' '}
-            {/* {data?.jobCreated._interval === 86400
+            Every {data?.jobCreated._cycles}{' '}
+            {parseInt(data?.jobCreated._interval) === 86400
               ? 'days'
-              : data?.jobCreated._interval === 2629800
+              : parseInt(data?.jobCreated._interval) === 2629800
               ? 'months'
-              : data?.jobCreated._interval === 604800
+              : parseInt(data?.jobCreated._interval) === 604800
               ? 'weeks'
-              : data?.jobCreated._interval === 31536000
+              : parseInt(data?.jobCreated._interval) === 31536000
               ? 'years'
-              : null} */}
-            time
+              : null}
           </div>
         </div>
         <div className='flex items-center gap-7'>
@@ -196,14 +195,14 @@ const JobTaskData = ({
         <div className='flex items-center gap-7'>
           <span className='text-lg font-semibold text-[#AFAEAE]'>End time</span>
           <div className='flex'>
-            {calculateEndTime(
-              dayjs
-                .unix(parseInt(data?.jobCreated._startTime))
-                .toDate()
-                .toLocaleString(),
-              data?.jobCreated._cycles,
-              data?.jobCreated._interval
-            )}
+            {dayjs
+              .unix(
+                parseInt(data.jobCreated._interval) *
+                  (parseInt(data.jobCreated._cycles) - 1) +
+                  parseInt(data.jobCreated._startTime)
+              )
+              .toDate()
+              .toLocaleString()}
           </div>
         </div>
       </div>
