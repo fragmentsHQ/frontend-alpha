@@ -28,8 +28,14 @@ export default function ChainMenu({
 
   React.useEffect(() => {
     if (initialChain !== 0) {
-      onChainChange(chains.filter((ch) => ch.id === initialChain)[0]);
-      setSelectedChain(chains.filter((c) => c.id === initialChain)[0]);
+      const filter = chains.filter((ch) => ch.id === initialChain)[0];
+      if (filter) {
+        onChainChange(filter);
+        setSelectedChain(filter);
+      } else {
+        onChainChange(chains[0]);
+        setSelectedChain(null);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialChain]);
@@ -59,7 +65,7 @@ export default function ChainMenu({
           </div>
         ) : (
           <div className='w-full text-[18px] text-white text-opacity-20'>
-            Goerli
+            {chains[0].name}
           </div>
         )}
         <svg
@@ -139,8 +145,12 @@ export function TokenMenu({
         const token = TOKENS[selectedChain].filter(
           (d) => d.address === initialToken
         )[0];
-        onTokenChange(token);
-        setSelectedToken(token);
+        if (token) {
+          onTokenChange(token);
+          setSelectedToken(token);
+        } else {
+          onTokenChange(null);
+        }
       } catch (error) {
         onTokenChange(null);
       }

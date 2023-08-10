@@ -5,14 +5,14 @@ import {
 } from '@rainbow-me/rainbowkit';
 import React, { ComponentProps } from 'react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { goerli, polygonMumbai } from 'wagmi/chains';
+import { goerli, polygon, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [goerli, polygonMumbai],
+  [polygon],
   [
     alchemyProvider({ apiKey: 'NzvCDfoZ833NeFoQOXSXQDWfhCHhTa4u' }),
     publicProvider(),
@@ -47,7 +47,7 @@ const WalletConfiguration: React.FC<ComponentProps<'div'>> = (props) => {
           overlayBlur: 'small',
         })}
         modalSize='compact'
-        initialChain={goerli}
+        initialChain={polygon}
         showRecentTransactions
         appInfo={demoAppInfo}
         chains={chains}

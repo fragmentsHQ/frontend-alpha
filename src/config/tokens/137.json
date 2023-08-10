@@ -1,0 +1,58 @@
+[
+  {
+    "id": "usdc",
+    "symbol": "USDC",
+    "name": "USD Coin",
+    "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "decimals": 6,
+    "image": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
+  },
+  {
+    "id": "usdt",
+    "symbol": "USDT",
+    "name": "Tether",
+    "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    "decimals": 6,
+    "image": "https://assets.coingecko.com/coins/images/325/small/Tether.png?1668148663"
+  },
+  {
+    "id": "dai",
+    "symbol": "DAI",
+    "name": "Dai",
+    "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+    "decimals": 18,
+    "image": "https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png?1687143508"
+  },
+  {
+    "id": "weth",
+    "symbol": "WETH",
+    "name": "Wrapped Ether",
+    "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+    "decimals": 18,
+    "image": "https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295"
+  },
+  {
+    "id": "kp3r",
+    "symbol": "KP3R",
+    "name": "Keep3rV1",
+    "address": "0x725dB429F0ff5A3DF5f41fcA8676CF9Dd1C6b3F0",
+    "decimals": 18,
+    "image": "https://assets.coingecko.com/coins/images/12966/small/kp3r_logo.jpg"
+  },
+  {
+    "id": "klp",
+    "symbol": "KLP",
+    "name": "Keep3rLP",
+    "address": "0x381BC51bb203c5940A398622be918C876cB0f035",
+    "decimals": 18,
+    "image": "https://assets.coingecko.com/coins/images/22796/small/262654028_2202751929890590_982664396355018092_n.png"
+  },
+  {
+    "id": "xoc",
+    "symbol": "XOC",
+    "name": "Xocolatl MXN Stablecoin",
+    "address": "0xa411c9Aa00E020e4f88Bc19996d29c5B7ADB4ACf",
+    "decimals": 18,
+    "image": "https://s2.coinmarketcap.com/static/img/coins/64x64/1365.png"
+  }
+]

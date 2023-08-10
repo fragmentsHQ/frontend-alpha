@@ -25,7 +25,7 @@ const PreviewTabMenu: React.FC<{
         (token) =>
           token.address.toLocaleLowerCase() ===
           sourceToken?.address.toLocaleLowerCase()
-      )[0].isSupportedForwardGas
+      )[0].isForwardGasSupported
     : false;
 
   const options = [

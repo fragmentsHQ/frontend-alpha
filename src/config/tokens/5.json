@@ -1,0 +1,36 @@
+[
+  {
+    "id": "0",
+    "symbol": "USDC",
+    "name": "USDC",
+    "address": "0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C",
+    "isForwardGasSupported": true,
+    "decimals": 6,
+    "image": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
+  },
+  {
+    "id": "1",
+    "symbol": "WETH",
+    "name": "WETH",
+    "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+    "isForwardGasSupported": true,
+    "decimals": 18,
+    "image": "https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295"
+  },
+  {
+    "id": "2",
+    "symbol": "UNI",
+    "name": "UNI",
+    "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+    "decimals": 18,
+    "image": "https://assets.coingecko.com/coins/images/12504/small/uni.jpg?1687143398"
+  },
+  {
+    "id": "3",
+    "symbol": "DAI",
+    "name": "DAI",
+    "address": "0xe68104d83e647b7c1c15a91a8d8aad21a51b3b3e",
+    "decimals": 18,
+    "image": "https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png?1687143508"
+  }
+]

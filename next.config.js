@@ -9,7 +9,7 @@ const nextConfig = {
 
   // Uncoment to add domain whitelist
   images: {
-    domains: ['assets.coingecko.com', 'img.icons8.com'],
+    domains: ['assets.coingecko.com', 'img.icons8.com', 's2.coinmarketcap.com'],
   },
   typescript: {
     ignoreBuildErrors: true,
