@@ -55,7 +55,7 @@ export default function FrequencyDialog({
         onClick={handleClickOpen}
         className='flex w-full cursor-pointer items-center justify-between rounded-[6px] border border-[#464646] bg-[#262229] px-4 py-4 focus:outline-none'
       >
-        Select Frequency ({noOfInterval} {intervalType || 'day'})
+        Select Interval ({noOfInterval} {intervalType || 'day'})
         <span>
           <ChevronDownIcon
             className='-mr-1 ml-2 h-6 w-6 text-violet-200 hover:text-violet-100'
@@ -69,7 +69,7 @@ export default function FrequencyDialog({
             backgroundColor: '#262229',
           }}
         >
-          Select Frequency
+          Select Interval
         </DialogTitle>
         <DialogContent
           style={{

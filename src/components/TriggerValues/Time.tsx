@@ -204,7 +204,7 @@ const Time = () => {
           {sourceTypeMode === 'recurring' &&
             sourceType?.toLocaleLowerCase() === 'autopay' && (
               <div className='w-full min-w-[200px]'>
-                <p className='mb-2'>Selected Frequency</p>
+                <p className='mb-2'>Selected Interval</p>
                 <FrequencyDialog
                   setOpen={setDialogOpen}
                   open={isDialogOpen}
