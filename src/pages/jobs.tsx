@@ -1,15 +1,14 @@
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useAccount, useNetwork } from 'wagmi';
 
 import JobsTab from '@/components/JobsTab';
 import Layout from '@/components/layout/Layout';
-import { useAccount, useNetwork } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Jobs = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
-  const router = useRouter();
 
   if (address === undefined || chain === undefined || chain?.unsupported) {
     return (

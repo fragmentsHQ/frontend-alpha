@@ -3,20 +3,21 @@ import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { LoaderIcon } from 'react-hot-toast';
+import { useAccount, useNetwork } from 'wagmi';
+import { goerli, polygonMumbai } from 'wagmi/chains';
 
 import useDepositBalance, { TransactionState } from '@/hooks/useDepositBalance';
 import useGetTreasuryBalance from '@/hooks/useGetTreasuryBalance';
 import useWithdrawBalance from '@/hooks/useWithdrawBalance';
 
 import Layout from '@/components/layout/Layout';
+import LoadingScreen from '@/components/loaders';
 import AllTransactionTable from '@/components/table/transactions/AllTransactions';
 import DepositTransactionTable from '@/components/table/transactions/DepositTransactions';
 import WithdrawTransactionTable from '@/components/table/transactions/WithdrawTransactions';
-import LoadingScreen from '@/components/loaders';
+
 import { CHAIN_IMAGES } from '@/config/tokens';
-import { useAccount, useNetwork } from 'wagmi';
-import { goerli, polygonMumbai } from 'wagmi/chains';
-import { LoaderIcon } from 'react-hot-toast';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -87,7 +88,8 @@ const Profile = () => {
         />
         <button
           onClick={() => sendWithdrawTokenAsyncTxn?.()}
-          className='col-span-1 h-12 rounded-xl bg-[#1867FD] font-semibold text-white'
+          disabled={!balanceETH}
+          className='col-span-1 h-12 rounded-xl bg-[#1867FD] font-semibold text-white disabled:cursor-not-allowed'
         >
           Withdraw
         </button>
@@ -139,7 +141,7 @@ const Profile = () => {
               <span className='text-3xl font-bold'>
                 {balanceETH
                   ? parseFloat(balanceETH.toString()).toFixed(4)
-                  : '-'}{' '}
+                  : '0'}{' '}
                 {chain?.nativeCurrency.symbol}
               </span>
               {/* <span className='text-lg font-medium'>

@@ -251,7 +251,6 @@ const TransactionRow = ({
     },
     context: { clientName: client },
   });
-  console.log();
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
       {columns.map((column) => {

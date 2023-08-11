@@ -73,7 +73,6 @@ export default function TokenTable() {
     setPage(0);
   };
 
-  console.log(enteredRows);
   return (
     <div className='mx-auto mt-6 w-full rounded-[10px] bg-[#272E3C] px-4 py-6'>
       <CSVReader
@@ -251,7 +250,7 @@ const TokenTableRow: React.FC<{
                     return er.id === row.id
                       ? {
                           ...er,
-                          destination_chain: _chain.id,
+                          destination_chain: _chain ? _chain.id : 0,
                         }
                       : er;
                   });

@@ -6,13 +6,13 @@ import {
 import React, { ComponentProps } from 'react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { goerli, polygon, polygonMumbai } from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from 'wagmi/providers/public';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon],
+  [polygon, goerli, polygonMumbai],
   [
     alchemyProvider({ apiKey: 'NzvCDfoZ833NeFoQOXSXQDWfhCHhTa4u' }),
     publicProvider(),

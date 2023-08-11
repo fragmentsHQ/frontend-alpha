@@ -179,6 +179,23 @@ export default function JobsTable({
                 </TableCell>
               </TableRow>
             )}
+            {!filteredData && (
+              <TableRow>
+                <TableCell
+                  colSpan={12}
+                  style={{
+                    backgroundColor: '#262229',
+                  }}
+                >
+                  <div
+                    className='flex h-[300px] w-full flex-col items-center 
+                 justify-center text-white '
+                  >
+                    <p className='mt-2'>{jobMessage.message}</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
             {filteredData.length === 0 && (
               <TableRow>
                 <TableCell

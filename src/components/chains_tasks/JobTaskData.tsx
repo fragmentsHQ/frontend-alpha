@@ -13,8 +13,10 @@ import { encodeFunctionData } from 'viem';
 import { useNetwork, useToken } from 'wagmi';
 
 import useCheckIfValidJob from '@/hooks/useCheckIfValidJob';
+import { TransactionState } from '@/hooks/useDepositBalance';
 
 import UnstyledLink from '@/components/links/UnstyledLink';
+import LoadingScreen from '@/components/loaders';
 import TransactionTable from '@/components/table/TransactionTable';
 
 import { AUTOPAY_CONTRACT_ADDRESSES, ZERO_ADDRESS } from '@/config/contracts';
@@ -25,10 +27,6 @@ import { GelatoIcon } from '@/pages/job/[jobId]';
 import { GoBackLink } from '@/pages/jobs';
 
 import AutoPayAbi from '../../abi/Autopay.json';
-import LoadingModal from '@/components/loading/Loader';
-import LoadingScreen from '@/components/loaders';
-import { TransactionState } from '@/hooks/useDepositBalance';
-import calculateEndTime from '@/lib/utils/calculateEnditme';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -420,7 +418,6 @@ const ExecutionData = ({
     return parseFloat(acc) + parseFloat(curr._fundsUsed);
   }, 0);
 
-  console.log(costs);
   if (!costs) return null;
   return (
     <div className='mt-8 flex justify-between'>

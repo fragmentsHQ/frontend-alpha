@@ -5,15 +5,16 @@ import Image from 'next/image';
 import * as React from 'react';
 import { Chain, useNetwork } from 'wagmi';
 
-import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
 import TokenModal from '@/components/modal/TokenModal';
+
+import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
 
 export default function ChainMenu({
   initialChain,
   onChainChange,
 }: {
   initialChain: number;
-  onChainChange: (chain: Chain) => void;
+  onChainChange: (chain: Chain | null) => void;
 }) {
   const [selectedChain, setSelectedChain] = React.useState<Chain | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -21,14 +22,16 @@ export default function ChainMenu({
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const { chains } = useNetwork();
+  const { chains, chain } = useNetwork();
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   React.useEffect(() => {
     if (initialChain !== 0) {
-      const filter = chains.filter((ch) => ch.id === initialChain)[0];
+      const filter = chains.filter(
+        (ch) => ch.id === initialChain && ch.testnet === chain?.testnet
+      )[0];
       if (filter) {
         onChainChange(filter);
         setSelectedChain(filter);
@@ -36,9 +39,12 @@ export default function ChainMenu({
         onChainChange(chains[0]);
         setSelectedChain(null);
       }
+    } else {
+      onChainChange(null);
+      setSelectedChain(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialChain]);
+  }, [initialChain, chain]);
 
   return (
     <div>
@@ -104,21 +110,23 @@ export default function ChainMenu({
           horizontal: 'left',
         }}
       >
-        {chains.map((chain, index) => (
-          <MenuItem
-            onClick={() => {
-              setSelectedChain(chain);
-              onChainChange(chain);
-              handleClose();
-            }}
-            key={index}
-          >
-            <div className='relative mr-2 h-[1.5rem] w-[1.5rem] overflow-hidden rounded-full py-2'>
-              <Image src={CHAIN_IMAGES[chain.id].image_url} fill alt='Logo' />
-            </div>
-            {chain.name}
-          </MenuItem>
-        ))}
+        {chains
+          .filter((c) => c.testnet === chain?.testnet)
+          .map((chain, index) => (
+            <MenuItem
+              onClick={() => {
+                setSelectedChain(chain);
+                onChainChange(chain);
+                handleClose();
+              }}
+              key={index}
+            >
+              <div className='relative mr-2 h-[1.5rem] w-[1.5rem] overflow-hidden rounded-full py-2'>
+                <Image src={CHAIN_IMAGES[chain.id].image_url} fill alt='Logo' />
+              </div>
+              {chain.name}
+            </MenuItem>
+          ))}
       </Menu>
     </div>
   );
@@ -136,12 +144,17 @@ export function TokenMenu({
   const [selectedToken, setSelectedToken] = React.useState<Token | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
-
+  const { chains } = useNetwork();
   const open = Boolean(anchorEl);
 
   React.useEffect(() => {
     if (initialToken && selectedChain) {
       try {
+        const filter = chains.filter((ch) => ch.id === selectedChain)[0];
+        if (!filter) {
+          onTokenChange(null);
+          return;
+        }
         const token = TOKENS[selectedChain].filter(
           (d) => d.address === initialToken
         )[0];
@@ -187,7 +200,7 @@ export function TokenMenu({
             <div className='relative mr-2  h-[1.5rem] w-[1.5rem] overflow-hidden rounded-full py-2'>
               <Image src={selectedToken.image} fill alt='Logo' />
             </div>
-            {selectedToken.name}
+            {selectedToken.symbol}
           </div>
         ) : (
           <div className='w-full text-[18px] text-white text-opacity-20'>

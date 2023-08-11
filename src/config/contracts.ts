@@ -62,7 +62,7 @@ const AUTOPAY_CONTRACT_ADDRESSES: ContractAddresses = {
 
 const TREASURY_CONTRACT_ADDRESSES: ContractAddresses = {
   mainnets: {
-    [polygon.id]: '0xD5deC37fcA54a234Ea7b4AeA41657171381eDE76',
+    [polygon.id]: '0xa0484988a393527ef08ecbc76c2c01a6386a042a',
     ethereum: '0x',
     optimism: '0x',
     arbitrum: '0x',

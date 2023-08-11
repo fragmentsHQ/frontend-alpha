@@ -10,6 +10,7 @@ import {
 } from '@wagmi/core';
 import { BigNumber } from 'alchemy-sdk';
 import { MaxUint256 } from 'ethers';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import useGlobalStore, { useTableData } from 'store';
 import { encodeFunctionData, parseUnits } from 'viem';
@@ -20,7 +21,6 @@ import {
   CONNEXT_DOMAINS,
   ZERO_ADDRESS,
 } from '../config/contracts';
-import { useState } from 'react';
 
 type AutomationArguments = {
   start_time: number;
@@ -102,7 +102,6 @@ const useAutoPayContract = () => {
       await fetchAllowance(chain);
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -192,7 +191,6 @@ const useAutoPayContract = () => {
       toast.success('Transaction created successfully');
       return { hash: res.transactionHash };
     } catch (error) {
-      console.log(error, 'isError');
       return { hash: null };
     }
   };
