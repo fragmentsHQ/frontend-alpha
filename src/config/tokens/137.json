@@ -4,6 +4,7 @@
     "symbol": "USDC",
     "name": "USD Coin",
     "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "isForwardGasSupported": true,
     "decimals": 6,
     "image": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
   },
@@ -11,6 +12,7 @@
     "id": "usdt",
     "symbol": "USDT",
     "name": "Tether",
+    "isForwardGasSupported": true,
     "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
     "decimals": 6,
     "image": "https://assets.coingecko.com/coins/images/325/small/Tether.png?1668148663"
@@ -28,6 +30,7 @@
     "symbol": "WETH",
     "name": "Wrapped Ether",
     "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+    "isForwardGasSupported": true,
     "decimals": 18,
     "image": "https://assets.coingecko.com/coins/images/2518/small/weth.png?1628852295"
   },
