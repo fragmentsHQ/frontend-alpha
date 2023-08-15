@@ -1,7 +1,8 @@
-import { TOKENS } from '@/config/tokens';
 import React from 'react';
 import useGlobalStore from 'store';
 import { useAccount, useBalance, useNetwork } from 'wagmi';
+
+import { TOKENS } from '@/config/tokens';
 
 export enum AutomationArguments {
   FORWARD_PAYING_GAS = 'forwardpaying',
@@ -21,11 +22,15 @@ const PreviewTabMenu: React.FC<{
   });
 
   const isForwardPayingGas = chain
-    ? !TOKENS[chain?.id].filter(
-        (token) =>
-          token.address.toLocaleLowerCase() ===
-          sourceToken?.address.toLocaleLowerCase()
-      )[0].isForwardGasSupported
+    ? TOKENS[chain?.id].filter(
+      (token) =>
+        token.address.toLocaleLowerCase() ===
+        sourceToken?.address.toLocaleLowerCase()
+    )[0] ? TOKENS[chain?.id].filter(
+      (token) =>
+        token.address.toLocaleLowerCase() ===
+        sourceToken?.address.toLocaleLowerCase()
+    )[0].isForwardGasSupported : false
     : false;
 
   const options = [
@@ -54,14 +59,12 @@ const PreviewTabMenu: React.FC<{
         {options.map((option) => (
           <button
             key={option.value}
-            className={`flex w-full flex-1  cursor-pointer items-center justify-center rounded-[12px] py-2  text-[16px] transition-all  duration-200 focus:outline-none ${
-              gasMethods === option.value
+            className={`flex w-full flex-1  cursor-pointer items-center justify-center rounded-[12px] py-2  text-[16px] transition-all  duration-200 focus:outline-none ${gasMethods === option.value
                 ? 'bg-[#0047CE] font-medium text-white'
                 : 'bg-[#262229]  text-white'
-            } ${
-              option.isDisabled &&
+              } ${option.isDisabled &&
               'disabled:cursor-not-allowed disabled:bg-[#262229] disabled:bg-opacity-50 disabled:text-opacity-20'
-            }`}
+              }`}
             onClick={() => setGasMethods(option.value)}
             disabled={option.isDisabled}
           >

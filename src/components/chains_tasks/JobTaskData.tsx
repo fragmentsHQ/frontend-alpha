@@ -12,6 +12,7 @@ import { ImSpinner2 } from 'react-icons/im';
 import { encodeFunctionData } from 'viem';
 import { useNetwork, useToken } from 'wagmi';
 
+import { apolloClient } from '@/lib/apollo';
 import useCheckIfValidJob from '@/hooks/useCheckIfValidJob';
 import { TransactionState } from '@/hooks/useDepositBalance';
 
@@ -45,7 +46,7 @@ const JobTaskData = ({
     variables: {
       id: id,
     },
-    context: { clientName: client },
+    client: apolloClient,
   });
 
   const { chain } = useNetwork();
@@ -171,12 +172,12 @@ const JobTaskData = ({
             {parseInt(data?.jobCreated._interval) === 86400
               ? 'days'
               : parseInt(data?.jobCreated._interval) === 2629800
-              ? 'months'
-              : parseInt(data?.jobCreated._interval) === 604800
-              ? 'weeks'
-              : parseInt(data?.jobCreated._interval) === 31536000
-              ? 'years'
-              : null}
+                ? 'months'
+                : parseInt(data?.jobCreated._interval) === 604800
+                  ? 'weeks'
+                  : parseInt(data?.jobCreated._interval) === 31536000
+                    ? 'years'
+                    : null}
           </div>
         </div>
         <div className='flex items-center gap-7'>
@@ -196,8 +197,8 @@ const JobTaskData = ({
             {dayjs
               .unix(
                 parseInt(data.jobCreated._interval) *
-                  (parseInt(data.jobCreated._cycles) - 1) +
-                  parseInt(data.jobCreated._startTime)
+                (parseInt(data.jobCreated._cycles) - 1) +
+                parseInt(data.jobCreated._startTime)
               )
               .toDate()
               .toLocaleString()}
@@ -309,7 +310,7 @@ export const TaskData = ({ job }: { job: GetAJobQuery['jobCreated'] }) => {
             {parseInt(job.jobCreated._toChain) !== chain?.id
               ? '-'
               : job?.jobCreated._amount /
-                Math.pow(10, toToken?.decimals as number)}
+              Math.pow(10, toToken?.decimals as number)}
           </div>
           <div className='flex flex-col'>
             <span className='text-[#AFAEAE]'>Chain</span>
@@ -346,8 +347,8 @@ export const CancelJob = ({ jobId }: { jobId: string }) => {
       const request = await prepareSendTransaction({
         to: chain
           ? AUTOPAY_CONTRACT_ADDRESSES[
-              chain?.testnet ? 'testnets' : 'mainnets'
-            ][chain?.id]
+          chain?.testnet ? 'testnets' : 'mainnets'
+          ][chain?.id]
           : ZERO_ADDRESS,
         data: callDataCreateTimeTxn,
         value: BigInt(0),

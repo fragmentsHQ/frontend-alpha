@@ -1,7 +1,6 @@
 import { Tab } from '@headlessui/react';
 import { useState } from 'react';
 import { useNetwork } from 'wagmi';
-import { goerli, polygonMumbai } from 'wagmi/chains';
 
 import GoerliJobsTable from '@/components/chains_tasks/JobsTable';
 
@@ -46,12 +45,7 @@ export default function JobsTab() {
                 'w-full rounded-xl  bg-[#272E3C] px-6 py-6'
               )}
             >
-              {chain?.id === polygonMumbai.id && (
-                <GoerliJobsTable client='endpoint2' filter={key} />
-              )}
-              {chain?.id === goerli.id && (
-                <GoerliJobsTable client='endpoint1' filter={key} />
-              )}
+              <GoerliJobsTable filter={key} />
             </Tab.Panel>
           ))}
         </Tab.Panels>

@@ -13,6 +13,7 @@ import * as React from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { useAccount, useNetwork } from 'wagmi';
 
+import { apolloClient } from '@/lib/apollo';
 import clsxm from '@/lib/clsxm';
 import useCheckIfValidJob from '@/hooks/useCheckIfValidJob';
 import useGetGasUsed from '@/hooks/useGetGasUsed';
@@ -60,11 +61,9 @@ interface Data {
 }
 
 export default function JobsTable({
-  client,
   filter,
 }: {
   filter: 'All' | 'Ongoing' | 'Completed';
-  client: 'endpoint1' | 'endpoint2';
 }) {
   const { address } = useAccount();
   const [jobMessage, setJobMessage] = React.useState({
@@ -80,7 +79,7 @@ export default function JobsTable({
       orderBy: JobCreated_OrderBy.BlockTimestamp,
       orderDirection: OrderDirection.Desc,
     },
-    context: { clientName: client },
+    client: apolloClient
   });
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -208,7 +207,7 @@ export default function JobsTable({
                     className='flex h-[300px] w-full flex-col items-center 
                  justify-center text-white '
                   >
-                    <p className='mt-2'>{jobMessage.message}</p>
+                    <p className='mt-2'>No jobs found :(</p>
                   </div>
                 </TableCell>
               </TableRow>

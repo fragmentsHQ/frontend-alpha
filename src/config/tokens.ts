@@ -1,6 +1,7 @@
-import { ETH, MATIC } from '@/config/contracts';
 import { Address } from 'viem';
 import { goerli, polygon, polygonMumbai } from 'wagmi/chains';
+
+import { ETH } from '@/config/contracts';
 
 export type Token = {
   id: string;

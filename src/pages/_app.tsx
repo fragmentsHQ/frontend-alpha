@@ -40,15 +40,15 @@ const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider client={client}>
-      <QueryClientProvider client={queryClient}>
-        <WalletConfiguration>
+    <QueryClientProvider client={queryClient}>
+      <WalletConfiguration>
+        <ApolloProvider client={client}>
           <Seo />
           <SafeProviderWrapper />
           <Component {...pageProps} />
-        </WalletConfiguration>
-      </QueryClientProvider>
-    </ApolloProvider>
+        </ApolloProvider>
+      </WalletConfiguration>
+    </QueryClientProvider>
   );
 }
 

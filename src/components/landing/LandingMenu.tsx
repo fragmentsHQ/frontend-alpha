@@ -5,11 +5,12 @@ import * as React from 'react';
 import useGlobalStore from 'store';
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 
+import clsxm from '@/lib/clsxm';
+
+import TokenModal from '@/components/modal/TokenModal';
 import Row from '@/components/rows/Row';
 
-import { CHAIN_IMAGES, Token, TOKENS } from '@/config/tokens';
-import clsxm from '@/lib/clsxm';
-import TokenModal from '@/components/modal/TokenModal';
+import { CHAIN_IMAGES, TOKENS } from '@/config/tokens';
 
 export const getLogo = (name: string | undefined) => {
   switch (name) {
@@ -28,6 +29,15 @@ const LandingMenu = () => {
   const { switchNetwork } = useSwitchNetwork();
   const { chains, chain } = useNetwork();
   const [isOpen, setIsOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (chain?.id && sourceToken?.address) {
+      const checkIfOnCorrectChain = TOKENS[chain.id].find((token) => token.address === sourceToken?.address);
+      if (!checkIfOnCorrectChain) {
+        setSourceToken(null)
+      }
+    }
+  }, [chain])
   return (
     <React.Fragment>
       {chain && chain?.unsupported === false && (
@@ -85,9 +95,8 @@ const LandingMenu = () => {
               <Menu.Item key={index}>
                 {({ active }) => (
                   <div
-                    className={`${
-                      active && 'bg-[#282828]'
-                    } relative z-20 flex w-full cursor-pointer items-center space-x-2 bg-[#262229] px-4 py-3 text-white`}
+                    className={`${active && 'bg-[#282828]'
+                      } relative z-20 flex w-full cursor-pointer items-center space-x-2 bg-[#262229] px-4 py-3 text-white`}
                     onClick={() => {
                       switchNetwork?.(option.id);
                     }}
