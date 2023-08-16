@@ -12,7 +12,11 @@ import { publicProvider } from 'wagmi/providers/public';
 import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon, goerli, polygonMumbai],
+  [
+    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
+      ? [polygonMumbai, goerli]
+      : [polygon]),
+  ],
   [
     alchemyProvider({ apiKey: 'NzvCDfoZ833NeFoQOXSXQDWfhCHhTa4u' }),
     publicProvider(),
